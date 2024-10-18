@@ -298,26 +298,26 @@ function StoredPasswordComponent({
 }
 
 function MasterPasswordPanel() {
-    const [generatedMasterPassword, setGeneratedMasterPassword] =
-        useState<string>("");
+    const generatePassword = async () => {
+        setGeneratedPassword(await generateMasterPassword());
+    };
+
+    const [generatedPassword, setGeneratedPassword] = useState<string>("");
     const [copySuccess, setCopySuccess] = useState(false);
+    const [generatedPasswordLength, setGeneratedPasswordLength] = useState(8);
 
     const getPassword = (name: string): string => {
         return `password for ${name}`;
     };
 
     const handleCopy = () => {
-        if (!generatedMasterPassword) {
+        if (!generatedPassword) {
             return;
         }
 
-        writeTextToClipboard(generatedMasterPassword);
+        writeTextToClipboard(generatedPassword);
         setCopySuccess(true); // Show success message
         setTimeout(() => setCopySuccess(false), 2000); // Hide after 2 seconds
-    };
-
-    const generatePassword = async () => {
-        setGeneratedMasterPassword(await generateMasterPassword());
     };
 
     useEffect(() => {
@@ -365,6 +365,61 @@ function MasterPasswordPanel() {
             </div>
 
             <h4 className="my-4 text-xl font-bold">Generate Master Password</h4>
+            <div className="relative px-4 pt-2 pb-6 rounded-lg border border-passfort-vibrant bg-passfort-vibrant/10 mb-6 text-passfort-vibrant">
+                <div>
+                    <label htmlFor="password-length-input">Length</label>
+                    <input
+                        id="password-length-input"
+                        className="w-full h-2 rounded-lg appearance-none cursor-pointer bg-passfort-vibrant/10 mb-6"
+                        type="range"
+                        defaultValue={8}
+                        min={8}
+                        max={64}
+                        step={8}
+                        onChange={(event) =>
+                            setGeneratedPasswordLength(
+                                parseInt(event.target.value, 10)
+                            )
+                        }
+                    />
+                    <div className="relative w-full mb-4">
+                        <span className="text-sm text-passfort-vibrant absolute start-0 -bottom-2">
+                            Min (8)
+                        </span>
+                        {[16, 24, 32, 40, 48, 56].map((value, index) => (
+                            <span
+                                key={value}
+                                className="text-sm text-passfort-vibrant absolute -bottom-2"
+                                style={{
+                                    left: `${((index + 1) / 7) * 100}%`,
+                                    transform: "translateX(-50%)",
+                                }}>
+                                {value}
+                            </span>
+                        ))}
+                        <span className="text-sm text-passfort-vibrant absolute end-0 -bottom-2">
+                            Max (64)
+                        </span>
+                    </div>
+                </div>
+
+                <div>
+                    <div className="flex items-center">
+                        <input
+                            id="default-checkbox"
+                            type="checkbox"
+                            value=""
+                            className="w-4 h-4 text-blue-600 rounded  focus:ring-blue-600 ring-offset-gray-800 focus:ring-2 bg-gray-700 border-gray-600"
+                        />
+                        <label
+                            htmlFor="default-checkbox"
+                            className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+                            Default checkbox
+                        </label>
+                    </div>
+                </div>
+            </div>
+
             <div
                 className={`flex gap-4 px-3 py-2 rounded-lg border w-fit ${
                     copySuccess
@@ -372,10 +427,10 @@ function MasterPasswordPanel() {
                         : "bg-passfort-vibrant/10 border-passfort-vibrant"
                 }`}>
                 <input
-                    className={`bg-transparent h-8 me-6 ${
+                    className={`bg-transparent h-8 ${
                         copySuccess ? "text-green-500" : "text-passfort-vibrant"
                     }`}
-                    value={copySuccess ? "Copied!" : generatedMasterPassword}
+                    value={copySuccess ? "Copied!" : generatedPassword}
                     disabled={true}
                 />
 

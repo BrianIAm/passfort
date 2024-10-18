@@ -81,7 +81,7 @@ export default function Navbar() {
                         <a
                             className="text-sm underline font-medium text-red-200 hover:text-white"
                             href="mailto:bptiburcio@gmail.com&subject=I%20found%20a%20bug!">
-                            bptiburcio@gmail.com
+                            passfort@support.com
                         </a>
                     </div>
                 </ul>

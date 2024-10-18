@@ -3,7 +3,7 @@ use aes_gcm::{
     Aes256Gcm, Nonce,
 };
 use pbkdf2::pbkdf2_hmac;
-use rand::RngCore;
+use rand::{Rng, RngCore};
 use sha2::Sha256;
 
 /*
@@ -24,12 +24,21 @@ const NONCE_LENGTH: usize = 12;
 // The key length is 256 bits (32 bytes) because we are using AES-256
 const KEY_LENGTH: usize = 32;
 
-fn hex_encode(data: &[u8]) -> String {
-    // Convert each byte to a 2-character hexadecimal string
-    data.iter().map(|b| format!("{:02x}", b)).collect()
-}
+// Flags for the character ranges
+pub const CHARACTER_RANGES_LOWERCASE: u8 = 0b0001;
+pub const CHARACTER_RANGES_UPPERCASE: u8 = 0b0010;
+pub const CHARACTER_RANGES_NUMBERS: u8 = 0b0100;
+pub const CHARACTER_RANGES_SYMBOLS: u8 = 0b1000;
 
-fn hex_decode(s: &str) -> Result<Vec<u8>, String> {
+// Character ranges for generating random master passwords
+const CHARACTER_RANGES: [(u8, u8); 4] = [
+    (97, 123), // Lowercase
+    (65, 91),  // Uppercase
+    (48, 58),  // Numbers
+    (33, 127), // Special characters
+];
+
+pub fn hex_decode(s: &str) -> Result<Vec<u8>, String> {
     (0..s.len())
         // HEX values can be expressed with 2 characters
         .step_by(2)
@@ -50,19 +59,35 @@ fn derive_key(master_password: &str, salt: &[u8]) -> [u8; KEY_LENGTH] {
 
 // Genereate a random master password for the client
 #[tauri::command]
-pub fn generate_master_password(length: Option<u8>) -> String {
+pub fn generate_master_password(length: Option<u8>, options: Option<u8>) -> String {
     // Determine the length of the master password
     // The user can give a desired length, but we ensure that
     // the length is between 8 and 64 characters for convenience
     let length = length.unwrap_or(8).max(8).min(64) as usize;
+    // Determine the character ranges to be used in the master password
+    // or use all character ranges by default
+    let options = options.unwrap_or(0b1111);
 
     let mut rng = rand::thread_rng();
     let mut bytes = vec![0u8; length];
-    // Fill the byte array with random bytes
-    rng.fill_bytes(&mut bytes);
+
+    // Filter character ranges based on the provided options
+    let char_ranges: Vec<(u8, u8)> = CHARACTER_RANGES.iter()
+        .enumerate()
+        .filter_map(|(i, &range)| {
+            if options & (1 << i) != 0 { Some(range) } else { None }
+        })
+        .collect();
+
+    // Generate a random byte array for the master password
+    for i in 0..length {
+        // Pick one of the allowed ranges at random
+        let range = char_ranges[rng.gen_range(0..char_ranges.len())];
+        bytes[i] = rng.gen_range(range.0..range.1);
+    }
     
-    // Return the byte array as a hexadecimal string
-    hex_encode(&bytes)
+    // Return the generated password as a string
+    String::from_utf8(bytes).unwrap()
 }
 
 #[tauri::command]
@@ -89,7 +114,14 @@ pub fn encrypt(data: String, master_password: String) -> Result<String, String> 
         .encrypt(nonce, data.as_bytes())
         .map_err(|e| format!("Encryption failed: {}", e))?;
 
-    Ok(hex_encode(&salt) + &hex_encode(nonce.as_ref()) + &hex_encode(&ciphertext))
+    // Combine the salt, nonce, and ciphertext into a single byte array
+    let mut encrypted_bytes = Vec::with_capacity(SALT_LENGTH + NONCE_LENGTH + ciphertext.len());
+    encrypted_bytes.extend_from_slice(&salt);
+    encrypted_bytes.extend_from_slice(nonce.as_ref());
+    encrypted_bytes.extend_from_slice(&ciphertext);
+
+    // Encode the encrypted data as a hexadecimal string
+    Ok(String::from_utf8(encrypted_bytes).unwrap())
 }
 
 #[tauri::command]
