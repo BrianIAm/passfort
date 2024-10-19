@@ -319,6 +319,14 @@ function MasterPasswordPanel() {
         return (field & bit) !== 0;
     };
 
+    const handleToggleBit = (bit: number) => {
+        // Toggle the bit
+        const updatedBitfield = generatedPasswordOptions ^ bit;
+        // Update the bitfield and regenerate the password
+        setGeneratedPasswordOptions(updatedBitfield);
+        generatePassword(generatedPasswordLength, updatedBitfield);
+    };
+
     const handleCopy = () => {
         if (!generatedPassword) {
             return;
@@ -378,10 +386,10 @@ function MasterPasswordPanel() {
             </div>
 
             <h4 className="my-4 text-xl font-bold">Generate Master Password</h4>
-            <div className="relative w-fit pr-4 py-6 rounded-lg border border-passfort-vibrant bg-passfort-vibrant/10 mb-6 text-passfort-vibrant">
-                <div className="flex w-full gap-8">
-                    <div className="flex-row">
-                        <div className="flex items-center gap-2 px-4">
+            <div className="relative w-full py-4 rounded-lg border border-passfort-vibrant bg-passfort-vibrant/10 mb-6 text-passfort-vibrant">
+                <div className="flex flex-col w-full gap-4 px-4">
+                    <ul className="flex gap-8">
+                        <li className="flex items-center">
                             <input
                                 id="lowercase-checkbox"
                                 type="checkbox"
@@ -389,30 +397,17 @@ function MasterPasswordPanel() {
                                     generatedPasswordOptions,
                                     0b0001
                                 )}
-                                onChange={(e) =>
-                                    setGeneratedPasswordOptions(
-                                        (prev) => prev ^ 0b0001
-                                    )
-                                }
-                                className="
-                                appearance-none
-                                w-5 h-5 rounded
-                                bg-passfort-vibrant/10 border
-                                border-passfort-vibrant
-                                focus:ring-0 focus:ring-none
-                                focus:border-none
-                                focus:outline-none
-                                checked:bg-passfort-vibrant
-                                "
+                                onChange={() => handleToggleBit(0b0001)}
+                                className="appearance-none w-5 h-5 rounded bg-passfort-vibrant/10 border border-passfort-vibrant focus:ring-0 focus:ring-none focus:border-none focus:outline-none checked:bg-passfort-vibrant"
                             />
                             <label
                                 htmlFor="lowercase-checkbox"
                                 className="ms-2 font-medium text-passfort-vibrant">
                                 Lowercase
                             </label>
-                        </div>
+                        </li>
 
-                        <div className="flex items-center gap-2 px-4">
+                        <li className="flex items-center">
                             <input
                                 id="uppercase-checkbox"
                                 type="checkbox"
@@ -420,29 +415,16 @@ function MasterPasswordPanel() {
                                     generatedPasswordOptions,
                                     0b0010
                                 )}
-                                onChange={(e) =>
-                                    setGeneratedPasswordOptions(
-                                        (prev) => prev ^ 0b0010
-                                    )
-                                }
-                                className="
-                                appearance-none
-                                w-5 h-5 rounded
-                                bg-passfort-vibrant/10 border
-                                border-passfort-vibrant
-                                focus:ring-0 focus:ring-none
-                                focus:border-none
-                                focus:outline-none
-                                checked:bg-passfort-vibrant
-                                "
+                                onChange={() => handleToggleBit(0b0010)}
+                                className="appearance-none w-5 h-5 rounded bg-passfort-vibrant/10 border border-passfort-vibrant focus:ring-0 focus:ring-none focus:border-none focus:outline-none checked:bg-passfort-vibrant"
                             />
                             <label
                                 htmlFor="uppercase-checkbox"
                                 className="ms-2 font-medium text-passfort-vibrant">
                                 Uppercase
                             </label>
-                        </div>
-                        <div className="flex items-center gap-2 px-4">
+                        </li>
+                        <li className="flex items-center">
                             <input
                                 id="numbers-checkbox"
                                 type="checkbox"
@@ -450,30 +432,17 @@ function MasterPasswordPanel() {
                                     generatedPasswordOptions,
                                     0b0100
                                 )}
-                                onChange={(e) =>
-                                    setGeneratedPasswordOptions(
-                                        (prev) => prev ^ 0b0100
-                                    )
-                                }
-                                className="
-                                appearance-none
-                                w-5 h-5 rounded
-                                bg-passfort-vibrant/10 border
-                                border-passfort-vibrant
-                                focus:ring-0 focus:ring-none
-                                focus:border-none
-                                focus:outline-none
-                                checked:bg-passfort-vibrant
-                                "
+                                onChange={() => handleToggleBit(0b0100)}
+                                className="appearance-none w-5 h-5 rounded bg-passfort-vibrant/10 border border-passfort-vibrant focus:ring-0 focus:ring-none focus:border-none focus:outline-none checked:bg-passfort-vibrant"
                             />
                             <label
                                 htmlFor="numbers-checkbox"
                                 className="ms-2 font-medium text-passfort-vibrant">
                                 Numbers
                             </label>
-                        </div>
+                        </li>
 
-                        <div className="flex items-center gap-2 px-4">
+                        <li className="flex items-center">
                             <input
                                 id="symbols-checkbox"
                                 type="checkbox"
@@ -481,49 +450,39 @@ function MasterPasswordPanel() {
                                     generatedPasswordOptions,
                                     0b1000
                                 )}
-                                onChange={(e) =>
-                                    setGeneratedPasswordOptions(
-                                        (prev) => prev ^ 0b1000
-                                    )
-                                }
-                                className="
-                                appearance-none
-                                w-5 h-5 rounded
-                                bg-passfort-vibrant/10 border
-                                border-passfort-vibrant
-                                focus:ring-0 focus:ring-none
-                                focus:border-none
-                                focus:outline-none
-                                checked:bg-passfort-vibrant
-                                "
+                                onChange={() => handleToggleBit(0b1000)}
+                                className="appearance-none w-5 h-5 rounded bg-passfort-vibrant/10 border border-passfort-vibrant focus:ring-0 focus:ring-none focus:border-none focus:outline-none checked:bg-passfort-vibrant"
                             />
                             <label
                                 htmlFor="symbols-checkbox"
                                 className="ms-2 font-medium text-passfort-vibrant">
                                 Symbols
                             </label>
-                        </div>
-                    </div>
+                        </li>
+                    </ul>
 
-                    <div className="w-[42rem]">
+                    <div className="w-[32rem]">
                         <label htmlFor="password-length-slider">Length</label>
                         <input
                             id="password-length-slider"
-                            className="range w-full h-2 rounded-lgcursor-pointer bg-passfort-vibrant/10 mb-6 accent-passfort-vibrant"
+                            className="range w-full h-2 rounded-lg cursor-pointer bg-passfort-vibrant/10 mb-6 accent-passfort-vibrant"
                             type="range"
                             defaultValue={generatedPasswordLength}
                             min={8}
                             max={64}
                             step={8}
-                            onChange={(event) =>
-                                setGeneratedPasswordLength(
-                                    parseInt(event.target.value, 10)
-                                )
-                            }
+                            onChange={(event) => {
+                                const value = parseInt(event.target.value);
+                                setGeneratedPasswordLength(value);
+                                generatePassword(
+                                    value,
+                                    generatedPasswordOptions
+                                );
+                            }}
                         />
-                        <div className="relative w-full mb-4">
+                        <div className="relative w-full mb-2">
                             <span className="text-sm text-passfort-vibrant absolute start-0 -bottom-2">
-                                Min (8)
+                                8
                             </span>
                             {[16, 24, 32, 40, 48, 56].map((value, index) => (
                                 <span
@@ -537,7 +496,7 @@ function MasterPasswordPanel() {
                                 </span>
                             ))}
                             <span className="text-sm text-passfort-vibrant absolute end-0 -bottom-2">
-                                Max (64)
+                                64
                             </span>
                         </div>
                     </div>
@@ -595,10 +554,19 @@ function MasterPasswordPanel() {
                                 ? "text-green-500 hover:text-green-400"
                                 : "text-passfort-vibrant/75 hover:text-passfort-vibrant"
                         }`}
-                        fill="currentColor"
-                        viewBox="0 0 32 32"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <path d="M15.676 17.312h.048a4 4 0 0 0-.436-.78L4.174 10.186c-.37.13-.607.519-.607 1.109v9.84c0 1.034.726 2.291 1.621 2.808l9.168 5.294c.544.314 1.026.282 1.32-.023zm-5.627 6.922-1.83-1.057v-1.918l1.83 1.057zm1.556-4.241q-.198.3-.674.505l-.324.12q-.345.135-.451.278a.6.6 0 0 0-.106.38v.242l-1.83-1.056v-.264q0-.442.167-.685.166-.248.705-.466l.324-.125q.29-.114.421-.285a.64.64 0 0 0 .137-.417q0-.377-.243-.728a2.05 2.05 0 0 0-.679-.608 2.8 2.8 0 0 0-.887-.329 3.2 3.2 0 0 0-.994-.04v-1.691q.613.128 1.12.313c.507.185.664.276.978.457q1.237.714 1.886 1.627.65.908.649 1.937 0 .528-.198.834zM27.111 8.247 17.58 2.733c-.895-.518-2.346-.518-3.241 0L4.808 8.247c-.763.442-.875 1.117-.336 1.628l10.578 6.04a3.86 3.86 0 0 0 1.832-.003l10.589-6.06c.512-.508.392-1.17-.36-1.605m-10.806 2.17-.23-.129q-.385-.216-.492-.488-.111-.274.037-.874l.095-.359q.083-.321.016-.525a.55.55 0 0 0-.277-.329q-.329-.184-.788-.133a2.5 2.5 0 0 0-.958.326q-.465.26-.846.653-.385.39-.661.892l-1.476-.827q.498-.5.978-.875c.48-.375.659-.474 1.015-.674q1.401-.786 2.607-.934 1.2-.152 2.098.352.46.258.603.589.138.328.016.865l-.1.356q-.1.382-.041.55.053.165.265.284l.212.118zm2.369 1.327-1.673-.937 2.074-1.162 1.673.937zm9.073-1.57-11.06 6.329a4 4 0 0 0-.459.813v11.84c.287.358.793.414 1.37.081l9.168-5.294c.895-.517 1.621-1.774 1.621-2.808v-9.84c0-.608-.251-1.003-.641-1.121zm-4.6 13.506-1.83 1.056v-1.918l1.83-1.057zm1.556-6.037q-.198.529-.674 1.284l-.324.494q-.345.533-.451.799a1.3 1.3 0 0 0-.106.503v.242l-1.83 1.056v-.264q0-.441.167-.878.166-.442.705-1.279l.324-.5q.29-.447.421-.771.137-.327.137-.575 0-.377-.243-.447-.243-.075-.679.177-.41.237-.887.695-.477.453-.994 1.107v-1.692q.613-.58 1.12-.981c.507-.401.664-.491.978-.673q1.237-.714 1.886-.55.65.159.649 1.188 0 .528-.198 1.062z" />
+                        aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        fill="none"
+                        viewBox="0 0 24 24">
+                        <path
+                            stroke="currentColor"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M17.651 7.65a7.131 7.131 0 0 0-12.68 3.15M18.001 4v4h-4m-7.652 8.35a7.13 7.13 0 0 0 12.68-3.15M6 20v-4h4"
+                        />
                     </svg>
                 </button>
 
