@@ -14,6 +14,9 @@ export async function decrypt(
     return await invoke("decrypt", { encryptedData, masterPassword });
 }
 
-export async function generateMasterPassword(): Promise<string> {
-    return await invoke("generate_master_password");
+export async function generateMasterPassword(
+    length: number | null,
+    options: number | null
+): Promise<string> {
+    return await invoke("generate_master_password", { length, options });
 }

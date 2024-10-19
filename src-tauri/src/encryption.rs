@@ -24,12 +24,6 @@ const NONCE_LENGTH: usize = 12;
 // The key length is 256 bits (32 bytes) because we are using AES-256
 const KEY_LENGTH: usize = 32;
 
-// Flags for the character ranges
-pub const CHARACTER_RANGES_LOWERCASE: u8 = 0b0001;
-pub const CHARACTER_RANGES_UPPERCASE: u8 = 0b0010;
-pub const CHARACTER_RANGES_NUMBERS: u8 = 0b0100;
-pub const CHARACTER_RANGES_SYMBOLS: u8 = 0b1000;
-
 // Character ranges for generating random master passwords
 const CHARACTER_RANGES: [(u8, u8); 4] = [
     (97, 123), // Lowercase
@@ -62,11 +56,15 @@ fn derive_key(master_password: &str, salt: &[u8]) -> [u8; KEY_LENGTH] {
 pub fn generate_master_password(length: Option<u8>, options: Option<u8>) -> String {
     // Determine the length of the master password
     // The user can give a desired length, but we ensure that
-    // the length is between 8 and 64 characters for convenience
     let length = length.unwrap_or(8).max(8).min(64) as usize;
     // Determine the character ranges to be used in the master password
     // or use all character ranges by default
-    let options = options.unwrap_or(0b1111);
+    let mut options = options.unwrap_or(0b1111);
+
+    // If the user supplied no configuration options, use all character ranges
+    if options == 0 {
+        options = 0b1111;
+    }
 
     let mut rng = rand::thread_rng();
     let mut bytes = vec![0u8; length];

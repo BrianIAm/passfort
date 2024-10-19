@@ -1,11 +1,11 @@
 "use client";
 
 import { Dialog } from "#/components/Dialog";
-import React, { useState, useEffect } from "react";
 import { encrypt, decrypt, generateMasterPassword } from "#/util/encrypt";
 import { getStoredPasswords, setStoredPasswords } from "#/util/fs";
 import { type Password } from "#/types/password";
 import { writeText as writeTextToClipboard } from "@tauri-apps/plugin-clipboard-manager";
+import React, { useState, useEffect } from "react";
 
 /*
 #380f17
@@ -298,16 +298,25 @@ function StoredPasswordComponent({
 }
 
 function MasterPasswordPanel() {
-    const generatePassword = async () => {
-        setGeneratedPassword(await generateMasterPassword());
+    const generatePassword = async (
+        length: number | null,
+        options: number | null
+    ) => {
+        setGeneratedPassword(await generateMasterPassword(length, options));
     };
 
     const [generatedPassword, setGeneratedPassword] = useState<string>("");
     const [copySuccess, setCopySuccess] = useState(false);
+    const [generatedPasswordOptions, setGeneratedPasswordOptions] =
+        useState(0b1111);
     const [generatedPasswordLength, setGeneratedPasswordLength] = useState(8);
 
     const getPassword = (name: string): string => {
         return `password for ${name}`;
+    };
+
+    const isBitChecked = (field: number, bit: number) => {
+        return (field & bit) !== 0;
     };
 
     const handleCopy = () => {
@@ -321,8 +330,12 @@ function MasterPasswordPanel() {
     };
 
     useEffect(() => {
-        generatePassword();
+        generatePassword(null, null);
     }, []);
+
+    useEffect(() => {
+        console.log(isBitChecked(0b1111, 0b0001));
+    });
 
     return (
         <section className="mt-6">
@@ -365,69 +378,180 @@ function MasterPasswordPanel() {
             </div>
 
             <h4 className="my-4 text-xl font-bold">Generate Master Password</h4>
-            <div className="relative px-4 pt-2 pb-6 rounded-lg border border-passfort-vibrant bg-passfort-vibrant/10 mb-6 text-passfort-vibrant">
-                <div>
-                    <label htmlFor="password-length-input">Length</label>
-                    <input
-                        id="password-length-input"
-                        className="w-full h-2 rounded-lg appearance-none cursor-pointer bg-passfort-vibrant/10 mb-6"
-                        type="range"
-                        defaultValue={8}
-                        min={8}
-                        max={64}
-                        step={8}
-                        onChange={(event) =>
-                            setGeneratedPasswordLength(
-                                parseInt(event.target.value, 10)
-                            )
-                        }
-                    />
-                    <div className="relative w-full mb-4">
-                        <span className="text-sm text-passfort-vibrant absolute start-0 -bottom-2">
-                            Min (8)
-                        </span>
-                        {[16, 24, 32, 40, 48, 56].map((value, index) => (
-                            <span
-                                key={value}
-                                className="text-sm text-passfort-vibrant absolute -bottom-2"
-                                style={{
-                                    left: `${((index + 1) / 7) * 100}%`,
-                                    transform: "translateX(-50%)",
-                                }}>
-                                {value}
-                            </span>
-                        ))}
-                        <span className="text-sm text-passfort-vibrant absolute end-0 -bottom-2">
-                            Max (64)
-                        </span>
-                    </div>
-                </div>
+            <div className="relative w-fit pr-4 py-6 rounded-lg border border-passfort-vibrant bg-passfort-vibrant/10 mb-6 text-passfort-vibrant">
+                <div className="flex w-full gap-8">
+                    <div className="flex-row">
+                        <div className="flex items-center gap-2 px-4">
+                            <input
+                                id="lowercase-checkbox"
+                                type="checkbox"
+                                defaultChecked={isBitChecked(
+                                    generatedPasswordOptions,
+                                    0b0001
+                                )}
+                                onChange={(e) =>
+                                    setGeneratedPasswordOptions(
+                                        (prev) => prev ^ 0b0001
+                                    )
+                                }
+                                className="
+                                appearance-none
+                                w-5 h-5 rounded
+                                bg-passfort-vibrant/10 border
+                                border-passfort-vibrant
+                                focus:ring-0 focus:ring-none
+                                focus:border-none
+                                focus:outline-none
+                                checked:bg-passfort-vibrant
+                                "
+                            />
+                            <label
+                                htmlFor="lowercase-checkbox"
+                                className="ms-2 font-medium text-passfort-vibrant">
+                                Lowercase
+                            </label>
+                        </div>
 
-                <div>
-                    <div className="flex items-center">
+                        <div className="flex items-center gap-2 px-4">
+                            <input
+                                id="uppercase-checkbox"
+                                type="checkbox"
+                                defaultChecked={isBitChecked(
+                                    generatedPasswordOptions,
+                                    0b0010
+                                )}
+                                onChange={(e) =>
+                                    setGeneratedPasswordOptions(
+                                        (prev) => prev ^ 0b0010
+                                    )
+                                }
+                                className="
+                                appearance-none
+                                w-5 h-5 rounded
+                                bg-passfort-vibrant/10 border
+                                border-passfort-vibrant
+                                focus:ring-0 focus:ring-none
+                                focus:border-none
+                                focus:outline-none
+                                checked:bg-passfort-vibrant
+                                "
+                            />
+                            <label
+                                htmlFor="uppercase-checkbox"
+                                className="ms-2 font-medium text-passfort-vibrant">
+                                Uppercase
+                            </label>
+                        </div>
+                        <div className="flex items-center gap-2 px-4">
+                            <input
+                                id="numbers-checkbox"
+                                type="checkbox"
+                                defaultChecked={isBitChecked(
+                                    generatedPasswordOptions,
+                                    0b0100
+                                )}
+                                onChange={(e) =>
+                                    setGeneratedPasswordOptions(
+                                        (prev) => prev ^ 0b0100
+                                    )
+                                }
+                                className="
+                                appearance-none
+                                w-5 h-5 rounded
+                                bg-passfort-vibrant/10 border
+                                border-passfort-vibrant
+                                focus:ring-0 focus:ring-none
+                                focus:border-none
+                                focus:outline-none
+                                checked:bg-passfort-vibrant
+                                "
+                            />
+                            <label
+                                htmlFor="numbers-checkbox"
+                                className="ms-2 font-medium text-passfort-vibrant">
+                                Numbers
+                            </label>
+                        </div>
+
+                        <div className="flex items-center gap-2 px-4">
+                            <input
+                                id="symbols-checkbox"
+                                type="checkbox"
+                                defaultChecked={isBitChecked(
+                                    generatedPasswordOptions,
+                                    0b1000
+                                )}
+                                onChange={(e) =>
+                                    setGeneratedPasswordOptions(
+                                        (prev) => prev ^ 0b1000
+                                    )
+                                }
+                                className="
+                                appearance-none
+                                w-5 h-5 rounded
+                                bg-passfort-vibrant/10 border
+                                border-passfort-vibrant
+                                focus:ring-0 focus:ring-none
+                                focus:border-none
+                                focus:outline-none
+                                checked:bg-passfort-vibrant
+                                "
+                            />
+                            <label
+                                htmlFor="symbols-checkbox"
+                                className="ms-2 font-medium text-passfort-vibrant">
+                                Symbols
+                            </label>
+                        </div>
+                    </div>
+
+                    <div className="w-[42rem]">
+                        <label htmlFor="password-length-slider">Length</label>
                         <input
-                            id="default-checkbox"
-                            type="checkbox"
-                            value=""
-                            className="w-4 h-4 text-blue-600 rounded  focus:ring-blue-600 ring-offset-gray-800 focus:ring-2 bg-gray-700 border-gray-600"
+                            id="password-length-slider"
+                            className="range w-full h-2 rounded-lgcursor-pointer bg-passfort-vibrant/10 mb-6 accent-passfort-vibrant"
+                            type="range"
+                            defaultValue={generatedPasswordLength}
+                            min={8}
+                            max={64}
+                            step={8}
+                            onChange={(event) =>
+                                setGeneratedPasswordLength(
+                                    parseInt(event.target.value, 10)
+                                )
+                            }
                         />
-                        <label
-                            htmlFor="default-checkbox"
-                            className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">
-                            Default checkbox
-                        </label>
+                        <div className="relative w-full mb-4">
+                            <span className="text-sm text-passfort-vibrant absolute start-0 -bottom-2">
+                                Min (8)
+                            </span>
+                            {[16, 24, 32, 40, 48, 56].map((value, index) => (
+                                <span
+                                    key={value}
+                                    className="text-sm text-passfort-vibrant absolute -bottom-2"
+                                    style={{
+                                        left: `${((index + 1) / 7) * 100}%`,
+                                        transform: "translateX(-50%)",
+                                    }}>
+                                    {value}
+                                </span>
+                            ))}
+                            <span className="text-sm text-passfort-vibrant absolute end-0 -bottom-2">
+                                Max (64)
+                            </span>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <div
-                className={`flex gap-4 px-3 py-2 rounded-lg border w-fit ${
+                className={`flex gap-4 px-3 py-2 rounded-lg border w-full ${
                     copySuccess
                         ? "bg-green-900/10 border-green-700"
                         : "bg-passfort-vibrant/10 border-passfort-vibrant"
                 }`}>
                 <input
-                    className={`bg-transparent h-8 ${
+                    className={`bg-transparent w-full h-8 ${
                         copySuccess ? "text-green-500" : "text-passfort-vibrant"
                     }`}
                     value={copySuccess ? "Copied!" : generatedPassword}
@@ -458,7 +582,13 @@ function MasterPasswordPanel() {
                     </svg>
                 </button>
 
-                <button onClick={() => generatePassword()}>
+                <button
+                    onClick={() =>
+                        generatePassword(
+                            generatedPasswordLength,
+                            generatedPasswordOptions
+                        )
+                    }>
                     <svg
                         className={`w-8 h-8 ${
                             copySuccess
