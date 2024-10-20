@@ -104,14 +104,14 @@ export const Dialog = forwardRef<DialogMethods, DialogProps>(function Dialog(
         <dialog
             ref={dialogRef}
             id={id}
-            className="relative bg-zinc-900 text-white p-3 rounded-xl backdrop:bg-black/50 backdrop:backdrop-blur-sm"
+            className="relative bg-passfort-vibrant/10 border border-passfort-vibrant text-white p-3 rounded-xl backdrop:bg-black/50 backdrop:backdrop-blur-sm"
             onClick={checkClose}>
             {children}
 
             {withCloseButton && (
                 <button
                     type="button"
-                    className="absolute top-4 right-2 w-6 h-6 rounded-lg text-zinc-400"
+                    className="absolute top-4 right-2 w-6 h-6 rounded-lg text-passfort-vibrant"
                     onClick={closeModal}
                     aria-label="Close">
                     <span className="sr-only">Close</span>
