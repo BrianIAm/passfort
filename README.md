@@ -41,4 +41,6 @@ Contributions are not allowed at the moment but will be a possibility after the 
 
 ## **Screenshots**
 
-![Homepage](./public/screenshot_homepage.png)
+![Passwords](./public/passfort_poldd9Ke6J.png)
+![Master Password](./public/passfort_0jm3LKmaCH.png)
+![Configure Master Password](./public/passfort_hljjW8QtV7.png)
