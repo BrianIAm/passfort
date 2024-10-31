@@ -1,6 +1,7 @@
 import "./globals.css";
 import { Poppins } from "next/font/google";
 import Navbar from "#/components/Navbar";
+import { ToastProvider, ToastContext } from "#/context/ToastContext";
 import type { Metadata } from "next";
 
 const poppins = Poppins({

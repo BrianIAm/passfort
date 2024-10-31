@@ -25,7 +25,7 @@ export default function Navbar() {
                     <li>
                         <Link
                             href="/"
-                            className="flex items-center p-2 rounded-lg text-passfort-vibrant font-bold text-lg border border-passfort-vibrant">
+                            className="flex items-center p-2 rounded-lg text-passfort-vibrant font-bold text-lg border border-passfort-vibrant hover:bg-passfort-vibrant/10">
                             <svg
                                 className="flex-shrink-0 w-8 h-8 transition duration-75 text-passfort-vibrant"
                                 aria-hidden="true"
@@ -50,7 +50,7 @@ export default function Navbar() {
                     <li>
                         <Link
                             href="/master-password"
-                            className="flex items-center p-2 rounded-lg text-passfort-vibrant font-bold text-lg border border-passfort-vibrant">
+                            className="flex items-center p-2 rounded-lg text-passfort-vibrant font-bold text-lg border border-passfort-vibrant hover:bg-passfort-vibrant/10">
                             <svg
                                 className="flex-shrink-0 w-8 h-8 transition duration-75 text-passfort-vibrant"
                                 aria-hidden="true"
@@ -77,7 +77,7 @@ export default function Navbar() {
                     <li>
                         <Link
                             href="/about"
-                            className="flex items-center p-2 rounded-lg text-passfort-vibrant font-bold text-lg border border-passfort-vibrant">
+                            className="flex items-center p-2 rounded-lg text-passfort-vibrant font-bold text-lg border border-passfort-vibrant hover:bg-passfort-vibrant/10">
                             <svg
                                 className="flex-shrink-0 w-8 h-8 transition duration-75 text-passfort-vibrant"
                                 aria-hidden="true"

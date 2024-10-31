@@ -14,12 +14,12 @@ name = "app_lib"
 crate-type = ["staticlib", "cdylib", "rlib"]
 
 [build-dependencies]
-tauri-build = { version = "2", features = [] }
+tauri-build = { version = "2.0.2", features = [] }
 
 [dependencies]
-serde_json = "1.0.128"
-serde = { version = "1.0.210", features = ["derive"] }
-tauri = { version = "2", features = [] }
+serde_json = "1.0.132"
+serde = { version = "1.0.214", features = ["derive"] }
+tauri = { version = "2.0.6", features = [] }
 aes-gcm = "0.10.3"
 rand = "0.8.5"
 pbkdf2 = "0.12.2"
@@ -28,10 +28,10 @@ tauri-plugin-clipboard-manager = "2.0.0-beta.0"
 tauri-plugin-os = "2"
 tauri-plugin-process = "2"
 tauri-plugin-notification = "2"
-tauri-plugin-shell = "2"
-tauri-plugin-fs = "2"
-tauri-plugin-dialog = "2"
-tauri-plugin-http = "2"
+tauri-plugin-shell = "2.0.2"
+tauri-plugin-fs = "2.0.3"
+tauri-plugin-dialog = "2.0.3"
+tauri-plugin-http = "2.0.3"
 
 [features]
 # this feature is used for production builds or when `devPath` points to the filesystem and the built-in dev server is disabled.

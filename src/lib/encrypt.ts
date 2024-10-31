@@ -1,5 +1,9 @@
 import { invoke } from "@tauri-apps/api/core";
 
+/**
+ * These are bindings for the rust backend commands.
+ */
+
 export async function encrypt(
     data: string,
     masterPassword: string

@@ -1,19 +1,10 @@
 "use client";
 
 import { Dialog } from "#/components/Dialog";
-import { encrypt, decrypt } from "#/util/encrypt";
-import { getStoredPasswords, setStoredPasswords } from "#/util/fs";
+import { encrypt, decrypt } from "#/lib/encrypt";
+import { getStoredPasswords, setStoredPasswords } from "#/lib/fs";
 import { type Password } from "#/types/password";
 import React, { useState, useEffect } from "react";
-
-/*
-#380f17
-#08f0b13
-#dc2011
-#efdfc5
-#252b2b
-#4c4f54
-*/
 
 export default function Home() {
     const [passwords, setPasswords] = useState<Password[]>([]);
@@ -33,12 +24,14 @@ export default function Home() {
         setPasswords(updatedPasswords);
     };
 
-    useEffect(() => {
-        const watcherInterval = setInterval(async () => {
-            const latestPasswords = await getStoredPasswords();
-            setPasswords(latestPasswords);
-        }, 3_000);
+    const loadPasswords = async () => {
+        setPasswords(await getStoredPasswords());
+    };
 
+    useEffect(() => {
+        const watcherInterval = setInterval(loadPasswords, 3_000);
+
+        loadPasswords();
         return () => clearInterval(watcherInterval);
     }, []);
 
@@ -207,6 +200,7 @@ function AddPasswordPanel({
             name: name.value,
             associated_identifier: identifier.value,
             value: password.value,
+            last_updated: Date.now(),
         });
 
         setIsPanelShowing(false);
@@ -278,14 +272,14 @@ function AddPasswordPanel({
                 </label>
 
                 <div className="mt-4 flex gap-4 justify-end">
-                    <button
+                    {/* <button
                         onClick={test}
                         type="button"
                         className="px-4 py-2 font-semibold first-line:py-1 rounded-lg border border-passfort-vibrant">
                         Test
-                    </button>
+                    </button> */}
                     <button className="px-4 py-2 font-semibold first-line:py-1 rounded-lg border border-passfort-vibrant">
-                        Add password
+                        Add new password
                     </button>
                 </div>
             </form>
