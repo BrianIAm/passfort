@@ -24,10 +24,9 @@ export default function RootLayout({
             <body
                 className={`${poppins.className} relative bg-zinc-900 text-white z-10`}>
                 <BackgroundGlow />
-                <div className="relative flex z-10">
-                    <Navbar />
-                    {children}
-                </div>
+                <Navbar />
+
+                <div className="relative flex z-10 ml-64">{children}</div>
             </body>
         </html>
     );
@@ -35,7 +34,7 @@ export default function RootLayout({
 
 function BackgroundGlow() {
     return (
-        <div className="absolute inset-0 flex justify-center items-center z-0">
+        <div className="absolute inset-0 flex justify-center items-center z-0 h-screen">
             <div className="w-[32rem] h-[32rem] bg-passfort-vibrant rounded-full blur-[350px]"></div>
         </div>
     );

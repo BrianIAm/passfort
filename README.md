@@ -33,7 +33,7 @@ This project is licensed under the GNU General Public License v3.0 - see the [LI
 
 ## **Intallation**
 
-To be decided
+To be implemented
 
 ## **Contributing**
 
