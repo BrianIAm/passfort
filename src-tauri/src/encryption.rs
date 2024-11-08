@@ -18,6 +18,7 @@ const SALT_LENGTH: usize = 32;
 const NONCE_LENGTH: usize = 12;
 // The key length is 256 bits (32 bytes) because we are using AES-256
 const KEY_LENGTH: usize = 32;
+const ITERATIONS: u32 = 100_000;
 
 #[derive(serde::Serialize)]
 pub struct FileKeys {
@@ -52,40 +53,35 @@ pub fn derive_key(password: String, salt: &str, iterations: u32) -> Result<[u8; 
 
 #[tauri::command]
 pub fn encrypt(data: String, master_password: String) -> Result<String, String> {
-    // Early validation
     if data.is_empty() || master_password.is_empty() {
         return Err("Invalid input data".to_string());
     }
 
     let mut rng = rand::thread_rng();
     
-    // Generate salt with error handling
+    // Generate salt
     let mut salt = [0u8; SALT_LENGTH];
     rng.try_fill_bytes(&mut salt).map_err(|e| e.to_string())?;
-    let salt = hex::encode(salt);
+    let salt_hex = hex::encode(&salt);  // Store salt_hex for key derivation
 
-    // Derive key as raw bytes now
-    let key = derive_key(master_password, &salt, 10_000)?;
+    // Derive key using the hex-encoded salt
+    let key = derive_key(master_password, &salt_hex, ITERATIONS)?;
     
-    // Use raw bytes directly with cipher
     let cipher = Aes256Gcm::new_from_slice(&key)
         .map_err(|e| format!("Failed to create cipher: {}", e))?;
 
-
-    // Generate nonce with error handling
     let mut nonce = [0u8; NONCE_LENGTH];
     rng.try_fill_bytes(&mut nonce).map_err(|e| e.to_string())?;
     let nonce = Nonce::from_slice(&nonce);
 
-    // Encrypt with proper error handling
     let ciphertext = cipher
         .encrypt(nonce, data.as_bytes())
         .map_err(|e| format!("Encryption failed: {}", e))?;
 
-    // Combine without debug prints
+    // Important: Use the original salt bytes, not the hex-encoded version
     let mut encrypted_bytes = Vec::with_capacity(SALT_LENGTH + NONCE_LENGTH + ciphertext.len());
-    encrypted_bytes.extend_from_slice(&hex::decode(&salt).unwrap());
-    encrypted_bytes.extend_from_slice(&nonce);
+    encrypted_bytes.extend_from_slice(&salt);  // Use original salt bytes
+    encrypted_bytes.extend_from_slice(nonce.as_slice());
     encrypted_bytes.extend_from_slice(&ciphertext);
 
     Ok(hex::encode(encrypted_bytes))
@@ -98,8 +94,8 @@ pub fn decrypt(encrypted_data: String, master_password: String) -> Result<String
     }
     
     // Decode the encrypted data from a hexadecimal string to a byte array
-    let encrypted_bytes =
-        hex::decode(&encrypted_data).map_err(|e| format!("Invalid encrypted data: {}", e))?;
+    let encrypted_bytes = hex::decode(&encrypted_data)
+        .map_err(|e| format!("Invalid encrypted data: {}", e))?;
 
     // Ensure that the encrypted data is long enough to contain the salt, nonce, and ciphertext
     if encrypted_bytes.len() < SALT_LENGTH + NONCE_LENGTH {
@@ -110,23 +106,29 @@ pub fn decrypt(encrypted_data: String, master_password: String) -> Result<String
     let (salt, rest) = encrypted_bytes.split_at(SALT_LENGTH);
     let (nonce, ciphertext) = rest.split_at(NONCE_LENGTH);
 
-    // Encode the salt as a hexadecimal string so that it can be used
-    // by the derive_key function
-    let salt = hex::encode(salt);
+    // Important: Use the salt bytes directly instead of hex encoding them again
+    let key = derive_key(master_password, &hex::encode(salt), ITERATIONS)?;
 
-    // Decode the salt, nonce, and ciphertext from hexadecimal strings to byte arrays
-    let key = derive_key(master_password, &salt, 100_000)?;
-    let cipher =
-        Aes256Gcm::new_from_slice(&key).map_err(|e| format!("Failed to create cipher: {}", e))?;
+    // Validation checks after key derivation
+    if key.len() != KEY_LENGTH {
+        return Err("Invalid key length".to_string());
+    } else if nonce.len() != NONCE_LENGTH {
+        return Err("Invalid nonce length".to_string());
+    } else if salt.len() != SALT_LENGTH {
+        return Err("Invalid salt length".to_string());
+    }
+
+    let cipher = Aes256Gcm::new_from_slice(&key)
+        .map_err(|e| format!("Failed to create cipher: {}", e))?;
 
     let nonce = Nonce::from_slice(nonce);
 
-    // Decrypt the data using the cipher and the nonce
     let plaintext = cipher
         .decrypt(nonce, ciphertext)
         .map_err(|e| format!("Decryption failed: {}", e))?;
 
-    String::from_utf8(plaintext).map_err(|e| format!("Invalid UTF-8 in decrypted data: {}", e))
+    String::from_utf8(plaintext)
+        .map_err(|e| format!("Invalid UTF-8 in decrypted data: {}", e))
 }
 
 // Genereate a random master password for the client

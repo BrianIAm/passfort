@@ -274,13 +274,14 @@ function UpdateMasterPasswordDialog({
     hasMasterPassword: boolean;
 }) {
     const [previousMasterPassword, setPreviousMasterPassword] = useState("");
-    const [errors, setErrors] = useState({
-        previousMasterPassword: "This is a test",
-        general: "This is also a test",
-    });
-
     const [copySuccess, setCopySuccess] = useState(false);
     const [hasConsented, setHasConsented] = useState(false);
+
+    const [errors, setErrors] = useState({
+        previousMasterPassword: "",
+        general: "",
+    });
+
     const [consents, setConsents] = useState({
         dataLoss: false,
         replacesOldPassword: false,
@@ -298,7 +299,7 @@ function UpdateMasterPasswordDialog({
     };
 
     const updateMasterPassword = async () => {
-        // These should not be possible
+        // This should not be possible
         // but just in case
         if (!hasConsented) {
             return;
@@ -318,18 +319,19 @@ function UpdateMasterPasswordDialog({
                 }
 
                 // If the user had a previous master password
-                // there may be passwords that need to be re-encoded
+                // there may be passwords that need to be re-encrypted
                 const passwords = await getStoredPasswords();
 
-                // Re-encode them with the new master password
+                // Re-encrypt them with the new master password
                 const updatedPasswords = await Promise.all(
                     passwords.map(async (password) => {
                         const decrypted = await decrypt(
                             password.value,
                             previousMasterPassword
                         );
+
                         if (!decrypted) {
-                            throw new Error(`Invalid previous master password`);
+                            throw new Error("Invalid previous master password");
                         }
                         const encrypted = await encrypt(
                             decrypted,
@@ -351,6 +353,8 @@ function UpdateMasterPasswordDialog({
 
             await saveMasterPasswordVerification(newMasterPassword);
             toggleDialog(false);
+
+            // Redirect to the vault
             window.location.assign("/");
         } catch (err) {
             setErrors((prev) => ({

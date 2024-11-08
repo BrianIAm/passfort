@@ -1,46 +1,82 @@
-![logo](./src-tauri/icons/128x128.png)
+<div align="center">
+  <img src="./public/logo.png" alt="PassFort Logo" width="128" height="128"/>
+  <h1>PassFort</h1>
+  <p>A secure, encrypted, and offline-first password manager</p>
 
-# **PassFort**
-
-A secure and encrypted desktop application for managing passwords.
-
-![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Mac%20%7C%20Linux-blue)  
-![License](https://img.shields.io/github/license/BrianTib/passfort)  
-![Version](https://img.shields.io/github/v/release/BrianTib/passfort)  
+![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Mac%20%7C%20Linux-blue)
+![License](https://img.shields.io/github/license/BrianTib/passfort)
+![Version](https://img.shields.io/github/v/release/BrianTib/passfort)
 ![Contributions](https://img.shields.io/badge/contributions-soon-yellow)
 
-## **Table of Contents**
+</div>
 
-1. [Features](#features)
-2. [License](#license)
-3. [Installation](#installation)
-4. [Contributing](#contributing)
-5. [Screenshots](#screenshots)
+## **Overview**
+
+PassFort is a desktop application that helps you securely manage and store passwords. Using AES-256 encryption and running completely offline, PassFort ensures your credentials remain private and secure.
+
+![Home](./public/screenshots/passfort_vault-example.png)
 
 ## **Features**
 
--   Completely free, offline and open-source
--   Out-of-the-box AES-256 encryption for all stored passwords
--   Multi-platform support (Windows, macOS, Linux)
--   User-friendly interface for easy password management
--   Secure password generation tool
--   Auto-lock after inactivity
--   Unlimited password storage
+-   🔒 **Secure Storage**: AES-256 encryption for all stored passwords
+-   🔐 **Master Password**: Single master password to access all your credentials
+-   🌐 **Cross-Platform**: Available for Windows, macOS, and Linux
+-   ⚡ **Fast & Offline**: Works without internet connection
+-   🎯 **Auto-Lock**: Automatic locking after inactivity
+-   🔄 **Password Generator**: Built-in secure password generation
+-   ∞ **Unlimited Storage**: No limits on number of passwords
 
-## **License**
+## **Installation**
 
-This project is licensed under the GNU General Public License v3.0 - see the [LICENSE](./LICENSE) file for details.
+### System Requirements
 
-## **Intallation**
+-   Windows 10/11, macOS 10.15+, or Linux
+-   200MB free disk space
+-   2GB RAM minimum
 
-To be implemented
+### Download
+
+Download the latest release for your platform from the [releases page](https://github.com/BrianTib/passfort/releases).
+
+## **Usage**
+
+1. **First Launch**: Create your master password
+   ![Master Password](./public/screenshots/passfort_master_password.png)
+
+2. **Adding Passwords**: Click the "+" button or "Add new password" to add new credentials
+   ![Add Password](./public/screenshots/passfort_add-password.png)
+
+3. **Viewing Passwords**: Access your vault using your master password
+   ![Vault](./public/screenshots/passfort-vault-unlocked.png)
+
+## **Security**
+
+-   All passwords are encrypted using AES-256
+-   Master password is never stored by the application
+-   No cloud storage or network connectivity required
+-   Regular security audits and updates by our community members
 
 ## **Contributing**
 
-Contributions are not allowed at the moment but will be a possibility after the 1.0.0 release.
+Contributions will be welcome after the 1.0.0 release. Please read our [Contributing Guidelines](./.github/CONTRIBUTING.md) for more information.
 
-## **Screenshots**
+## **Important Notice**
 
-![Passwords](./public/passfort_poldd9Ke6J.png)
-![Master Password](./public/passfort_0jm3LKmaCH.png)
-![Configure Master Password](./public/passfort_hljjW8QtV7.png)
+⚠️ **Your master password cannot be recovered if lost**. Make sure to:
+
+-   Store it securely
+-   Create a backup
+-   Never share it with anyone
+
+## **License**
+
+PassFort is licensed under the GNU General Public License v3.0 - see the [LICENSE](./LICENSE) file for details.
+
+## **Support**
+
+-   🐛 [Report Issues](https://github.com/BrianTib/passfort/issues)
+-   💡 [Feature Requests](https://github.com/BrianTib/passfort/issues)
+
+---
+
+Made with ❤️ by [Brian T.](https://github.com/BrianTib) and (soon) contributors.

@@ -61,7 +61,7 @@ export default function Page() {
                         3.{" "}
                         <span className="font-medium">Access when needed</span>{" "}
                         - Unlock your password vault using your master password.
-                        For security, access expires after 30 seconds of
+                        For security, access expires after 60 seconds of
                         inactivity.
                     </li>
                 </ol>
@@ -96,7 +96,7 @@ export default function Page() {
                     <li className="p-4 rounded-lg border border-passfort-vibrant bg-passfort-vibrant/10">
                         <h4 className="font-medium mb-2">Auto-Lock</h4>
                         <p className="text-passfort-vibrant">
-                            Automatic locking after 30 seconds of inactivity
+                            Automatic locking after 60 seconds of inactivity
                         </p>
                     </li>
                     <li className="p-4 rounded-lg border border-passfort-vibrant bg-passfort-vibrant/10">

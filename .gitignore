@@ -19,6 +19,8 @@ package-lock.json
 # production
 /build
 
+/src/app/development/
+
 # misc
 .DS_Store
 *.pem

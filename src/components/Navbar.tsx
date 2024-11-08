@@ -10,6 +10,7 @@ import {
     InfoIcon,
     ExclamationIcon,
     CogIcon,
+    HammerIcon,
 } from "#/icons";
 
 export default function Navbar() {
@@ -38,6 +39,14 @@ export default function Navbar() {
             icon: CogIcon,
         },
     ];
+
+    // if (process.env.NODE_ENV === "development") {
+    //     navItems.push({
+    //         name: "Development",
+    //         href: "/development",
+    //         icon: HammerIcon,
+    //     });
+    // }
 
     return (
         <nav className="fixed h-screen w-64 flex-col" aria-label="Sidebar">

@@ -1,6 +1,8 @@
 import {
     writeFile,
     readFile,
+    readDir,
+    remove,
     mkdir,
     BaseDirectory,
     exists,
@@ -106,19 +108,23 @@ export async function getMasterPasswordVerification(): Promise<string | null> {
 }
 
 export async function saveMasterPasswordVerification(masterPassword: string) {
-    console.log("Saving master password verification");
     await ensureAppDataDirectoryExists();
-    console.log("Ensured app data directory exists");
     const { verification: verificationFileName } = await getFileNames();
 
-    console.log("Got file names");
     const verification = await createMasterPasswordVerification(masterPassword);
-    console.log("Created verification");
     const data = toBinary(verification);
 
     await writeFile(`${verificationFileName}.bin`, data, {
         baseDir: BaseDirectory.AppData,
     });
+}
 
-    console.log("Wrote verification to file");
+export async function deleteAllData() {
+    try {
+        const entries = await readDir("", { baseDir: BaseDirectory.AppData });
+
+        for (const entry of entries) {
+            await remove(entry.name, { baseDir: BaseDirectory.AppData });
+        }
+    } catch {}
 }

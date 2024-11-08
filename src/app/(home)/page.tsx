@@ -1,7 +1,7 @@
 "use client";
 
 import { Dialog } from "#/components/Dialog";
-import { encrypt, decrypt } from "#/lib/encrypt";
+import { encrypt, decrypt, verifyMasterPassword } from "#/lib/encrypt";
 import { type Password } from "#/types/password";
 import Link from "next/link";
 import React, { useState, useEffect } from "react";
@@ -22,7 +22,7 @@ import {
     ShieldIcon,
 } from "#/icons";
 
-const UNLOCK_DURATION = 30_000; // 30 seconds
+const UNLOCK_DURATION = 60_000; // 30 seconds
 
 export default function Page() {
     const [passwords, setPasswords] = useState<Password[]>([]);
@@ -209,7 +209,9 @@ function AddPasswordModal({
     setIsModalShowing: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
     const [errors, setErrors] = useState<{ [key: string]: string }>({
-        masterPassword: "This is a test",
+        name: "",
+        password: "",
+        masterPassword: "",
     });
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -229,11 +231,30 @@ function AddPasswordModal({
         ) as HTMLInputElement;
 
         const newErrors: { [key: string]: string } = {};
-        if (!name.value) newErrors.name = "Name is required";
-        if (!password.value) newErrors.password = "Password is required";
-        if (masterPassword.value && masterPassword.value.length < 8) {
+
+        if (!name.value) {
+            newErrors.name = "Name is required";
+        }
+
+        if (!password.value) {
+            newErrors.password = "Password is required";
+        }
+
+        if (!masterPassword.value) {
+            newErrors.masterPassword = "Master password is required";
+        }
+
+        if (
+            masterPassword.value.length < 8 ||
+            masterPassword.value.length > 64
+        ) {
             newErrors.masterPassword =
-                "Master password must be at least 8 characters";
+                "Master password must be between 8 and 64 characters";
+        }
+
+        const isVerified = await verifyMasterPassword(masterPassword.value);
+        if (!isVerified) {
+            newErrors.masterPassword = "Incorrect master password";
         }
 
         if (Object.keys(newErrors).length > 0) {
@@ -277,7 +298,8 @@ function AddPasswordModal({
                             <input
                                 type="text"
                                 id="name"
-                                className={`bg-passfort/25 w-full p-3 rounded-lg border ${
+                                className={`bg-passfort/25 w-full p-3 rounded-lg border[&:autofill]:bg-none [&:-webkit-autofill]:bg-none
+                                ${
                                     errors.name
                                         ? "border-red-500 focus:border-red-500"
                                         : "border-passfort-vibrant/50 focus:border-passfort-vibrant"
@@ -300,8 +322,7 @@ function AddPasswordModal({
                             <input
                                 type="text"
                                 id="identifier"
-                                className="bg-passfort/25 w-full p-3 rounded-lg border border-passfort-vibrant/50 
-                                             focus:border-passfort-vibrant focus:ring-0 transition-colors"
+                                className="bg-passfort/25 w-full p-3 rounded-lg border border-passfort-vibrant/50 focus:border-passfort-vibrant focus:ring-0 transition-colors"
                             />
                             <p className="mt-1 text-xs text-passfort-vibrant/75">
                                 Username or email associated with this password
@@ -354,7 +375,8 @@ function AddPasswordModal({
                             <label
                                 htmlFor="master-password"
                                 className="block font-medium text-passfort-vibrant mb-1">
-                                Master Password
+                                Master Password{" "}
+                                <span className="text-red-500">*</span>
                             </label>
                             <input
                                 type="password"
@@ -402,6 +424,32 @@ function UnlockPasswordsModal({
     setIsModalShowing: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
     const [currentPassword, setCurrentPassword] = useState<string>("");
+    const [error, setError] = useState("");
+
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        setError("");
+
+        const form = event.currentTarget;
+        const masterPassword = form.elements.namedItem(
+            "master-password"
+        ) as HTMLInputElement;
+
+        if (!masterPassword.value) {
+            setError("Master password is required");
+            return;
+        }
+
+        const isVerified = await verifyMasterPassword(masterPassword.value);
+
+        if (!isVerified) {
+            setError("Incorrect master password");
+            return;
+        }
+
+        setMasterPassword(masterPassword.value);
+        setIsModalShowing(false);
+    };
 
     return (
         <Dialog onClose={() => setIsModalShowing(false)}>
@@ -410,15 +458,10 @@ function UnlockPasswordsModal({
                     Unlock Your Passwords
                 </h2>
                 <p className="mb-4">
-                    Enter your master password to temporarily unlock your stored
+                    Enter your master password to temporarily access your stored
                     passwords.
                 </p>
-                <form
-                    onSubmit={(event) => {
-                        event.preventDefault();
-                        setMasterPassword(currentPassword);
-                        setIsModalShowing(false);
-                    }}>
+                <form onSubmit={handleSubmit}>
                     <input
                         type="password"
                         id="master-password"
@@ -428,6 +471,14 @@ function UnlockPasswordsModal({
                         onChange={(e) => setCurrentPassword(e.target.value)}
                         className="bg-transparent w-full text-passfort-vibrant border border-passfort-vibrant rounded-lg px-2 focus:ring-0 focus:border-passfort-vibrant"
                     />
+
+                    {error && (
+                        <div className="flex items-center mt-2 text-sm text-red-500">
+                            <ExclamationIcon className="w-4 h-4 mr-1" />
+                            {error}
+                        </div>
+                    )}
+
                     <button
                         type="submit"
                         className="mt-4 text-white px-4 py-2 rounded font-semibold bg-passfort-vibrant">

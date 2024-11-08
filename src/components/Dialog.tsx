@@ -5,6 +5,7 @@ import React, {
     useCallback,
     useImperativeHandle,
     forwardRef,
+    useState,
 } from "react";
 
 interface DialogProps {
@@ -62,6 +63,7 @@ export const Dialog = forwardRef<DialogMethods, DialogProps>(function Dialog(
             if (!dialogRef.current) {
                 return;
             }
+
             const dimensions = dialogRef.current.getBoundingClientRect();
 
             if (
@@ -73,7 +75,7 @@ export const Dialog = forwardRef<DialogMethods, DialogProps>(function Dialog(
                 closeModal();
             }
         },
-        [dialogRef, closeModal]
+        [closeModal]
     );
 
     useImperativeHandle(
@@ -105,7 +107,7 @@ export const Dialog = forwardRef<DialogMethods, DialogProps>(function Dialog(
             ref={dialogRef}
             id={id}
             className="relative bg-passfort-vibrant/10 border border-passfort-vibrant text-white p-3 rounded-xl backdrop:bg-black/50 backdrop:backdrop-blur-sm backdrop-blur"
-            onClick={checkClose}>
+            onMouseDown={checkClose}>
             {children}
 
             {withCloseButton && (

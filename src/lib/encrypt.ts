@@ -27,7 +27,10 @@ export async function encrypt(
         ]);
         return result as string;
     } catch (error) {
-        console.error("Encryption failed:", error);
+        // Very rarely this will error because of erroneous code
+        // this error will happen most commonly when the master password
+        // is incorrect
+        // Same applies to the decrypt function
         throw error;
     }
 }
@@ -48,7 +51,6 @@ export async function decrypt(
         ]);
         return result as string;
     } catch (error) {
-        console.error("Decryption failed:", error);
         throw error;
     }
 }
@@ -87,14 +89,14 @@ async function generateVerificationHash(
     // Generate a unique salt for each verification
     const salt = await invoke<string>("generate_random_salt", {});
 
-    // Create hash using PBKDF2 with different iteration counts
+    // Create hash using PBKDF2. This returns a buffer
     const key = await invoke<number[]>("derive_key", {
         password: masterPassword,
         salt,
         iterations,
     });
 
-    // Convert array to hex string if needed
+    // Convert the key to a hex string
     const hash = Buffer.from(key).toString("hex");
 
     return { salt, hash, iterations };
@@ -113,7 +115,7 @@ export async function verifyMasterPassword(password: string): Promise<boolean> {
         // Uses Promise.all for concurrent verification but requires ALL to pass
         const results = await Promise.all(
             verifications.map(async (v) => {
-                const testHash = await invoke<string>("derive_key", {
+                const testBuffer = await invoke<string>("derive_key", {
                     password,
                     salt: v.salt,
                     iterations: v.iterations,
@@ -121,7 +123,7 @@ export async function verifyMasterPassword(password: string): Promise<boolean> {
 
                 // Time-constant comparison to prevent timing attacks
                 return await invoke<boolean>("constant_time_compare", {
-                    a: testHash,
+                    a: Buffer.from(testBuffer).toString("hex"),
                     b: v.hash,
                 });
             })
