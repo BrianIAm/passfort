@@ -1,6 +1,6 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 mod encryption;
-use encryption::{decrypt, encrypt, generate_master_password};
+use encryption::{decrypt, encrypt, generate_master_password, constant_time_compare, generate_random_salt, generate_file_keys, derive_key};
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
@@ -17,7 +17,11 @@ pub fn run() {
         .invoke_handler(tauri::generate_handler![
             encrypt,
             decrypt,
-            generate_master_password
+            generate_master_password,
+            constant_time_compare,
+            generate_file_keys,
+            derive_key,
+            generate_random_salt
         ])
         .run(tauri::generate_context!())
         .expect("Error while running tauri application");

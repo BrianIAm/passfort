@@ -3,14 +3,19 @@ import React, { useEffect, useState } from "react";
 import { writeText as writeTextToClipboard } from "@tauri-apps/plugin-clipboard-manager";
 import { generateMasterPassword, encrypt, decrypt } from "#/lib/encrypt";
 import { Dialog } from "#/components/Dialog";
-import { getStoredPasswords, setStoredPasswords } from "#/lib/fs";
+import {
+    getStoredPasswords,
+    setStoredPasswords,
+    getMasterPasswordVerification,
+    hasMasterPasswordVerification,
+    saveMasterPasswordVerification,
+} from "#/lib/fs";
 import {
     ShieldIcon,
     CopyIcon,
-    ClipboardIcon,
     SaveIcon,
     GenerateIcon,
-    ClipboardCheckIcon,
+    ExclamationIcon,
 } from "#/icons";
 
 export default function Page() {
@@ -20,6 +25,7 @@ export default function Page() {
         useState(0b1111);
     const [generatedPasswordLength, setGeneratedPasswordLength] = useState(8);
     const [showUpdatePasswordDialog, setUpdatePasswordDialog] = useState(false);
+    const [hasMasterPassword, setHasMasterPassword] = useState(false);
 
     const generationOptions = [
         {
@@ -57,7 +63,12 @@ export default function Page() {
 
     const handleToggleBit = (bit: number) => {
         // Toggle the bit
-        const updatedBitfield = generatedPasswordOptions ^ bit;
+        let updatedBitfield = generatedPasswordOptions ^ bit;
+        // If none of the bits are set, set all of them
+        if (updatedBitfield === 0) {
+            updatedBitfield = 0b1111;
+        }
+
         // Update the bitfield and regenerate the password
         setGeneratedPasswordOptions(updatedBitfield);
         generatePassword(generatedPasswordLength, updatedBitfield);
@@ -77,6 +88,13 @@ export default function Page() {
         generatePassword(null, null);
     }, []);
 
+    // Check if the user has set a master password before
+    useEffect(() => {
+        hasMasterPasswordVerification().then((hasMasterPassword) => {
+            setHasMasterPassword(hasMasterPassword);
+        });
+    }, []);
+
     return (
         <main className="flex-1 px-8 py-4 max-w-7xl">
             <div className="flex justify-between items-center mb-6">
@@ -91,7 +109,7 @@ export default function Page() {
             {/* Security Notice */}
             <div className="p-6 rounded-lg border border-red-500 bg-red-500/10 mb-8">
                 <div className="flex items-center mb-4">
-                    <ShieldIcon className="w-6 h-6 text-red-500 mr-2" />
+                    <ShieldIcon className="w-6 h-6 text-red-400 mr-2" />
                     <h3 className="text-xl font-bold text-red-400">
                         Important Security Notice
                     </h3>
@@ -135,8 +153,7 @@ export default function Page() {
                                         option.bit
                                     )}
                                     onChange={() => handleToggleBit(option.bit)}
-                                    className="w-5 h-5 rounded bg-passfort-vibrant/10 border border-passfort-vibrant 
-                                             checked:bg-passfort-vibrant focus:ring-passfort-vibrant"
+                                    className="w-5 h-5 rounded bg-passfort-vibrant/10 border border-passfort-vibrant checked:bg-passfort-vibrant focus:ring-passfort-vibrant"
                                 />
                                 <label
                                     htmlFor={option.id}
@@ -166,8 +183,7 @@ export default function Page() {
                                     generatedPasswordOptions
                                 );
                             }}
-                            className="w-full h-2 rounded-lg appearance-none bg-passfort-vibrant/10 
-                                     accent-passfort-vibrant cursor-pointer"
+                            className="range w-full h-2 rounded-lg appearance-none bg-passfort-vibrant/10 accent-passfort-vibrant cursor-pointer [&::-webkit-slider-thumb]:!bg-passfort-vibrant [&::-webkit-slider-thumb]:hover:bg-passfort-vibrant"
                         />
                         <div className="flex justify-between text-xs text-passfort-vibrant mt-2">
                             <span>8</span>
@@ -194,10 +210,13 @@ export default function Page() {
                             <button
                                 onClick={handleCopy}
                                 className="p-2 rounded-lg hover:bg-white/10 transition-colors group"
-                                title="Copy to clipboard">
+                                aria-label="Copy to clipboard">
                                 <CopyIcon
-                                    className="w-6 h-6 text-passfort-vibrant 
-                                                               group-hover:text-white transition-colors"
+                                    className={`w-6 h-6 ${
+                                        copySuccess
+                                            ? "text-green-500 group-hover:text-white"
+                                            : "text-passfort-vibrant group-hover:text-white"
+                                    }  transition-colors`}
                                 />
                             </button>
                             <button
@@ -208,19 +227,25 @@ export default function Page() {
                                     )
                                 }
                                 className="p-2 rounded-lg hover:bg-white/10 transition-colors group"
-                                title="Generate new password">
+                                aria-label="Generate new password">
                                 <GenerateIcon
-                                    className="w-6 h-6 text-passfort-vibrant 
-                                                        group-hover:text-white transition-colors"
+                                    className={`w-6 h-6 ${
+                                        copySuccess
+                                            ? "text-green-500 group-hover:text-white"
+                                            : "text-passfort-vibrant group-hover:text-white"
+                                    }  transition-colors`}
                                 />
                             </button>
                             <button
                                 onClick={() => setUpdatePasswordDialog(true)}
                                 className="p-2 rounded-lg hover:bg-white/10 transition-colors group"
-                                title="Set as master password">
+                                aria-label="Set as master password">
                                 <SaveIcon
-                                    className="w-6 h-6 text-passfort-vibrant 
-                                                           group-hover:text-white transition-colors"
+                                    className={`w-6 h-6 ${
+                                        copySuccess
+                                            ? "text-green-500 group-hover:text-white"
+                                            : "text-passfort-vibrant group-hover:text-white"
+                                    }  transition-colors`}
                                 />
                             </button>
                         </div>
@@ -231,7 +256,8 @@ export default function Page() {
             {showUpdatePasswordDialog && (
                 <UpdateMasterPasswordDialog
                     toggleDialog={setUpdatePasswordDialog}
-                    masterPassword={generatedPassword}
+                    newMasterPassword={generatedPassword}
+                    hasMasterPassword={hasMasterPassword}
                 />
             )}
         </main>
@@ -240,114 +266,254 @@ export default function Page() {
 
 function UpdateMasterPasswordDialog({
     toggleDialog,
-    masterPassword,
+    newMasterPassword,
+    hasMasterPassword,
 }: {
     toggleDialog: React.Dispatch<React.SetStateAction<boolean>>;
-    masterPassword: string;
+    newMasterPassword: string;
+    hasMasterPassword: boolean;
 }) {
-    const [hasConsented, setHasConsented] = useState(false);
     const [previousMasterPassword, setPreviousMasterPassword] = useState("");
+    const [errors, setErrors] = useState({
+        previousMasterPassword: "This is a test",
+        general: "This is also a test",
+    });
 
-    const updateMasterPassword = async () => {
-        if (!previousMasterPassword) {
+    const [copySuccess, setCopySuccess] = useState(false);
+    const [hasConsented, setHasConsented] = useState(false);
+    const [consents, setConsents] = useState({
+        dataLoss: false,
+        replacesOldPassword: false,
+        safekeeping: false,
+    });
+
+    const handleCopy = () => {
+        if (!newMasterPassword) {
             return;
         }
 
-        // Get all stored passwords
-        const passwords = await getStoredPasswords();
+        writeTextToClipboard(newMasterPassword);
+        setCopySuccess(true); // Show success message
+        setTimeout(() => setCopySuccess(false), 2000); // Hide after 2 seconds
+    };
 
-        // Decrypt all stored passwords with the previous master password
-        // and encrypt them with the new master password
-        const updatedPasswords = await Promise.all(
-            passwords.map(async (password) => {
-                const decrypted = await decrypt(
-                    password.value,
-                    previousMasterPassword
-                );
-                if (!decrypted) {
-                    // Handle incorrect password
-                    throw new Error(
-                        `Password with name: ${password.name} could not be decrypted`
-                    );
+    const updateMasterPassword = async () => {
+        // These should not be possible
+        // but just in case
+        if (!hasConsented) {
+            return;
+        }
+
+        setErrors({ previousMasterPassword: "", general: "" });
+
+        try {
+            if (hasMasterPassword) {
+                if (!previousMasterPassword) {
+                    setErrors((prev) => ({
+                        ...prev,
+                        previousMasterPassword:
+                            "Your previous master password is required",
+                    }));
+                    return;
                 }
 
-                // Encrypt the password with the new master password
-                const encrypted = await encrypt(decrypted, masterPassword);
-                // Update the password value
-                return {
-                    ...password,
-                    value: encrypted,
-                    last_updated: Date.now(),
-                };
-            })
-        );
+                // If the user had a previous master password
+                // there may be passwords that need to be re-encoded
+                const passwords = await getStoredPasswords();
 
-        // Save the updated passwords and close the dialog
-        await setStoredPasswords(updatedPasswords);
-        toggleDialog(false);
+                // Re-encode them with the new master password
+                const updatedPasswords = await Promise.all(
+                    passwords.map(async (password) => {
+                        const decrypted = await decrypt(
+                            password.value,
+                            previousMasterPassword
+                        );
+                        if (!decrypted) {
+                            throw new Error(`Invalid previous master password`);
+                        }
+                        const encrypted = await encrypt(
+                            decrypted,
+                            newMasterPassword
+                        );
+
+                        return {
+                            ...password,
+                            value: encrypted,
+                            last_updated: Date.now(),
+                        };
+                    })
+                );
+
+                if (updatedPasswords.length) {
+                    await setStoredPasswords(updatedPasswords);
+                }
+            }
+
+            await saveMasterPasswordVerification(newMasterPassword);
+            toggleDialog(false);
+            window.location.assign("/");
+        } catch (err) {
+            setErrors((prev) => ({
+                ...prev,
+                general:
+                    err instanceof Error ? err.message : "An error occurred",
+            }));
+        }
     };
+
+    useEffect(() => {
+        setHasConsented(
+            consents.dataLoss &&
+                consents.safekeeping &&
+                (consents.replacesOldPassword || !hasMasterPassword)
+        );
+    }, [consents, hasMasterPassword]);
 
     return (
         <Dialog onClose={() => toggleDialog(false)}>
-            <div className="my-4 pl-2 pr-12 max-w-5xl">
-                <div className="flex items-center mb-3">
-                    <span className="text-xl font-semibold me-2 px-2.5 py-0.5 rounded bg-red-200 text-red-800">
-                        Warning!
-                    </span>
-                </div>
+            <div>
+                <div className="p-6 max-w-5xl">
+                    <h3 className="text-2xl font-bold text-white mb-6">
+                        {hasMasterPassword
+                            ? "Update Master Password"
+                            : "Set Master Password"}
+                    </h3>
 
-                <h3 className="text-3xl font-bold text-passfort-vibrant">
-                    Confirm Master Password Update
-                </h3>
-                <p className="mt-4 text-lg text-passfort-vibrant">
-                    Updating your master password will{" "}
-                    <span className="font-bold underline text-red-300 decoration-red-500">
-                        ONLY
-                    </span>{" "}
-                    unlock stored passwords with the new password. Securely
-                    store the new password, as this change is irreversible.
-                </p>
-                <p className="my-8 text-xl text-passfort-vibrant">
-                    <strong>New Master Password:</strong> {masterPassword}
-                </p>
+                    {/* Warning Notice */}
+                    {hasMasterPassword && (
+                        <div className="p-4 rounded-lg border border-red-500 bg-red-500/10 mb-6">
+                            <p className="text-red-400 text-sm">
+                                Changing your master password will re-encrypt
+                                all your stored passwords. Make sure to safely
+                                store the new master password, as losing it will
+                                result in permanent loss of access to your
+                                previous passwords.
+                            </p>
+                        </div>
+                    )}
 
-                {!hasConsented ? (
-                    <button
-                        className="bg-passfort-vibrant px-4 py-2 rounded-lg"
-                        onClick={() => setHasConsented(true)}>
-                        <span className="text-lg font-semibold">
-                            Yes, update!
-                        </span>
-                    </button>
-                ) : (
-                    <label className="text-passfort-vibrant font-semibold text-lg">
-                        Enter previous master password
-                        <small className="block font-normal leading-5 mb-2">
-                            This password is required to decode stored passwords
-                            correctly. Ensure you use the right password.
-                        </small>
-                        <div className="flex gap-2 h-10">
+                    {/* Previous Password Input */}
+                    {hasMasterPassword && (
+                        <div className="mb-6">
+                            <label className="block text-sm font-medium text-passfort-vibrant mb-2">
+                                Previous Master Password
+                            </label>
                             <input
-                                aria-label="Previous master password"
-                                className="bg-transparent w-full text-passfort-vibrant border border-passfort-vibrant rounded-lg px-2 focus:ring-0 focus:ring-none focus:border-passfort-vibrant focus:outline-none"
                                 type="password"
                                 value={previousMasterPassword}
-                                onChange={(event) =>
-                                    setPreviousMasterPassword(
-                                        event.target.value
-                                    )
+                                className="w-full p-3 rounded-lg bg-transparent text-sm border focus:ring-0 placeholder:text-passfort-vibrant text-passfort-vibrant focus:border-passfort-vibrant border-passfort-vibrant/50"
+                                onChange={(e) =>
+                                    setPreviousMasterPassword(e.target.value)
                                 }
+                                placeholder="Enter your current master password"
                             />
+
+                            {errors.previousMasterPassword && (
+                                <div className="flex items-center mt-1 text-sm text-red-500">
+                                    <ExclamationIcon className="w-4 h-4 mr-1" />
+                                    {errors.previousMasterPassword}
+                                </div>
+                            )}
+                        </div>
+                    )}
+
+                    {/* New Password Preview */}
+                    <div className="mb-6">
+                        <label className="block text-sm font-medium text-passfort-vibrant mb-2">
+                            New Master Password
+                        </label>
+                        <div className="flex bg-passfort/25 px-3 py-1 items-center rounded-lg border border-passfort-vibrant/50 font-mono text-passfort-vibrant">
+                            <div className="flex-1">{newMasterPassword}</div>
                             <button
-                                className="bg-passfort-vibrant px-4 py-2 rounded-lg"
-                                onClick={updateMasterPassword}>
-                                <span className="text-lg font-semibold text-white">
-                                    Update
-                                </span>
+                                onClick={handleCopy}
+                                className="p-2 rounded-lg hover:bg-white/10 transition-colors group"
+                                aria-label="Copy to clipboard">
+                                <CopyIcon
+                                    className={`w-6 h-6 ${
+                                        copySuccess
+                                            ? "text-zinc-200 group-hover:text-white"
+                                            : "text-passfort-vibrant group-hover:text-white"
+                                    }  transition-colors`}
+                                />
                             </button>
                         </div>
-                    </label>
-                )}
+                    </div>
+
+                    {/* Consent Checkboxes */}
+                    {hasMasterPassword && (
+                        <div className="mb-6">
+                            <label className="flex items-center">
+                                <input
+                                    type="checkbox"
+                                    checked={consents.replacesOldPassword}
+                                    onChange={(e) =>
+                                        setConsents((prev) => ({
+                                            ...prev,
+                                            replacesOldPassword:
+                                                e.target.checked,
+                                        }))
+                                    }
+                                    className="w-5 h-5 rounded bg-passfort-vibrant/10 border border-passfort-vibrant checked:bg-passfort-vibrant focus:ring-0"
+                                />
+                                <span className="ml-2 text-sm text-passfort-vibrant">
+                                    I understand that this new master password
+                                    will replace my previous master password
+                                </span>
+                            </label>
+                        </div>
+                    )}
+                    <div className="mb-6">
+                        <label className="flex items-center">
+                            <input
+                                type="checkbox"
+                                checked={consents.dataLoss}
+                                onChange={(e) =>
+                                    setConsents((prev) => ({
+                                        ...prev,
+                                        dataLoss: e.target.checked,
+                                    }))
+                                }
+                                className="w-5 h-5 rounded bg-passfort-vibrant/10 border border-passfort-vibrant checked:bg-passfort-vibrant focus:ring-0"
+                            />
+                            <span className="ml-2 text-sm text-passfort-vibrant">
+                                I understand that losing this master password
+                                will result in permanent loss of access to my
+                                stored passwords
+                            </span>
+                        </label>
+                    </div>
+
+                    <div className="mb-6">
+                        <label className="flex items-center">
+                            <input
+                                type="checkbox"
+                                checked={consents.safekeeping}
+                                onChange={(e) =>
+                                    setConsents((prev) => ({
+                                        ...prev,
+                                        safekeeping: e.target.checked,
+                                    }))
+                                }
+                                className="w-5 h-5 rounded bg-passfort-vibrant/10 border border-passfort-vibrant checked:bg-passfort-vibrant focus:ring-0 focus:border-none"
+                            />
+                            <span className="ml-2 text-sm text-passfort-vibrant">
+                                I have stored this new master password securely
+                            </span>
+                        </label>
+                    </div>
+
+                    {/* Update Button */}
+                    <button
+                        onClick={updateMasterPassword}
+                        disabled={!hasConsented}
+                        className={`w-full py-3 rounded-lg text-white font-semibold transition-colors ${
+                            hasConsented
+                                ? "bg-passfort-vibrant hover:bg-passfort-vibrant/90"
+                                : "bg-passfort-vibrant/25 cursor-not-allowed"
+                        }`}>
+                        Update Master Password
+                    </button>
+                </div>
             </div>
         </Dialog>
     );

@@ -7,7 +7,7 @@ A secure and encrypted desktop application for managing passwords.
 ![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Mac%20%7C%20Linux-blue)  
 ![License](https://img.shields.io/github/license/BrianTib/passfort)  
 ![Version](https://img.shields.io/github/v/release/BrianTib/passfort)  
-![Contributions](https://img.shields.io/badge/contributions-welcome-brightgreen)
+![Contributions](https://img.shields.io/badge/contributions-soon-yellow)
 
 ## **Table of Contents**
 

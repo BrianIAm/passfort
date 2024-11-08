@@ -3,19 +3,14 @@ use aes_gcm::{
     Aes256Gcm, Nonce,
 };
 use pbkdf2::pbkdf2_hmac;
+use rand::seq::SliceRandom;
 use rand::{Rng, RngCore};
 use sha2::Sha256;
 
-/*
-    This system takes a client password with a length between 8-64 characters (for convenience) and
-    hashes it using PBKDF2 with SHA-256 to generate a 256-bit key. This key is then used to encrypt
-    and decrypt data using AES-256 in Galois Counter Mode (GCM). The salt and nonce are randomly
-    generated for each encryption operation and are stored alongside the encrypted data. The salt is
-    used to generate the key and the nonce is used to generate the ciphertext. This ensures that the
-    same password will generate different keys and the same plaintext will generate different
-    ciphertexts. The key is never stored and is derived from the password every time the data is
-    decrypted. This ensures that the key is not exposed to brute force attacks.
-*/
+use hmac::{Hmac, Mac};
+use base64::{Engine as _, engine::general_purpose::URL_SAFE_NO_PAD};
+
+type HmacSha256 = Hmac<Sha256>;
 
 // The salt is important because it ensures that the same password will generate different keys
 const SALT_LENGTH: usize = 32;
@@ -24,109 +19,87 @@ const NONCE_LENGTH: usize = 12;
 // The key length is 256 bits (32 bytes) because we are using AES-256
 const KEY_LENGTH: usize = 32;
 
+#[derive(serde::Serialize)]
+pub struct FileKeys {
+    passwords: String,
+    verification: String,
+}
+
 // Character ranges for generating random master passwords
 const CHARACTER_RANGES: [(u8, u8); 4] = [
-    (97, 123), // Lowercase
-    (65, 91),  // Uppercase
-    (48, 58),  // Numbers
-    (33, 127), // Special characters
+    (b'a', b'z' + 1), // Lowercase
+    (b'A', b'Z' + 1), // Uppercase
+    (b'0', b'9' + 1), // Numbers
+    (b'!', b'/' + 1), // Symbols (basic set)
 ];
 
-pub fn hex_decode(s: &str) -> Result<Vec<u8>, String> {
-    (0..s.len())
-        // HEX values can be expressed with 2 characters
-        .step_by(2)
-        // Parse each pair of characters as a u8
-        .map(|i| u8::from_str_radix(&s[i..i + 2], 16).map_err(|e| e.to_string()))
-        .collect()
-}
-
-// This function derives a key from a master password and a salt
-// The salt should be randomly generated and stored alongside the encrypted data
-// The key should be derived from the master password every time the data is decrypted
-// This ensures that the key is not stored anywhere and is not exposed to brute force attacks
-fn derive_key(master_password: &str, salt: &[u8]) -> [u8; KEY_LENGTH] {
-    let mut key = [0u8; KEY_LENGTH];
-    pbkdf2_hmac::<Sha256>(master_password.as_bytes(), salt, 100_000, &mut key);
-    key
-}
-
-// Genereate a random master password for the client
 #[tauri::command]
-pub fn generate_master_password(length: Option<u8>, options: Option<u8>) -> String {
-    // Determine the length of the master password
-    // The user can give a desired length, but we ensure that
-    let length = length.unwrap_or(8).max(8).min(64) as usize;
-    // Determine the character ranges to be used in the master password
-    // or use all character ranges by default
-    let mut options = options.unwrap_or(0b1111);
-
-    // If the user supplied no configuration options, use all character ranges
-    if options == 0 {
-        options = 0b1111;
-    }
-
-    let mut rng = rand::thread_rng();
-    let mut bytes = vec![0u8; length];
-
-    // Filter character ranges based on the provided options
-    let char_ranges: Vec<(u8, u8)> = CHARACTER_RANGES.iter()
-        .enumerate()
-        .filter_map(|(i, &range)| {
-            if options & (1 << i) != 0 { Some(range) } else { None }
-        })
-        .collect();
-
-    // Generate a random byte array for the master password
-    for i in 0..length {
-        // Pick one of the allowed ranges at random
-        let range = char_ranges[rng.gen_range(0..char_ranges.len())];
-        bytes[i] = rng.gen_range(range.0..range.1);
-    }
+// Change derive_key to return bytes directly
+pub fn derive_key(password: String, salt: &str, iterations: u32) -> Result<[u8; KEY_LENGTH], String> {
+    let salt_bytes = hex::decode(salt)
+        .map_err(|_| "Invalid salt".to_string())?;
     
-    // Return the generated password as a string
-    String::from_utf8(bytes).unwrap()
+    let mut key = [0u8; KEY_LENGTH];
+    pbkdf2_hmac::<Sha256>(
+        password.as_bytes(),
+        &salt_bytes,
+        iterations,
+        &mut key
+    );
+    
+    Ok(key)
 }
 
 #[tauri::command]
 pub fn encrypt(data: String, master_password: String) -> Result<String, String> {
+    // Early validation
+    if data.is_empty() || master_password.is_empty() {
+        return Err("Invalid input data".to_string());
+    }
+
     let mut rng = rand::thread_rng();
-
-    // Create a random salt to be used in the key derivation
+    
+    // Generate salt with error handling
     let mut salt = [0u8; SALT_LENGTH];
-    rng.fill_bytes(&mut salt);
+    rng.try_fill_bytes(&mut salt).map_err(|e| e.to_string())?;
+    let salt = hex::encode(salt);
 
-    // Derive a key from the master password and the salt
-    let key = derive_key(&master_password, &salt);
-    // Create a cipher from the key to encrypt the data
-    let cipher =
-        Aes256Gcm::new_from_slice(&key).map_err(|e| format!("Failed to create cipher: {}", e))?;
+    // Derive key as raw bytes now
+    let key = derive_key(master_password, &salt, 10_000)?;
+    
+    // Use raw bytes directly with cipher
+    let cipher = Aes256Gcm::new_from_slice(&key)
+        .map_err(|e| format!("Failed to create cipher: {}", e))?;
 
-    // Create a random nonce to be used in the encryption
+
+    // Generate nonce with error handling
     let mut nonce = [0u8; NONCE_LENGTH];
-    rng.fill_bytes(&mut nonce);
+    rng.try_fill_bytes(&mut nonce).map_err(|e| e.to_string())?;
     let nonce = Nonce::from_slice(&nonce);
 
-    // Encrypt the data using the cipher and the nonce
+    // Encrypt with proper error handling
     let ciphertext = cipher
         .encrypt(nonce, data.as_bytes())
         .map_err(|e| format!("Encryption failed: {}", e))?;
 
-    // Combine the salt, nonce, and ciphertext into a single byte array
+    // Combine without debug prints
     let mut encrypted_bytes = Vec::with_capacity(SALT_LENGTH + NONCE_LENGTH + ciphertext.len());
-    encrypted_bytes.extend_from_slice(&salt);
-    encrypted_bytes.extend_from_slice(nonce.as_ref());
+    encrypted_bytes.extend_from_slice(&hex::decode(&salt).unwrap());
+    encrypted_bytes.extend_from_slice(&nonce);
     encrypted_bytes.extend_from_slice(&ciphertext);
 
-    // Encode the encrypted data as a hexadecimal string
-    Ok(String::from_utf8(encrypted_bytes).unwrap())
+    Ok(hex::encode(encrypted_bytes))
 }
 
 #[tauri::command]
 pub fn decrypt(encrypted_data: String, master_password: String) -> Result<String, String> {
+    if encrypted_data.is_empty() || master_password.is_empty() {
+        return Err("Invalid input data".to_string());
+    }
+    
     // Decode the encrypted data from a hexadecimal string to a byte array
     let encrypted_bytes =
-        hex_decode(&encrypted_data).map_err(|e| format!("Invalid encrypted data: {}", e))?;
+        hex::decode(&encrypted_data).map_err(|e| format!("Invalid encrypted data: {}", e))?;
 
     // Ensure that the encrypted data is long enough to contain the salt, nonce, and ciphertext
     if encrypted_bytes.len() < SALT_LENGTH + NONCE_LENGTH {
@@ -137,8 +110,12 @@ pub fn decrypt(encrypted_data: String, master_password: String) -> Result<String
     let (salt, rest) = encrypted_bytes.split_at(SALT_LENGTH);
     let (nonce, ciphertext) = rest.split_at(NONCE_LENGTH);
 
+    // Encode the salt as a hexadecimal string so that it can be used
+    // by the derive_key function
+    let salt = hex::encode(salt);
+
     // Decode the salt, nonce, and ciphertext from hexadecimal strings to byte arrays
-    let key = derive_key(&master_password, salt);
+    let key = derive_key(master_password, &salt, 100_000)?;
     let cipher =
         Aes256Gcm::new_from_slice(&key).map_err(|e| format!("Failed to create cipher: {}", e))?;
 
@@ -150,4 +127,77 @@ pub fn decrypt(encrypted_data: String, master_password: String) -> Result<String
         .map_err(|e| format!("Decryption failed: {}", e))?;
 
     String::from_utf8(plaintext).map_err(|e| format!("Invalid UTF-8 in decrypted data: {}", e))
+}
+
+// Genereate a random master password for the client
+#[tauri::command]
+pub fn generate_master_password(length: Option<u8>, configuration: Option<u8>) -> String {
+    let length = length.unwrap_or(8).max(8).min(64) as usize;
+    let options = configuration.unwrap_or(0b1111);
+
+    let mut rng = rand::thread_rng();
+    let mut password = Vec::with_capacity(length);
+
+    // Ensure at least one character from each selected range
+    for (i, &(start, end)) in CHARACTER_RANGES.iter().enumerate() {
+        if options & (1 << i) != 0 {
+            let random_char = rng.gen_range(start..end) as char;
+            password.push(random_char);
+        }
+    }
+
+    // Fill the rest of the password length with random characters from selected ranges
+    let selected_ranges: Vec<(u8, u8)> = CHARACTER_RANGES.iter()
+        .enumerate()
+        .filter_map(|(i, &range)| if options & (1 << i) != 0 { Some(range) } else { None })
+        .collect();
+
+    while password.len() < length {
+        let &(start, end) = selected_ranges.choose(&mut rng).unwrap();
+        let random_char = rng.gen_range(start..end) as char;
+        password.push(random_char);
+    }
+
+    // Shuffle the password to avoid predictable patterns
+    password.shuffle(&mut rng);
+    password.into_iter().collect()
+}
+
+#[tauri::command]
+pub fn generate_random_salt() -> String {
+    let mut salt = [0u8; SALT_LENGTH];
+    let mut rng = rand::thread_rng();
+    rng.fill_bytes(&mut salt);
+    hex::encode(salt)
+}
+
+#[tauri::command]
+pub fn constant_time_compare(a: String, b: String) -> bool {    
+    // Compare the two strings in constant time using XOR
+    a.len() == b.len() && a.as_bytes().iter().zip(b.as_bytes().iter()).fold(0, |acc, (x, y)| acc | (x ^ y)) == 0
+}
+
+#[tauri::command]
+pub fn generate_file_keys(app_key: String, version: String) -> FileKeys {
+    // Create HMAC instance for file name generation
+    let mut mac = <HmacSha256 as KeyInit>::new_from_slice(app_key.as_bytes())
+        .expect("HMAC initialization failed");
+
+    // Generate passwords file name
+    mac.update(b"passwords");
+    mac.update(version.as_bytes());
+    let passwords = URL_SAFE_NO_PAD.encode(mac.finalize().into_bytes());
+
+    // Reset HMAC for verification file name
+    let mut mac = <HmacSha256 as KeyInit>::new_from_slice(app_key.as_bytes())
+        .expect("HMAC initialization failed");
+
+    mac.update(b"verification");
+    mac.update(version.as_bytes());
+    let verification = URL_SAFE_NO_PAD.encode(mac.finalize().into_bytes());
+
+    FileKeys {
+        passwords,
+        verification,
+    }
 }
