@@ -11,6 +11,7 @@ import {
     ExclamationIcon,
     CogIcon,
     HammerIcon,
+    FileAndPenIcon,
 } from "#/icons";
 
 export default function Navbar() {
@@ -32,6 +33,11 @@ export default function Navbar() {
             name: "About",
             href: "/about",
             icon: InfoIcon,
+        },
+        {
+            name: "Contributions",
+            href: "/contributions",
+            icon: FileAndPenIcon,
         },
         {
             name: "Settings",
