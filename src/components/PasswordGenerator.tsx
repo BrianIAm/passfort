@@ -1,29 +1,29 @@
-"use client";
+'use client';
 
-import React, { useEffect, useState, useCallback } from "react";
-import { writeText as writeTextToClipboard } from "@tauri-apps/plugin-clipboard-manager";
-import { generatePassword } from "#/lib/encrypt";
-import { CopyIcon, SaveIcon, GenerateIcon } from "#/icons";
+import React, { useEffect, useState, useCallback } from 'react';
+import { writeText as writeTextToClipboard } from '@tauri-apps/plugin-clipboard-manager';
+import { generatePassword } from '#/lib/encrypt';
+import { CopyIcon, SaveIcon, GenerateIcon } from '#/icons';
 
 const generationOptions = [
     {
-        id: "lowercase",
-        label: "Lowercase (a-z)",
+        id: 'lowercase',
+        label: 'Lowercase (a-z)',
         bit: 0b0001,
     },
     {
-        id: "uppercase",
-        label: "Uppercase (A-Z)",
+        id: 'uppercase',
+        label: 'Uppercase (A-Z)',
         bit: 0b0010,
     },
     {
-        id: "numbers",
-        label: "Numbers (0-9)",
+        id: 'numbers',
+        label: 'Numbers (0-9)',
         bit: 0b0100,
     },
     {
-        id: "symbols",
-        label: "Symbols (!@#$)",
+        id: 'symbols',
+        label: 'Symbols (!@#$)',
         bit: 0b1000,
     },
 ];
@@ -35,13 +35,17 @@ export function PasswordGenerator({
     onGenerate: (password: string) => void;
     onSave?: (password?: string) => void;
 }) {
-    const [generatedPassword, setGeneratedPassword] = useState("");
+    const [generatedPassword, setGeneratedPassword] = useState('');
     const [generatedPasswordLength, setGeneratedPasswordLength] = useState(8);
     const [copySuccess, setCopySuccess] = useState(false);
-    const [generatedPasswordOptions, setGeneratedPasswordOptions] = useState(0b1111);
+    const [generatedPasswordOptions, setGeneratedPasswordOptions] =
+        useState(0b1111);
     const [hasInitialPassword, setHasInitialPassword] = useState(false);
 
-    const generateNewPassword = async (length: number | null, options: number | null) => {
+    const generateNewPassword = async (
+        length: number | null,
+        options: number | null
+    ) => {
         const generatedPassword = await generatePassword(length, options);
 
         setGeneratedPassword(generatedPassword);
@@ -51,7 +55,10 @@ export function PasswordGenerator({
     // Only generate on first mount
     useEffect(() => {
         if (!hasInitialPassword) {
-            generateNewPassword(generatedPasswordLength, generatedPasswordOptions);
+            generateNewPassword(
+                generatedPasswordLength,
+                generatedPasswordOptions
+            );
             setHasInitialPassword(true);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -83,10 +90,6 @@ export function PasswordGenerator({
         setTimeout(() => setCopySuccess(false), 2000); // Hide after 2 seconds
     };
 
-    useEffect(() => {
-        generateNewPassword(generatedPasswordLength, generatedPasswordOptions);
-    }, []);
-
     return (
         <div className="border border-passfort-vibrant bg-passfort/25 rounded-lg p-6 mb-8">
             <h3 className="text-xl font-bold mb-6">Password Generator</h3>
@@ -94,17 +97,25 @@ export function PasswordGenerator({
             {/* Options */}
             <div className="grid grid-cols-2 gap-4 mb-6">
                 <div className="space-y-4">
-                    <label className="block text-passfort-vibrant">Character Types</label>
+                    <label className="block text-passfort-vibrant">
+                        Character Types
+                    </label>
                     {generationOptions.map((option) => (
                         <div key={option.id} className="flex items-center">
                             <input
                                 id={option.id}
                                 type="checkbox"
-                                checked={isBitChecked(generatedPasswordOptions, option.bit)}
+                                checked={isBitChecked(
+                                    generatedPasswordOptions,
+                                    option.bit
+                                )}
                                 onChange={() => handleToggleBit(option.bit)}
                                 className="w-5 h-5 rounded bg-passfort-vibrant/10 border border-passfort-vibrant checked:bg-passfort-vibrant focus:ring-passfort-vibrant"
                             />
-                            <label htmlFor={option.id} className="ml-2 text-passfort-vibrant">
+                            <label
+                                htmlFor={option.id}
+                                className="ml-2 text-passfort-vibrant"
+                            >
                                 {option.label}
                             </label>
                         </div>
@@ -139,12 +150,13 @@ export function PasswordGenerator({
                 <div
                     className={`flex items-center px-2 py-2 rounded-lg border ${
                         copySuccess
-                            ? "border-green-500 bg-green-500/10"
-                            : "border-passfort-vibrant bg-passfort-vibrant/10"
-                    }`}>
+                            ? 'border-green-500 bg-green-500/10'
+                            : 'border-passfort-vibrant bg-passfort-vibrant/10'
+                    }`}
+                >
                     <input
                         type="text"
-                        value={copySuccess ? "Copied!" : generatedPassword}
+                        value={copySuccess ? 'Copied!' : generatedPassword}
                         readOnly
                         className="flex-1 bg-transparent border-none text-lg font-mono focus:ring-0"
                     />
@@ -157,24 +169,26 @@ export function PasswordGenerator({
                                 )
                             }
                             className="p-2 rounded-lg hover:bg-white/10 transition-colors group"
-                            aria-label="Generate new password">
+                            aria-label="Generate new password"
+                        >
                             <GenerateIcon
                                 className={`w-6 h-6 ${
                                     copySuccess
-                                        ? "text-green-500 group-hover:text-white"
-                                        : "text-passfort-vibrant group-hover:text-white"
+                                        ? 'text-green-500 group-hover:text-white'
+                                        : 'text-passfort-vibrant group-hover:text-white'
                                 }  transition-colors`}
                             />
                         </button>
                         <button
                             onClick={handleCopy}
                             className="p-2 rounded-lg hover:bg-white/10 transition-colors group"
-                            aria-label="Copy to clipboard">
+                            aria-label="Copy to clipboard"
+                        >
                             <CopyIcon
                                 className={`w-6 h-6 ${
                                     copySuccess
-                                        ? "text-green-500 group-hover:text-white"
-                                        : "text-passfort-vibrant group-hover:text-white"
+                                        ? 'text-green-500 group-hover:text-white'
+                                        : 'text-passfort-vibrant group-hover:text-white'
                                 }  transition-colors`}
                             />
                         </button>
@@ -183,12 +197,13 @@ export function PasswordGenerator({
                             <button
                                 onClick={() => onSave(generatedPassword)}
                                 className="p-2 rounded-lg hover:bg-white/10 transition-colors group"
-                                aria-label="Set as master password">
+                                aria-label="Set as master password"
+                            >
                                 <SaveIcon
                                     className={`w-6 h-6 ${
                                         copySuccess
-                                            ? "text-green-500 group-hover:text-white"
-                                            : "text-passfort-vibrant group-hover:text-white"
+                                            ? 'text-green-500 group-hover:text-white'
+                                            : 'text-passfort-vibrant group-hover:text-white'
                                     }  transition-colors`}
                                 />
                             </button>

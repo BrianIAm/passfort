@@ -368,13 +368,30 @@ export function FileAndPenIcon(props: React.SVGProps<SVGSVGElement>) {
     );
 }
 
-export function PaypalIcon(props: React.SVGProps<SVGSVGElement>) {
+export function RefreshIcon(props: React.SVGProps<SVGSVGElement>) {
     return (
         <svg
+            {...props}
+            aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
             fill="none"
-            viewBox="0 0 48 48"
-            {...props}>
+            viewBox="0 0 24 24">
+            <path
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M17.651 7.65a7.131 7.131 0 0 0-12.68 3.15M18.001 4v4h-4m-7.652 8.35a7.13 7.13 0 0 0 12.68-3.15M6 20v-4h4"
+            />
+        </svg>
+    );
+}
+
+export function PaypalIcon(props: React.SVGProps<SVGSVGElement>) {
+    return (
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 48 48" {...props}>
             <g clipPath="url(#a)">
                 <path
                     fill="#002991"
@@ -495,12 +512,7 @@ export function TailwindIcon(props: React.SVGProps<SVGSVGElement>) {
             preserveAspectRatio="xMidYMid"
             {...props}>
             <defs>
-                <linearGradient
-                    x1="-2.778%"
-                    y1="32%"
-                    x2="100%"
-                    y2="67.556%"
-                    id="gradient">
+                <linearGradient x1="-2.778%" y1="32%" x2="100%" y2="67.556%" id="gradient">
                     <stop stopColor="#2298BD" offset="0%"></stop>
                     <stop stopColor="#0ED7B5" offset="100%"></stop>
                 </linearGradient>
@@ -690,25 +702,12 @@ export function NextjsIcon(props: React.SVGProps<SVGSVGElement>) {
                 <circle cx={90} cy={90} r={90} fill="black" />
             </mask>
             <g mask="url(#mask0_408_139)">
-                <circle
-                    cx={90}
-                    cy={90}
-                    r={87}
-                    fill="black"
-                    stroke="white"
-                    strokeWidth={6}
-                />
+                <circle cx={90} cy={90} r={87} fill="black" stroke="white" strokeWidth={6} />
                 <path
                     d="M149.508 157.52L69.142 54H54V125.97H66.1136V69.3836L139.999 164.845C143.333 162.614 146.509 160.165 149.508 157.52Z"
                     fill="url(#paint0_linear_408_139)"
                 />
-                <rect
-                    x={115}
-                    y={54}
-                    width={12}
-                    height={72}
-                    fill="url(#paint1_linear_408_139)"
-                />
+                <rect x={115} y={54} width={12} height={72} fill="url(#paint1_linear_408_139)" />
             </g>
             <defs>
                 <linearGradient

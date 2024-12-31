@@ -28,6 +28,8 @@ This section guides you through submitting an enhancement suggestion for PassFor
 
 ## Style Guidelines
 
+Ensure youre using prettier so the .prettierrc styling is applied
+
 ### Git Commit Messages
 
 -   Use the present tense ("Add feature" not "Added feature")

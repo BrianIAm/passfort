@@ -1,8 +1,8 @@
 ---
 name: Feature Request
-about: Suggest an idea for PassFort
+about: Make a feature suggestion to improve PassFort
 title: "[FEATURE] "
-labels: "enhancement"
+labels: "feature-request"
 assignees: ""
 ---
 

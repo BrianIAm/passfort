@@ -12,6 +12,7 @@ import {
     CogIcon,
     HammerIcon,
     FileAndPenIcon,
+    RefreshIcon,
 } from "#/icons";
 
 export default function Navbar() {
@@ -28,6 +29,11 @@ export default function Navbar() {
             name: "Master Password",
             href: "/master-password",
             icon: LockIcon,
+        },
+        {
+            name: "Password Generator",
+            href: "/password-generator",
+            icon: RefreshIcon,
         },
         {
             name: "About",
@@ -98,8 +104,8 @@ export default function Navbar() {
                         </span>
                     </div>
                     <p className="text-sm text-red-400 mb-3">
-                        PassFort is in beta and under active development.
-                        We&apos;re adding new features and squashing bugs.
+                        PassFort is in beta and under active development. We&apos;re adding new
+                        features and squashing bugs.
                     </p>
                     <a
                         href="https://github.com/BrianTib/passfort/issues"
