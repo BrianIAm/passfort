@@ -1,92 +1,21 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { writeText as writeTextToClipboard } from "@tauri-apps/plugin-clipboard-manager";
-import { generateMasterPassword, encrypt, decrypt } from "#/lib/encrypt";
+import { encrypt, decrypt } from "#/lib/encrypt";
 import { Dialog } from "#/components/Dialog";
+import { PasswordGenerator } from "#/components/PasswordGenerator";
+import { writeText as writeTextToClipboard } from "@tauri-apps/plugin-clipboard-manager";
 import {
     getStoredPasswords,
     setStoredPasswords,
-    getMasterPasswordVerification,
     hasMasterPasswordVerification,
     saveMasterPasswordVerification,
 } from "#/lib/fs";
-import {
-    ShieldIcon,
-    CopyIcon,
-    SaveIcon,
-    GenerateIcon,
-    ExclamationIcon,
-} from "#/icons";
+import { ShieldIcon, CopyIcon, ExclamationIcon } from "#/icons";
 
 export default function Page() {
-    const [generatedPassword, setGeneratedPassword] = useState<string>("");
-    const [copySuccess, setCopySuccess] = useState(false);
-    const [generatedPasswordOptions, setGeneratedPasswordOptions] =
-        useState(0b1111);
-    const [generatedPasswordLength, setGeneratedPasswordLength] = useState(8);
     const [showUpdatePasswordDialog, setUpdatePasswordDialog] = useState(false);
     const [hasMasterPassword, setHasMasterPassword] = useState(false);
-
-    const generationOptions = [
-        {
-            id: "lowercase",
-            label: "Lowercase (a-z)",
-            bit: 0b0001,
-        },
-        {
-            id: "uppercase",
-            label: "Uppercase (A-Z)",
-            bit: 0b0010,
-        },
-        {
-            id: "numbers",
-            label: "Numbers (0-9)",
-            bit: 0b0100,
-        },
-        {
-            id: "symbols",
-            label: "Symbols (!@#$)",
-            bit: 0b1000,
-        },
-    ];
-
-    const generatePassword = async (
-        length: number | null,
-        options: number | null
-    ) => {
-        setGeneratedPassword(await generateMasterPassword(length, options));
-    };
-
-    const isBitChecked = (field: number, bit: number) => {
-        return (field & bit) !== 0;
-    };
-
-    const handleToggleBit = (bit: number) => {
-        // Toggle the bit
-        let updatedBitfield = generatedPasswordOptions ^ bit;
-        // If none of the bits are set, set all of them
-        if (updatedBitfield === 0) {
-            updatedBitfield = 0b1111;
-        }
-
-        // Update the bitfield and regenerate the password
-        setGeneratedPasswordOptions(updatedBitfield);
-        generatePassword(generatedPasswordLength, updatedBitfield);
-    };
-
-    const handleCopy = () => {
-        if (!generatedPassword) {
-            return;
-        }
-
-        writeTextToClipboard(generatedPassword);
-        setCopySuccess(true); // Show success message
-        setTimeout(() => setCopySuccess(false), 2000); // Hide after 2 seconds
-    };
-
-    useEffect(() => {
-        generatePassword(null, null);
-    }, []);
+    const [generatedPassword, setGeneratedPassword] = useState("");
 
     // Check if the user has set a master password before
     useEffect(() => {
@@ -110,14 +39,11 @@ export default function Page() {
             <div className="p-6 rounded-lg border border-red-500 bg-red-500/10 mb-8">
                 <div className="flex items-center mb-4">
                     <ShieldIcon className="w-6 h-6 text-red-400 mr-2" />
-                    <h3 className="text-xl font-bold text-red-400">
-                        Important Security Notice
-                    </h3>
+                    <h3 className="text-xl font-bold text-red-400">Important Security Notice</h3>
                 </div>
                 <div className="space-y-4 text-red-400">
                     <p>
-                        Your master password is the key to all your stored
-                        passwords. Make sure to:
+                        Your master password is the key to all your stored passwords. Make sure to:
                     </p>
                     <ul className="list-disc list-inside space-y-2 ml-4">
                         <li>Choose a strong, unique password</li>
@@ -126,132 +52,17 @@ export default function Page() {
                         <li>Consider changing it periodically</li>
                     </ul>
                     <p className="font-bold">
-                        Warning: If you forget your master password, there is no
-                        way to recover your stored passwords. Such is the price
-                        of security.
+                        Warning: If you forget your master password, there is no way to recover your
+                        stored passwords. Such is the price of security.
                     </p>
                 </div>
             </div>
 
             {/* Password Generator */}
-            <div className="border border-passfort-vibrant bg-passfort/25 rounded-lg p-6 mb-8">
-                <h3 className="text-xl font-bold mb-6">Password Generator</h3>
-
-                {/* Options */}
-                <div className="grid grid-cols-2 gap-4 mb-6">
-                    <div className="space-y-4">
-                        <label className="block text-passfort-vibrant">
-                            Character Types
-                        </label>
-                        {generationOptions.map((option) => (
-                            <div key={option.id} className="flex items-center">
-                                <input
-                                    id={option.id}
-                                    type="checkbox"
-                                    checked={isBitChecked(
-                                        generatedPasswordOptions,
-                                        option.bit
-                                    )}
-                                    onChange={() => handleToggleBit(option.bit)}
-                                    className="w-5 h-5 rounded bg-passfort-vibrant/10 border border-passfort-vibrant checked:bg-passfort-vibrant focus:ring-passfort-vibrant"
-                                />
-                                <label
-                                    htmlFor={option.id}
-                                    className="ml-2 text-passfort-vibrant">
-                                    {option.label}
-                                </label>
-                            </div>
-                        ))}
-                    </div>
-
-                    <div>
-                        <label className="block text-passfort-vibrant mb-4">
-                            Password Length: {generatedPasswordLength}{" "}
-                            characters
-                        </label>
-                        <input
-                            type="range"
-                            min={8}
-                            max={64}
-                            step={8}
-                            value={generatedPasswordLength}
-                            onChange={(e) => {
-                                const value = parseInt(e.target.value);
-                                setGeneratedPasswordLength(value);
-                                generatePassword(
-                                    value,
-                                    generatedPasswordOptions
-                                );
-                            }}
-                            className="range w-full h-2 rounded-lg appearance-none bg-passfort-vibrant/10 accent-passfort-vibrant cursor-pointer [&::-webkit-slider-thumb]:!bg-passfort-vibrant [&::-webkit-slider-thumb]:hover:bg-passfort-vibrant"
-                        />
-                        <div className="flex justify-between text-xs text-passfort-vibrant mt-2">
-                            <span>8</span>
-                            <span>64</span>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Generated Password Display */}
-                <div className="relative">
-                    <div
-                        className={`flex items-center px-2 py-2 rounded-lg border ${
-                            copySuccess
-                                ? "border-green-500 bg-green-500/10"
-                                : "border-passfort-vibrant bg-passfort-vibrant/10"
-                        }`}>
-                        <input
-                            type="text"
-                            value={copySuccess ? "Copied!" : generatedPassword}
-                            readOnly
-                            className="flex-1 bg-transparent border-none text-lg font-mono focus:ring-0"
-                        />
-                        <div className="flex gap-2">
-                            <button
-                                onClick={handleCopy}
-                                className="p-2 rounded-lg hover:bg-white/10 transition-colors group"
-                                aria-label="Copy to clipboard">
-                                <CopyIcon
-                                    className={`w-6 h-6 ${
-                                        copySuccess
-                                            ? "text-green-500 group-hover:text-white"
-                                            : "text-passfort-vibrant group-hover:text-white"
-                                    }  transition-colors`}
-                                />
-                            </button>
-                            <button
-                                onClick={() =>
-                                    generatePassword(
-                                        generatedPasswordLength,
-                                        generatedPasswordOptions
-                                    )
-                                }
-                                className="p-2 rounded-lg hover:bg-white/10 transition-colors group"
-                                aria-label="Generate new password">
-                                <GenerateIcon
-                                    className={`w-6 h-6 ${
-                                        copySuccess
-                                            ? "text-green-500 group-hover:text-white"
-                                            : "text-passfort-vibrant group-hover:text-white"
-                                    }  transition-colors`}
-                                />
-                            </button>
-                            <button
-                                onClick={() => setUpdatePasswordDialog(true)}
-                                className="p-2 rounded-lg hover:bg-white/10 transition-colors group"
-                                aria-label="Set as master password">
-                                <SaveIcon
-                                    className={`w-6 h-6 ${
-                                        copySuccess
-                                            ? "text-green-500 group-hover:text-white"
-                                            : "text-passfort-vibrant group-hover:text-white"
-                                    }  transition-colors`}
-                                />
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <PasswordGenerator
+                onGenerate={(password) => setGeneratedPassword(password)}
+                onSave={() => setUpdatePasswordDialog(true)}
+            />
 
             {showUpdatePasswordDialog && (
                 <UpdateMasterPasswordDialog
@@ -312,8 +123,7 @@ function UpdateMasterPasswordDialog({
                 if (!previousMasterPassword) {
                     setErrors((prev) => ({
                         ...prev,
-                        previousMasterPassword:
-                            "Your previous master password is required",
+                        previousMasterPassword: "Your previous master password is required",
                     }));
                     return;
                 }
@@ -325,18 +135,12 @@ function UpdateMasterPasswordDialog({
                 // Re-encrypt them with the new master password
                 const updatedPasswords = await Promise.all(
                     passwords.map(async (password) => {
-                        const decrypted = await decrypt(
-                            password.value,
-                            previousMasterPassword
-                        );
+                        const decrypted = await decrypt(password.value, previousMasterPassword);
 
                         if (!decrypted) {
                             throw new Error("Invalid previous master password");
                         }
-                        const encrypted = await encrypt(
-                            decrypted,
-                            newMasterPassword
-                        );
+                        const encrypted = await encrypt(decrypted, newMasterPassword);
 
                         return {
                             ...password,
@@ -359,8 +163,7 @@ function UpdateMasterPasswordDialog({
         } catch (err) {
             setErrors((prev) => ({
                 ...prev,
-                general:
-                    err instanceof Error ? err.message : "An error occurred",
+                general: err instanceof Error ? err.message : "An error occurred",
             }));
         }
     };
@@ -378,20 +181,17 @@ function UpdateMasterPasswordDialog({
             <div>
                 <div className="p-6 max-w-5xl">
                     <h3 className="text-2xl font-bold text-white mb-6">
-                        {hasMasterPassword
-                            ? "Update Master Password"
-                            : "Set Master Password"}
+                        {hasMasterPassword ? "Update Master Password" : "Set Master Password"}
                     </h3>
 
                     {/* Warning Notice */}
                     {hasMasterPassword && (
                         <div className="p-4 rounded-lg border border-red-500 bg-red-500/10 mb-6">
                             <p className="text-red-400 text-sm">
-                                Changing your master password will re-encrypt
-                                all your stored passwords. Make sure to safely
-                                store the new master password, as losing it will
-                                result in permanent loss of access to your
-                                previous passwords.
+                                Changing your master password will re-encrypt all your stored
+                                passwords. Make sure to safely store the new master password, as
+                                losing it will result in permanent loss of access to your previous
+                                passwords.
                             </p>
                         </div>
                     )}
@@ -406,9 +206,7 @@ function UpdateMasterPasswordDialog({
                                 type="password"
                                 value={previousMasterPassword}
                                 className="w-full p-3 rounded-lg bg-transparent text-sm border focus:ring-0 placeholder:text-passfort-vibrant text-passfort-vibrant focus:border-passfort-vibrant border-passfort-vibrant/50"
-                                onChange={(e) =>
-                                    setPreviousMasterPassword(e.target.value)
-                                }
+                                onChange={(e) => setPreviousMasterPassword(e.target.value)}
                                 placeholder="Enter your current master password"
                             />
 
@@ -453,15 +251,14 @@ function UpdateMasterPasswordDialog({
                                     onChange={(e) =>
                                         setConsents((prev) => ({
                                             ...prev,
-                                            replacesOldPassword:
-                                                e.target.checked,
+                                            replacesOldPassword: e.target.checked,
                                         }))
                                     }
                                     className="w-5 h-5 rounded bg-passfort-vibrant/10 border border-passfort-vibrant checked:bg-passfort-vibrant focus:ring-0"
                                 />
                                 <span className="ml-2 text-sm text-passfort-vibrant">
-                                    I understand that this new master password
-                                    will replace my previous master password
+                                    I understand that this new master password will replace my
+                                    previous master password
                                 </span>
                             </label>
                         </div>
@@ -480,9 +277,8 @@ function UpdateMasterPasswordDialog({
                                 className="w-5 h-5 rounded bg-passfort-vibrant/10 border border-passfort-vibrant checked:bg-passfort-vibrant focus:ring-0"
                             />
                             <span className="ml-2 text-sm text-passfort-vibrant">
-                                I understand that losing this master password
-                                will result in permanent loss of access to my
-                                stored passwords
+                                I understand that losing this master password will result in
+                                permanent loss of access to my stored passwords
                             </span>
                         </label>
                     </div>

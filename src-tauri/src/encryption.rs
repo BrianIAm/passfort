@@ -131,9 +131,9 @@ pub fn decrypt(encrypted_data: String, master_password: String) -> Result<String
         .map_err(|e| format!("Invalid UTF-8 in decrypted data: {}", e))
 }
 
-// Genereate a random master password for the client
+// Genereate a random password for the client
 #[tauri::command]
-pub fn generate_master_password(length: Option<u8>, configuration: Option<u8>) -> String {
+pub fn generate_password(length: Option<u8>, configuration: Option<u8>) -> String {
     let length = length.unwrap_or(8).max(8).min(64) as usize;
     let options = configuration.unwrap_or(0b1111);
 

@@ -11,18 +11,12 @@ interface VerificationHash {
     iterations: number;
 }
 
-export async function encrypt(
-    data: string,
-    masterPassword: string
-): Promise<string> {
+export async function encrypt(data: string, masterPassword: string): Promise<string> {
     try {
         const result = await Promise.race([
             invoke("encrypt", { data, masterPassword }),
             new Promise((_, reject) =>
-                setTimeout(
-                    () => reject(new Error("Encryption timed out")),
-                    5000
-                )
+                setTimeout(() => reject(new Error("Encryption timed out")), 5000)
             ),
         ]);
         return result as string;
@@ -35,18 +29,12 @@ export async function encrypt(
     }
 }
 
-export async function decrypt(
-    encryptedData: string,
-    masterPassword: string
-): Promise<string> {
+export async function decrypt(encryptedData: string, masterPassword: string): Promise<string> {
     try {
         const result = await Promise.race([
             invoke("decrypt", { encryptedData, masterPassword }),
             new Promise((_, reject) =>
-                setTimeout(
-                    () => reject(new Error("Decryption timed out")),
-                    5000
-                )
+                setTimeout(() => reject(new Error("Decryption timed out")), 5000)
             ),
         ]);
         return result as string;
@@ -55,19 +43,17 @@ export async function decrypt(
     }
 }
 
-export async function generateMasterPassword(
+export async function generatePassword(
     length: number | null,
     configuration: number | null
 ): Promise<string> {
-    return await invoke<string>("generate_master_password", {
+    return invoke<string>("generate_password", {
         length,
         configuration,
     });
 }
 
-export async function createMasterPasswordVerification(
-    masterPassword: string
-): Promise<string> {
+export async function createMasterPasswordVerification(masterPassword: string): Promise<string> {
     // Create multiple verification tokens with different parameters
     const verifications: VerificationHash[] = await Promise.all([
         // Primary verification with high iteration count

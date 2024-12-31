@@ -35,8 +35,7 @@ export default function Page() {
             name: "TypeScript",
             icon: TypescriptIcon,
             url: "https://www.typescriptlang.org/",
-            description:
-                "Type-safe JavaScript for better development and fewer bugs",
+            description: "Type-safe JavaScript for better development and fewer bugs",
         },
         {
             name: "Rust",
@@ -62,9 +61,7 @@ export default function Page() {
         <main className="flex-1 px-8 py-4 max-w-7xl">
             <div className="flex justify-between items-center mb-12">
                 <div>
-                    <h2 className="text-4xl font-bold text-white">
-                        Contributions
-                    </h2>
+                    <h2 className="text-4xl font-bold text-white">Contributions</h2>
                     <p className="text-passfort-vibrant/80 mt-2 text-lg">
                         Building a secure, open-source password manager together
                     </p>
@@ -83,15 +80,13 @@ export default function Page() {
                 </div>
                 <div className="p-6 rounded-lg bg-passfort-vibrant/5 border border-passfort-vibrant/20 hover:border-passfort-vibrant/40 transition-colors">
                     <div className="text-3xl font-bold mb-2">3</div>
-                    <div className="text-passfort-vibrant/80">Platforms</div>
+                    <div className="text-passfort-vibrant/80">Supported Platforms</div>
                 </div>
             </div>
 
             {/* Technologies Section */}
             <div className="mb-12">
-                <h3 className="text-2xl font-bold mb-8">
-                    We&apos;re built with
-                </h3>
+                <h3 className="text-2xl font-bold mb-8">What we&apos;re built with</h3>
                 <div className="grid grid-cols-3 gap-6">
                     {technologies.map((tech) => (
                         <a
@@ -100,12 +95,8 @@ export default function Page() {
                             target="_blank"
                             className="group p-6 rounded-lg bg-passfort-vibrant/5 border border-passfort-vibrant/20 hover:border-passfort-vibrant/40 transition-all hover:-translate-y-1">
                             <tech.icon className="w-16 h-16 mb-4 transition-transform group-hover:scale-110" />
-                            <h4 className="text-lg font-semibold mb-2">
-                                {tech.name}
-                            </h4>
-                            <p className="text-passfort-vibrant/80 text-sm">
-                                {tech.description}
-                            </p>
+                            <h4 className="text-lg font-semibold mb-2">{tech.name}</h4>
+                            <p className="text-passfort-vibrant/80 text-sm">{tech.description}</p>
                         </a>
                     ))}
                 </div>
@@ -115,12 +106,10 @@ export default function Page() {
             <div className="p-6 rounded-lg bg-gradient-to-br from-passfort-vibrant/20 to-transparent border border-passfort-vibrant/30">
                 <div className="flex items-start gap-6">
                     <div className="flex-1">
-                        <h3 className="text-2xl font-bold mb-4">
-                            Support PassFort
-                        </h3>
+                        <h3 className="text-2xl font-bold mb-4">Support PassFort</h3>
                         <p className="text-lg text-passfort-vibrant/80 mb-6">
-                            Help us keep PassFort free, secure, and continuously
-                            improving. Your support directly contributes to:
+                            Help us keep PassFort free, secure, and continuously improving. Your
+                            support directly contributes to:
                         </p>
                         <ul className="space-y-3 mb-6">
                             <li className="flex items-center text-passfort-vibrant/80">
@@ -129,11 +118,11 @@ export default function Page() {
                             </li>
                             <li className="flex items-center text-passfort-vibrant/80">
                                 <ShieldIcon className="w-6 h-6 mr-2" />
-                                New feature development
+                                Development of new features
                             </li>
                             <li className="flex items-center text-passfort-vibrant/80">
                                 <ShieldIcon className="w-6 h-6 mr-2" />
-                                Cross-platform compatibility
+                                Increase cross-platform compatibility
                             </li>
                         </ul>
                         <a
