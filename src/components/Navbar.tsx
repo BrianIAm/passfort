@@ -1,9 +1,11 @@
-"use client";
+'use client';
 
-import React from "react";
-import Image from "next/image";
-import { usePathname } from "next/navigation";
-import Link from "next/link";
+import { getVersion } from '@tauri-apps/api/app';
+import { usePathname } from 'next/navigation';
+import Image from 'next/image';
+import Link from 'next/link';
+import React, { useEffect } from 'react';
+
 import {
     HomeIcon,
     LockIcon,
@@ -13,41 +15,42 @@ import {
     HammerIcon,
     FileAndPenIcon,
     RefreshIcon,
-} from "#/icons";
+} from '#/icons';
 
 export default function Navbar() {
+    const [version, setVersion] = React.useState<string>('');
     const pathname = usePathname();
     const isActive = (path: string) => pathname === path;
 
     const navItems = [
         {
-            name: "Password Vault",
-            href: "/",
+            name: 'Password Vault',
+            href: '/',
             icon: HomeIcon,
         },
         {
-            name: "Master Password",
-            href: "/master-password",
+            name: 'Master Password',
+            href: '/master-password',
             icon: LockIcon,
         },
         {
-            name: "Password Generator",
-            href: "/password-generator",
+            name: 'Password Generator',
+            href: '/password-generator',
             icon: RefreshIcon,
         },
         {
-            name: "About",
-            href: "/about",
+            name: 'About',
+            href: '/about',
             icon: InfoIcon,
         },
         {
-            name: "Contributions",
-            href: "/contributions",
+            name: 'Contributions',
+            href: '/contributions',
             icon: FileAndPenIcon,
         },
         {
-            name: "Settings",
-            href: "/settings",
+            name: 'Settings',
+            href: '/settings',
             icon: CogIcon,
         },
     ];
@@ -59,6 +62,10 @@ export default function Navbar() {
     //         icon: HammerIcon,
     //     });
     // }
+
+    useEffect(() => {
+        getVersion().then((version) => setVersion(version));
+    }, []);
 
     return (
         <nav className="fixed h-screen w-64 flex-col" aria-label="Sidebar">
@@ -85,9 +92,10 @@ export default function Navbar() {
                                 href={item.href}
                                 className={`flex items-center px-4 py-3 rounded-lg transition-colors ${
                                     isActive(item.href)
-                                        ? "bg-passfort-vibrant/25 text-white"
-                                        : "text-passfort-vibrant hover:bg-passfort-vibrant/10"
-                                }`}>
+                                        ? 'bg-passfort-vibrant/25 text-white'
+                                        : 'text-passfort-vibrant hover:bg-passfort-vibrant/10'
+                                }`}
+                            >
                                 <item.icon className="w-5 h-5 mr-3" />
                                 <span>{item.name}</span>
                             </Link>
@@ -99,8 +107,12 @@ export default function Navbar() {
                 <div className="p-4 rounded-lg border-2 border-red-500/50 bg-red-500/5">
                     <div className="flex items-center mb-3">
                         <ExclamationIcon className="w-5 h-5 text-red-500 mr-2" />
-                        <span className="text-sm font-semibold px-2 py-0.5 rounded-sm bg-red-500/20 text-red-400">
+                        <span className="mr-2 text-sm font-semibold px-2 py-0.5 rounded-sm bg-red-500/20 text-red-400">
                             Beta
+                        </span>
+                        {/* Version */}
+                        <span className="text-sm font-semibold px-2 py-0.5 rounded-sm bg-red-500/20 text-red-400">
+                            v{version}
                         </span>
                     </div>
                     <p className="text-sm text-red-400 mb-3">
@@ -111,7 +123,8 @@ export default function Navbar() {
                         href="https://github.com/BrianTib/passfort/issues"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-sm text-red-400 hover:text-red-300 underline transition-colors">
+                        className="text-sm text-red-400 hover:text-red-300 underline transition-colors"
+                    >
                         Report an issue
                     </a>
                 </div>
