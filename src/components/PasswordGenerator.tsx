@@ -36,9 +36,9 @@ export function PasswordGenerator({
     onSave?: (password?: string) => void;
 }) {
     const [generatedPassword, setGeneratedPassword] = useState('');
-    const [generatedPasswordLength, setGeneratedPasswordLength] = useState(8);
+    const [generatedPasswordLength, setGeneratedPasswordLength] = useState(16);
     const [copySuccess, setCopySuccess] = useState(false);
-    const [generatedPasswordOptions, setGeneratedPasswordOptions] = useState(0b1111);
+    const [generatedPasswordOptions, setGeneratedPasswordOptions] = useState(0b0111);
     const [hasInitialPassword, setHasInitialPassword] = useState(false);
 
     const generateNewPassword = async (length: number | null, options: number | null) => {
