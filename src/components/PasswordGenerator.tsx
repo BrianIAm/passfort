@@ -135,9 +135,12 @@ export function PasswordGenerator({
                 </div>
 
                 <div>
-                    <label className="block text-passfort-vibrant mb-4">
-                        Password Length: {generatedPasswordLength} characters
-                    </label>
+                    {/* Character length */}
+                    <div className="text-center">
+                        <span className="font-bold text-white">{generatedPasswordLength}</span>{' '}
+                        <span className="font-bold text-passfort-vibrant">characters</span>
+                    </div>
+
                     <input
                         type="range"
                         min={8}

@@ -9,7 +9,6 @@ import React, { useEffect } from 'react';
 import {
     BugIcon,
     CogIcon,
-    ExclamationIcon,
     FileAndPenIcon,
     HammerIcon,
     HomeIcon,
@@ -17,6 +16,7 @@ import {
     LockIcon,
     RefreshIcon,
     TagIcon,
+    UserGroupIcon,
 } from '#/icons';
 
 export default function Navbar() {
@@ -48,7 +48,7 @@ export default function Navbar() {
         {
             name: 'Contributions',
             href: '/contributions',
-            icon: FileAndPenIcon,
+            icon: UserGroupIcon,
         },
         {
             name: 'Settings',
