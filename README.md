@@ -12,7 +12,7 @@
 
 ## **Overview**
 
-PassFort is a desktop application that helps you securely manage and store passwords. Using AES-256 encryption and running completely offline, PassFort ensures your credentials remain private and secure.
+PassFort is a free and open-source desktop application that helps you securely manage and store passwords. Using AES-256 encryption and running completely offline, PassFort ensures your credentials remain private and secure.
 
 ![Home](./public/screenshots/passfort_vault-example.png)
 
@@ -30,21 +30,30 @@ PassFort is a desktop application that helps you securely manage and store passw
 
 ### System Requirements
 
--   Windows 10/11, macOS 10.15+, or Linux
+-   Windows 10/11, MacOS 10.15+, or Linux
 -   200MB free disk space
 -   2GB RAM minimum
 
-### Building the project locally
-
-If you're directly pulling from the repository to either contribute or build the project locally, follow these steps after downloading the project locally.
-
-(*P.S. These steps assume you have Rust and pnpm installed*)
-
-
-
 ### Download
 
-Download the latest release for your platform from the [releases page](https://github.com/BrianTib/passfort/releases).
+The easiest way to run Passfort is to download our pre-compiled binaries that best suit your operating system from our [releases page](https://github.com/BrianTib/passfort/releases).
+
+### Building a development environment
+
+If you're directly pulling from the repository to either contribute or build the project locally, follow these steps.
+
+(*P.S. These steps assume that you've already pulled the repo and that you have Rust and pnpm installed*)
+
+1. Since all of the icon variations are no longer pushed to GitHub to save resources, use the following command to build all the necessary icons
+
+   - `cargo tauri icon`
+
+2. Install dependencies
+
+   - `pnpm install`
+
+3. Run the application in development mode
+   - `cargo tauri dev`
 
 ## **Usage**
 
@@ -60,21 +69,20 @@ Download the latest release for your platform from the [releases page](https://g
 ## **Security**
 
 -   All passwords are encrypted using AES-256
--   Master password is never stored by the application
+-   Master password is never saved to disk by the application
 -   No cloud storage or network connectivity required
 -   Regular security audits and updates by our community members
-
-## **Contributing**
-
-Contributions will be welcome after the 1.0.0 release. Please read our [Contributing Guidelines](./.github/CONTRIBUTING.md) for more information.
 
 ## **Important Notice**
 
 ⚠️ **Your master password cannot be recovered if lost**. Make sure to:
 
 -   Store it securely
--   Create a backup
 -   Never share it with anyone
+
+## **Contributing**
+
+Contributions will be welcome after the 1.0.0 release. Please read our [Contributing Guidelines](./.github/CONTRIBUTING.md) for more information.
 
 ## **License**
 
@@ -82,8 +90,10 @@ PassFort is licensed under the GNU General Public License v3.0 - see the [LICENS
 
 ## **Support**
 
--   🐛 [Report Issues](https://github.com/BrianTib/passfort/issues)
--   💡 [Feature Requests](https://github.com/BrianTib/passfort/issues)
+- 🐛 [Report Issues](https://github.com/BrianTib/passfort/issues)
+- 💡 [Feature Requests](https://github.com/BrianTib/passfort/issues)
+
+- 📧 [Become a sponsor! (Reach me personally by e-mail)](bptiburcio@gmail.com)
 
 ---
 
