@@ -1,15 +1,15 @@
 // If the icon is outlined, make sure to include "Outline" on the function name
-import React from "react";
+import { SVGProps } from 'react';
 
-export function KeyIcon(props: React.SVGProps<SVGSVGElement>) {
+export function KeyIcon(props: SVGProps<SVGSVGElement>) {
     return (
         <svg
-            {...props}
             className="w-6 h-6"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
             xmlns="http://www.w3.org/2000/svg"
+            {...props}
         >
             <path
                 strokeLinecap="round"
@@ -27,10 +27,9 @@ export function KeyIcon(props: React.SVGProps<SVGSVGElement>) {
     );
 }
 
-export function EyeIcon(props: React.SVGProps<SVGSVGElement>) {
+export function EyeIcon(props: SVGProps<SVGSVGElement>) {
     return (
         <svg
-            {...props}
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
             fill="none"
@@ -38,6 +37,7 @@ export function EyeIcon(props: React.SVGProps<SVGSVGElement>) {
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
+            {...props}
         >
             <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
             <circle cx="12" cy="12" r="3" />
@@ -45,16 +45,16 @@ export function EyeIcon(props: React.SVGProps<SVGSVGElement>) {
     );
 }
 
-export function UnlockIcon(props: React.SVGProps<SVGSVGElement>) {
+export function UnlockIcon(props: SVGProps<SVGSVGElement>) {
     return (
         <svg
-            {...props}
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
             width="24"
             height="24"
             fill="currentColor"
             viewBox="0 0 24 24"
+            {...props}
         >
             <path
                 fillRule="evenodd"
@@ -65,16 +65,16 @@ export function UnlockIcon(props: React.SVGProps<SVGSVGElement>) {
     );
 }
 
-export function LockIcon(props: React.SVGProps<SVGSVGElement>) {
+export function LockIcon(props: SVGProps<SVGSVGElement>) {
     return (
         <svg
-            {...props}
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
             width="24"
             height="24"
             fill="currentColor"
             viewBox="0 0 24 24"
+            {...props}
         >
             <path
                 fillRule="evenodd"
@@ -85,16 +85,16 @@ export function LockIcon(props: React.SVGProps<SVGSVGElement>) {
     );
 }
 
-export function AddIcon(props: React.SVGProps<SVGSVGElement>) {
+export function AddIcon(props: SVGProps<SVGSVGElement>) {
     return (
         <svg
-            {...props}
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
             width="24"
             height="24"
             fill="currentColor"
             viewBox="0 0 24 24"
+            {...props}
         >
             <path
                 fillRule="evenodd"
@@ -105,10 +105,9 @@ export function AddIcon(props: React.SVGProps<SVGSVGElement>) {
     );
 }
 
-export function TrashIcon(props: React.SVGProps<SVGSVGElement>) {
+export function TrashIcon(props: SVGProps<SVGSVGElement>) {
     return (
         <svg
-            {...props}
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
             fill="none"
@@ -116,6 +115,7 @@ export function TrashIcon(props: React.SVGProps<SVGSVGElement>) {
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
+            {...props}
         >
             <path d="M3 6h18" />
             <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
@@ -124,16 +124,16 @@ export function TrashIcon(props: React.SVGProps<SVGSVGElement>) {
     );
 }
 
-export function ClockIcon(props: React.SVGProps<SVGSVGElement>) {
+export function ClockIcon(props: SVGProps<SVGSVGElement>) {
     return (
         <svg
-            {...props}
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
             width="24"
             height="24"
             fill="currentColor"
             viewBox="0 0 24 24"
+            {...props}
         >
             <path
                 fillRule="evenodd"
@@ -144,16 +144,16 @@ export function ClockIcon(props: React.SVGProps<SVGSVGElement>) {
     );
 }
 
-export function HomeIcon(props: React.SVGProps<SVGSVGElement>) {
+export function HomeIcon(props: SVGProps<SVGSVGElement>) {
     return (
         <svg
-            {...props}
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
             width="24"
             height="24"
             fill="currentColor"
             viewBox="0 0 24 24"
+            {...props}
         >
             <path
                 fillRule="evenodd"
@@ -164,16 +164,16 @@ export function HomeIcon(props: React.SVGProps<SVGSVGElement>) {
     );
 }
 
-export function InfoIcon(props: React.SVGProps<SVGSVGElement>) {
+export function InfoIcon(props: SVGProps<SVGSVGElement>) {
     return (
         <svg
-            {...props}
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
             width="24"
             height="24"
             fill="currentColor"
             viewBox="0 0 24 24"
+            {...props}
         >
             <path
                 fillRule="evenodd"
@@ -184,16 +184,16 @@ export function InfoIcon(props: React.SVGProps<SVGSVGElement>) {
     );
 }
 
-export function ExclamationIcon(props: React.SVGProps<SVGSVGElement>) {
+export function ExclamationIcon(props: SVGProps<SVGSVGElement>) {
     return (
         <svg
-            {...props}
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
             width="24"
             height="24"
             fill="currentColor"
             viewBox="0 0 24 24"
+            {...props}
         >
             <path
                 fillRule="evenodd"
@@ -204,16 +204,16 @@ export function ExclamationIcon(props: React.SVGProps<SVGSVGElement>) {
     );
 }
 
-export function CogIcon(props: React.SVGProps<SVGSVGElement>) {
+export function CogIcon(props: SVGProps<SVGSVGElement>) {
     return (
         <svg
-            {...props}
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
             width="24"
             height="24"
             fill="currentColor"
             viewBox="0 0 24 24"
+            {...props}
         >
             <path
                 fillRule="evenodd"
@@ -224,16 +224,16 @@ export function CogIcon(props: React.SVGProps<SVGSVGElement>) {
     );
 }
 
-export function CopyIcon(props: React.SVGProps<SVGSVGElement>) {
+export function CopyIcon(props: SVGProps<SVGSVGElement>) {
     return (
         <svg
-            {...props}
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
             width="24"
             height="24"
             fill="currentColor"
             viewBox="0 0 24 24"
+            {...props}
         >
             <path
                 fillRule="evenodd"
@@ -249,32 +249,32 @@ export function CopyIcon(props: React.SVGProps<SVGSVGElement>) {
     );
 }
 
-export function ShieldIcon(props: React.SVGProps<SVGSVGElement>) {
+export function ShieldIcon(props: SVGProps<SVGSVGElement>) {
     return (
         <svg
-            {...props}
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
             width="24"
             height="24"
             fill="currentColor"
             viewBox="0 0 24 24"
+            {...props}
         >
             <path d="M12.356 3.066a1 1 0 0 0-.712 0l-7 2.666A1 1 0 0 0 4 6.68a17.695 17.695 0 0 0 2.022 7.98 17.405 17.405 0 0 0 5.403 6.158 1 1 0 0 0 1.15 0 17.406 17.406 0 0 0 5.402-6.157A17.694 17.694 0 0 0 20 6.68a1 1 0 0 0-.644-.949l-7-2.666Z" />
         </svg>
     );
 }
 
-export function ClipboardIcon(props: React.SVGProps<SVGSVGElement>) {
+export function ClipboardIcon(props: SVGProps<SVGSVGElement>) {
     return (
         <svg
-            {...props}
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
             width="24"
             height="24"
             fill="currentColor"
             viewBox="0 0 24 24"
+            {...props}
         >
             <path
                 fillRule="evenodd"
@@ -285,16 +285,16 @@ export function ClipboardIcon(props: React.SVGProps<SVGSVGElement>) {
     );
 }
 
-export function SaveIcon(props: React.SVGProps<SVGSVGElement>) {
+export function SaveIcon(props: SVGProps<SVGSVGElement>) {
     return (
         <svg
-            {...props}
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
             width="24"
             height="24"
             fill="currentColor"
             viewBox="0 0 24 24"
+            {...props}
         >
             <path
                 fillRule="evenodd"
@@ -305,16 +305,16 @@ export function SaveIcon(props: React.SVGProps<SVGSVGElement>) {
     );
 }
 
-export function GenerateIcon(props: React.SVGProps<SVGSVGElement>) {
+export function GenerateIcon(props: SVGProps<SVGSVGElement>) {
     return (
         <svg
-            {...props}
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
             width="24"
             height="24"
             fill="currentColor"
             viewBox="0 0 24 24"
+            {...props}
         >
             <path
                 fillRule="evenodd"
@@ -326,16 +326,16 @@ export function GenerateIcon(props: React.SVGProps<SVGSVGElement>) {
     );
 }
 
-export function ClipboardCheckIcon(props: React.SVGProps<SVGSVGElement>) {
+export function ClipboardCheckIcon(props: SVGProps<SVGSVGElement>) {
     return (
         <svg
-            {...props}
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
             width="24"
             height="24"
             fill="currentColor"
             viewBox="0 0 24 24"
+            {...props}
         >
             <path
                 fillRule="evenodd"
@@ -346,32 +346,33 @@ export function ClipboardCheckIcon(props: React.SVGProps<SVGSVGElement>) {
     );
 }
 
-export function HammerIcon(props: React.SVGProps<SVGSVGElement>) {
+export function HammerIcon(props: SVGProps<SVGSVGElement>) {
     return (
         <svg
-            {...props}
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
             width="24"
             height="24"
             fill="currentColor"
             viewBox="0 0 24 24"
+            {...props}
         >
             <path d="M8.4 6.763c-.251.1-.383.196-.422.235L6.564 5.584l2.737-2.737c1.113-1.113 3.053-1.097 4.337.187l1.159 1.159a1 1 0 0 1 1.39.022l4.105 4.105a1 1 0 0 1 .023 1.39l1.345 1.346a1 1 0 0 1 0 1.415l-2.052 2.052a1 1 0 0 1-1.414 0l-1.346-1.346a1 1 0 0 1-1.323.039L11.29 8.983a1 1 0 0 1 .04-1.324l-.849-.848c-.18-.18-.606-.322-1.258-.25a3.271 3.271 0 0 0-.824.202Zm1.519 3.675L3.828 16.53a1 1 0 0 0 0 1.414l2.736 2.737a1 1 0 0 0 1.414 0l6.091-6.091-4.15-4.15Z" />
         </svg>
     );
 }
 
-export function FileAndPenIcon(props: React.SVGProps<SVGSVGElement>) {
+export function FileAndPenIcon(props: SVGProps<SVGSVGElement>) {
     return (
         <svg
-            {...props}
+            className="w-6 h-6"
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
             width="24"
             height="24"
             fill="currentColor"
             viewBox="0 0 24 24"
+            {...props}
         >
             <path
                 fillRule="evenodd"
@@ -387,16 +388,16 @@ export function FileAndPenIcon(props: React.SVGProps<SVGSVGElement>) {
     );
 }
 
-export function RefreshIcon(props: React.SVGProps<SVGSVGElement>) {
+export function RefreshIcon(props: SVGProps<SVGSVGElement>) {
     return (
         <svg
-            {...props}
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
             width="24"
             height="24"
             fill="none"
             viewBox="0 0 24 24"
+            {...props}
         >
             <path
                 stroke="currentColor"
@@ -409,16 +410,16 @@ export function RefreshIcon(props: React.SVGProps<SVGSVGElement>) {
     );
 }
 
-export function LightBulbIcon(props: React.SVGProps<SVGSVGElement>) {
+export function LightBulbIcon(props: SVGProps<SVGSVGElement>) {
     return (
         <svg
-            {...props}
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
             width="24"
             height="24"
             fill="currentColor"
             viewBox="0 0 24 24"
+            {...props}
         >
             <path
                 fillRule="evenodd"
@@ -429,7 +430,52 @@ export function LightBulbIcon(props: React.SVGProps<SVGSVGElement>) {
     );
 }
 
-export function PaypalIcon(props: React.SVGProps<SVGSVGElement>) {
+export function ShapesIcon(props: SVGProps<SVGSVGElement>) {
+    return (
+        <svg
+            className="w-6 h-6"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="currentColor"
+            viewBox="0 0 24 24"
+            {...props}
+        >
+            <path d="M12.8638 3.49613C12.6846 3.18891 12.3557 3 12 3s-.6846.18891-.8638.49613l-3.49998 6c-.18042.30929-.1817.69147-.00336 1.00197S8.14193 11 8.5 11h7c.3581 0 .6888-.1914.8671-.5019.1784-.3105.1771-.69268-.0033-1.00197l-3.5-6ZM4 13c-.55228 0-1 .4477-1 1v6c0 .5523.44772 1 1 1h6c.5523 0 1-.4477 1-1v-6c0-.5523-.4477-1-1-1H4Zm12.5-1c-2.4853 0-4.5 2.0147-4.5 4.5s2.0147 4.5 4.5 4.5 4.5-2.0147 4.5-4.5-2.0147-4.5-4.5-4.5Z" />
+        </svg>
+    );
+}
+
+export function BugIcon(props: SVGProps<SVGSVGElement>) {
+    return (
+        <svg
+            className="w-6 h-6"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="currentColor"
+            viewBox="0 0 24 24"
+            {...props}
+        >
+            <path d="M18 17h-.09c.058-.33.088-.665.09-1v-1h1a1 1 0 0 0 0-2h-1.09a5.97 5.97 0 0 0-.26-1H17a2 2 0 0 0 2-2V8a1 1 0 1 0-2 0v2h-.54a6.239 6.239 0 0 0-.46-.46V8a3.963 3.963 0 0 0-.986-2.6l.693-.693A1 1 0 0 0 16 4V3a1 1 0 1 0-2 0v.586l-.661.661a3.753 3.753 0 0 0-2.678 0L10 3.586V3a1 1 0 1 0-2 0v1a1 1 0 0 0 .293.707l.693.693A3.963 3.963 0 0 0 8 8v1.54a6.239 6.239 0 0 0-.46.46H7V8a1 1 0 0 0-2 0v2a2 2 0 0 0 2 2h-.65a5.97 5.97 0 0 0-.26 1H5a1 1 0 0 0 0 2h1v1a6 6 0 0 0 .09 1H6a2 2 0 0 0-2 2v2a1 1 0 1 0 2 0v-2h.812A6.012 6.012 0 0 0 11 21.907V12a1 1 0 0 1 2 0v9.907A6.011 6.011 0 0 0 17.188 19H18v2a1 1 0 0 0 2 0v-2a2 2 0 0 0-2-2Zm-4-8.65a5.922 5.922 0 0 0-.941-.251l-.111-.017a5.52 5.52 0 0 0-1.9 0l-.111.017A5.925 5.925 0 0 0 10 8.35V8a2 2 0 1 1 4 0v.35Z" />
+        </svg>
+    );
+}
+
+export function TagIcon(props: SVGProps<SVGSVGElement>) {
+    return (
+        <svg
+            className="w-6 h-6"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="currentColor"
+            viewBox="0 0 24 24"
+            {...props}
+        >
+            <path d="M18.045 3.007 12.31 3a1.965 1.965 0 0 0-1.4.585l-7.33 7.394a2 2 0 0 0 0 2.805l6.573 6.631a1.957 1.957 0 0 0 1.4.585 1.965 1.965 0 0 0 1.4-.585l7.409-7.477A2 2 0 0 0 21 11.479v-5.5a2.972 2.972 0 0 0-2.955-2.972Zm-2.452 6.438a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z" />
+        </svg>
+    );
+}
+
+export function PaypalIcon(props: SVGProps<SVGSVGElement>) {
     return (
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 48 48" {...props}>
             <g clipPath="url(#a)">
@@ -455,7 +501,7 @@ export function PaypalIcon(props: React.SVGProps<SVGSVGElement>) {
     );
 }
 
-export function ReactIcon(props: React.SVGProps<SVGSVGElement>) {
+export function ReactIcon(props: SVGProps<SVGSVGElement>) {
     return (
         <svg
             viewBox="0 0 256 228"
@@ -473,7 +519,7 @@ export function ReactIcon(props: React.SVGProps<SVGSVGElement>) {
     );
 }
 
-export function TauriIcon(props: React.SVGProps<SVGSVGElement>) {
+export function TauriIcon(props: SVGProps<SVGSVGElement>) {
     return (
         <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -506,7 +552,7 @@ export function TauriIcon(props: React.SVGProps<SVGSVGElement>) {
     );
 }
 
-export function RustIcon(props: React.SVGProps<SVGSVGElement>) {
+export function RustIcon(props: SVGProps<SVGSVGElement>) {
     return (
         <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -524,7 +570,7 @@ export function RustIcon(props: React.SVGProps<SVGSVGElement>) {
     );
 }
 
-export function TypescriptIcon(props: React.SVGProps<SVGSVGElement>) {
+export function TypescriptIcon(props: SVGProps<SVGSVGElement>) {
     return (
         <svg
             viewBox="0 0 256 256"
@@ -546,7 +592,7 @@ export function TypescriptIcon(props: React.SVGProps<SVGSVGElement>) {
     );
 }
 
-export function TailwindIcon(props: React.SVGProps<SVGSVGElement>) {
+export function TailwindIcon(props: SVGProps<SVGSVGElement>) {
     return (
         <svg
             viewBox="0 0 256 154"
@@ -570,7 +616,7 @@ export function TailwindIcon(props: React.SVGProps<SVGSVGElement>) {
     );
 }
 
-export function FlowbiteIcon(props: React.SVGProps<SVGSVGElement>) {
+export function FlowbiteIcon(props: SVGProps<SVGSVGElement>) {
     return (
         <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -721,7 +767,7 @@ export function FlowbiteIcon(props: React.SVGProps<SVGSVGElement>) {
     );
 }
 
-export function GithubIcon(props: React.SVGProps<SVGSVGElement>) {
+export function GithubIcon(props: SVGProps<SVGSVGElement>) {
     return (
         <svg
             viewBox="0 0 256 250"
@@ -737,7 +783,7 @@ export function GithubIcon(props: React.SVGProps<SVGSVGElement>) {
     );
 }
 
-export function NextjsIcon(props: React.SVGProps<SVGSVGElement>) {
+export function NextjsIcon(props: SVGProps<SVGSVGElement>) {
     return (
         <svg
             width="1em"
@@ -750,7 +796,7 @@ export function NextjsIcon(props: React.SVGProps<SVGSVGElement>) {
             <mask
                 id="mask0_408_139"
                 style={{
-                    maskType: "alpha",
+                    maskType: 'alpha',
                 }}
                 maskUnits="userSpaceOnUse"
                 x={0}

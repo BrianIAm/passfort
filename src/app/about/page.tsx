@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 export default function Page() {
     return (
@@ -103,7 +103,8 @@ export default function Page() {
                     href="https://github.com/BrianTib/passfort"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center text-passfort-vibrant hover:text-white">
+                    className="inline-flex items-center text-passfort-vibrant hover:text-white"
+                >
                     View on GitHub
                     {/* <ArrowTopRightOnSquareIcon className="w-4 h-4 ml-1" /> */}
                 </a>

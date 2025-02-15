@@ -1,16 +1,16 @@
-"use client";
+'use client';
 
-import { Dialog } from "#/components/Dialog";
-import { encrypt, decrypt, verifyMasterPassword } from "#/lib/encrypt";
-import { type Password } from "#/types/password";
-import Link from "next/link";
-import React, { useState, useEffect } from "react";
+import { Dialog } from '#/components/Dialog';
+import { encrypt, decrypt, verifyMasterPassword } from '#/lib/encrypt';
+import { type Password } from '#/types/password';
+import Link from 'next/link';
+import React, { useState, useEffect } from 'react';
 import {
     getStoredPasswords,
     setStoredPasswords,
     getMasterPasswordVerification,
     hasMasterPasswordVerification,
-} from "#/lib/fs";
+} from '#/lib/fs';
 import {
     AddIcon,
     ClockIcon,
@@ -20,13 +20,13 @@ import {
     UnlockIcon,
     ExclamationIcon,
     ShieldIcon,
-} from "#/icons";
+} from '#/icons';
 
 const UNLOCK_DURATION = 60_000; // 30 seconds
 
 export default function Page() {
     const [passwords, setPasswords] = useState<Password[]>([]);
-    const [masterPassword, setMasterPassword] = useState<string>("");
+    const [masterPassword, setMasterPassword] = useState<string>('');
     const [lastUnlockTime, setLastUnlockTime] = useState<number>(0);
     const [isAddingPassword, setIsAddingPassword] = useState(false);
     const [isUnlockingPasswords, setIsUnlockingPasswords] = useState(false);
@@ -37,8 +37,7 @@ export default function Page() {
             // Filter out the password to delete
             (prevPassword) =>
                 prevPassword.name !== password.name &&
-                prevPassword.associated_identifier !==
-                    password.associated_identifier &&
+                prevPassword.associated_identifier !== password.associated_identifier &&
                 prevPassword.value !== password.value
         );
 
@@ -59,7 +58,7 @@ export default function Page() {
 
     useEffect(() => {
         const unlockInterval = setInterval(() => {
-            setMasterPassword("");
+            setMasterPassword('');
             setLastUnlockTime(0);
         }, UNLOCK_DURATION);
 
@@ -71,9 +70,7 @@ export default function Page() {
     }, [masterPassword]);
 
     useEffect(() => {
-        hasMasterPasswordVerification().then((hasToken) =>
-            setHasMasterPassword(hasToken)
-        );
+        hasMasterPasswordVerification().then((hasToken) => setHasMasterPassword(hasToken));
     }, []);
 
     return (
@@ -82,9 +79,7 @@ export default function Page() {
 
             <div className="flex-1 px-8 py-4 max-w-7xl">
                 {/* Modals */}
-                {isAddingPassword && (
-                    <AddPasswordModal setIsModalShowing={setIsAddingPassword} />
-                )}
+                {isAddingPassword && <AddPasswordModal setIsModalShowing={setIsAddingPassword} />}
 
                 {isUnlockingPasswords && (
                     <UnlockPasswordsModal
@@ -107,14 +102,16 @@ export default function Page() {
                             <button
                                 className="flex items-center px-4 py-2 rounded-lg border border-passfort-vibrant bg-passfort-vibrant/10 hover:bg-passfort-vibrant/20 transition-colors"
                                 aria-label="Add new password"
-                                onClick={() => setIsAddingPassword(true)}>
+                                onClick={() => setIsAddingPassword(true)}
+                            >
                                 <AddIcon className="w-5 h-5 mr-2" />
                                 <span>Add Password</span>
                             </button>
                             <button
                                 className="flex items-center px-4 py-2 rounded-lg border border-passfort-vibrant bg-passfort-vibrant/10 hover:bg-passfort-vibrant/20 transition-colors"
                                 aria-label="Unlock passwords"
-                                onClick={() => setIsUnlockingPasswords(true)}>
+                                onClick={() => setIsUnlockingPasswords(true)}
+                            >
                                 {masterPassword ? (
                                     <>
                                         <UnlockIcon className="w-5 h-5 mr-2" />
@@ -137,12 +134,10 @@ export default function Page() {
                         <div className="flex items-center">
                             <ClockIcon className="w-5 h-5 mr-2 text-green-500" />
                             <span className="text-green-400">
-                                Vault unlocked - Will auto-lock in{" "}
+                                Vault unlocked - Will auto-lock in{' '}
                                 {Math.ceil(
-                                    (UNLOCK_DURATION -
-                                        (Date.now() - lastUnlockTime)) /
-                                        1000
-                                )}{" "}
+                                    (UNLOCK_DURATION - (Date.now() - lastUnlockTime)) / 1000
+                                )}{' '}
                                 seconds
                             </span>
                         </div>
@@ -152,16 +147,15 @@ export default function Page() {
                 {/* No Master Password Disclaimer */}
                 {!hasMasterPassword && (
                     <div className="p-8 rounded-lg border border-passfort-vibrant bg-passfort-vibrant/10 text-center">
-                        <h3 className="text-xl font-bold mb-4">
-                            No Master Password Set
-                        </h3>
+                        <h3 className="text-xl font-bold mb-4">No Master Password Set</h3>
                         <p className="text-passfort-vibrant mb-6">
-                            You haven&apos;t set a master password yet. To start
-                            using PassFort, set a master password to secure your
+                            You haven&apos;t set a master password yet. To start using PassFort, set
+                            a master password to secure your vault
                         </p>
                         <Link
                             href="/master-password"
-                            className="px-4 py-2 rounded-lg bg-passfort-vibrant hover:bg-passfort-vibrant/80 transition-colors">
+                            className="px-4 py-2 rounded-lg bg-passfort-vibrant hover:bg-passfort-vibrant/80 transition-colors"
+                        >
                             Setup Master Password
                         </Link>
                     </div>
@@ -184,16 +178,14 @@ export default function Page() {
                 {/* Empty Vault */}
                 {hasMasterPassword && passwords.length <= 0 && (
                     <div className="p-8 rounded-lg border border-passfort-vibrant bg-passfort-vibrant/10 text-center">
-                        <h3 className="text-xl font-bold mb-4">
-                            No Passwords Yet
-                        </h3>
+                        <h3 className="text-xl font-bold mb-4">No Passwords Yet</h3>
                         <p className="text-passfort-vibrant mb-6">
-                            Your vault is empty. Start by adding your first
-                            password.
+                            Your vault is empty. Start by adding your first password.
                         </p>
                         <button
                             className="px-4 py-2 rounded-lg bg-passfort-vibrant hover:bg-passfort-vibrant/80 transition-colors"
-                            onClick={() => setIsAddingPassword(true)}>
+                            onClick={() => setIsAddingPassword(true)}
+                        >
                             Add Your First Password
                         </button>
                     </div>
@@ -209,9 +201,9 @@ function AddPasswordModal({
     setIsModalShowing: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
     const [errors, setErrors] = useState<{ [key: string]: string }>({
-        name: "",
-        password: "",
-        masterPassword: "",
+        name: '',
+        password: '',
+        masterPassword: '',
     });
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -219,42 +211,32 @@ function AddPasswordModal({
         setErrors({});
 
         const form = event.currentTarget;
-        const name = form.elements.namedItem("name") as HTMLInputElement;
-        const identifier = form.elements.namedItem(
-            "identifier"
-        ) as HTMLInputElement;
-        const password = form.elements.namedItem(
-            "password"
-        ) as HTMLInputElement;
-        const masterPassword = form.elements.namedItem(
-            "master-password"
-        ) as HTMLInputElement;
+        const name = form.elements.namedItem('name') as HTMLInputElement;
+        const identifier = form.elements.namedItem('identifier') as HTMLInputElement;
+        const password = form.elements.namedItem('password') as HTMLInputElement;
+        const masterPassword = form.elements.namedItem('master-password') as HTMLInputElement;
 
         const newErrors: { [key: string]: string } = {};
 
         if (!name.value) {
-            newErrors.name = "Name is required";
+            newErrors.name = 'Name is required';
         }
 
         if (!password.value) {
-            newErrors.password = "Password is required";
+            newErrors.password = 'Password is required';
         }
 
         if (!masterPassword.value) {
-            newErrors.masterPassword = "Master password is required";
+            newErrors.masterPassword = 'Master password is required';
         }
 
-        if (
-            masterPassword.value.length < 8 ||
-            masterPassword.value.length > 64
-        ) {
-            newErrors.masterPassword =
-                "Master password must be between 8 and 64 characters";
+        if (masterPassword.value.length < 8 || masterPassword.value.length > 64) {
+            newErrors.masterPassword = 'Master password must be between 8 and 64 characters';
         }
 
         const isVerified = await verifyMasterPassword(masterPassword.value);
         if (!isVerified) {
-            newErrors.masterPassword = "Incorrect master password";
+            newErrors.masterPassword = 'Incorrect master password';
         }
 
         if (Object.keys(newErrors).length > 0) {
@@ -281,18 +263,15 @@ function AddPasswordModal({
     return (
         <Dialog onClose={() => setIsModalShowing(false)}>
             <div className="rounded-lg">
-                <form
-                    className="flex flex-col p-6 min-w-[500px]"
-                    onSubmit={handleSubmit}>
-                    <h3 className="text-2xl font-bold text-white mb-6">
-                        Add New Password
-                    </h3>
+                <form className="flex flex-col p-6 min-w-[500px]" onSubmit={handleSubmit}>
+                    <h3 className="text-2xl font-bold text-white mb-6">Add New Password</h3>
 
                     <div className="space-y-4">
                         <div>
                             <label
                                 htmlFor="name"
-                                className="block font-medium text-passfort-vibrant mb-1">
+                                className="block font-medium text-passfort-vibrant mb-1"
+                            >
                                 Name <span className="text-red-500">*</span>
                             </label>
                             <input
@@ -301,8 +280,8 @@ function AddPasswordModal({
                                 className={`bg-passfort/25 w-full p-3 rounded-lg border[&:autofill]:bg-none [&:-webkit-autofill]:bg-none
                                 ${
                                     errors.name
-                                        ? "border-red-500 focus:border-red-500"
-                                        : "border-passfort-vibrant/50 focus:border-passfort-vibrant"
+                                        ? 'border-red-500 focus:border-red-500'
+                                        : 'border-passfort-vibrant/50 focus:border-passfort-vibrant'
                                 } focus:ring-0 transition-colors`}
                             />
                             {errors.name && (
@@ -316,7 +295,8 @@ function AddPasswordModal({
                         <div>
                             <label
                                 htmlFor="identifier"
-                                className="block font-medium text-passfort-vibrant mb-1">
+                                className="block font-medium text-passfort-vibrant mb-1"
+                            >
                                 Identifier
                             </label>
                             <input
@@ -332,7 +312,8 @@ function AddPasswordModal({
                         <div>
                             <label
                                 htmlFor="password"
-                                className="block font-medium text-passfort-vibrant mb-1">
+                                className="block font-medium text-passfort-vibrant mb-1"
+                            >
                                 Password <span className="text-red-500">*</span>
                             </label>
                             <input
@@ -341,8 +322,8 @@ function AddPasswordModal({
                                 autoComplete="current-password"
                                 className={`bg-passfort/25 w-full p-3 rounded-lg border ${
                                     errors.password
-                                        ? "border-red-500 focus:border-red-500"
-                                        : "border-passfort-vibrant/50 focus:border-passfort-vibrant"
+                                        ? 'border-red-500 focus:border-red-500'
+                                        : 'border-passfort-vibrant/50 focus:border-passfort-vibrant'
                                 } focus:ring-0 transition-colors`}
                             />
                             {errors.password && (
@@ -363,9 +344,8 @@ function AddPasswordModal({
                             </div>
                             <div className="space-y-4 text-red-400">
                                 <p>
-                                    Use your master password to encode this
-                                    password. Without it, it is stored in plain
-                                    text which is not safe if your device is
+                                    Use your master password to encode this password. Without it, it
+                                    is stored in plain text which is not safe if your device is
                                     compromised.
                                 </p>
                             </div>
@@ -374,9 +354,9 @@ function AddPasswordModal({
                         <div>
                             <label
                                 htmlFor="master-password"
-                                className="block font-medium text-passfort-vibrant mb-1">
-                                Master Password{" "}
-                                <span className="text-red-500">*</span>
+                                className="block font-medium text-passfort-vibrant mb-1"
+                            >
+                                Master Password <span className="text-red-500">*</span>
                             </label>
                             <input
                                 type="password"
@@ -384,8 +364,8 @@ function AddPasswordModal({
                                 autoComplete="master-password"
                                 className={`bg-passfort/25 w-full p-3 rounded-lg border ${
                                     errors.masterPassword
-                                        ? "border-red-500 focus:border-red-500"
-                                        : "border-passfort-vibrant/50 focus:border-passfort-vibrant"
+                                        ? 'border-red-500 focus:border-red-500'
+                                        : 'border-passfort-vibrant/50 focus:border-passfort-vibrant'
                                 } focus:ring-0 transition-colors`}
                             />
                             {errors.masterPassword && (
@@ -401,12 +381,14 @@ function AddPasswordModal({
                         <button
                             type="button"
                             onClick={() => setIsModalShowing(false)}
-                            className="px-4 py-2 rounded-lg border border-passfort-vibrant text-passfort-vibrant hover:bg-passfort-vibrant/10 transition-colors">
+                            className="px-4 py-2 rounded-lg border border-passfort-vibrant text-passfort-vibrant hover:bg-passfort-vibrant/10 transition-colors"
+                        >
                             Cancel
                         </button>
                         <button
                             type="submit"
-                            className="px-4 py-2 rounded-lg bg-passfort-vibrant/80 text-white hover:bg-passfort-vibrant transition-colors">
+                            className="px-4 py-2 rounded-lg bg-passfort-vibrant/80 text-white hover:bg-passfort-vibrant transition-colors"
+                        >
                             Add Password
                         </button>
                     </div>
@@ -423,27 +405,25 @@ function UnlockPasswordsModal({
     setMasterPassword: React.Dispatch<React.SetStateAction<string>>;
     setIsModalShowing: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
-    const [currentPassword, setCurrentPassword] = useState<string>("");
-    const [error, setError] = useState("");
+    const [currentPassword, setCurrentPassword] = useState<string>('');
+    const [error, setError] = useState('');
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        setError("");
+        setError('');
 
         const form = event.currentTarget;
-        const masterPassword = form.elements.namedItem(
-            "master-password"
-        ) as HTMLInputElement;
+        const masterPassword = form.elements.namedItem('master-password') as HTMLInputElement;
 
         if (!masterPassword.value) {
-            setError("Master password is required");
+            setError('Master password is required');
             return;
         }
 
         const isVerified = await verifyMasterPassword(masterPassword.value);
 
         if (!isVerified) {
-            setError("Incorrect master password");
+            setError('Incorrect master password');
             return;
         }
 
@@ -454,12 +434,9 @@ function UnlockPasswordsModal({
     return (
         <Dialog onClose={() => setIsModalShowing(false)}>
             <div className="p-4 text-passfort-vibrant">
-                <h2 className="text-2xl font-semibold mb-4 text-white">
-                    Unlock Your Passwords
-                </h2>
+                <h2 className="text-2xl font-semibold mb-4 text-white">Unlock Your Passwords</h2>
                 <p className="mb-4">
-                    Enter your master password to temporarily access your stored
-                    passwords.
+                    Enter your master password to temporarily access your stored passwords.
                 </p>
                 <form onSubmit={handleSubmit}>
                     <input
@@ -481,7 +458,8 @@ function UnlockPasswordsModal({
 
                     <button
                         type="submit"
-                        className="mt-4 text-white px-4 py-2 rounded-sm font-semibold bg-passfort-vibrant">
+                        className="mt-4 text-white px-4 py-2 rounded-sm font-semibold bg-passfort-vibrant"
+                    >
                         Unlock
                     </button>
                 </form>
@@ -537,22 +515,22 @@ function StoredPasswordComponent({
         <div className="rounded-xl border-2 border-zinc-700 p-6 shadow-lg hover:border-passfort-vibrant/50 transition-colors">
             <div
                 className={`flex items-center justify-between ${
-                    password.associated_identifier ? "mb-4" : "mb-8"
-                }`}>
+                    password.associated_identifier ? 'mb-4' : 'mb-8'
+                }`}
+            >
                 <div>
                     <h3 className="text-xl font-medium mb-1">
                         {password.name.length > 20
-                            ? password.name.slice(0, 20) + "..."
+                            ? password.name.slice(0, 20) + '...'
                             : password.name}
                     </h3>
                     {password.associated_identifier && (
                         <p
                             className={`text-sm text-passfort-vibrant/75 ${
-                                !isRevealed && "blur-xs"
-                            }`}>
-                            {isRevealed
-                                ? password.associated_identifier
-                                : "passfort@example.com"}
+                                !isRevealed && 'blur-xs'
+                            }`}
+                        >
+                            {isRevealed ? password.associated_identifier : 'passfort@example.com'}
                         </p>
                     )}
                 </div>
@@ -562,7 +540,8 @@ function StoredPasswordComponent({
                             <button
                                 className="p-2 rounded-lg hover:bg-white/10 transition-colors group"
                                 onClick={revealPasswordMomentarily}
-                                aria-label="Reveal password">
+                                aria-label="Reveal password"
+                            >
                                 <EyeIcon className="w-5 h-5 text-white" />
                             </button>
                         </>
@@ -571,7 +550,8 @@ function StoredPasswordComponent({
                     <button
                         className="p-2 rounded-lg hover:bg-passfort-vibrant/10 transition-colors group"
                         onClick={() => setShowDeleteConfirm(true)}
-                        aria-label="Delete password">
+                        aria-label="Delete password"
+                    >
                         <TrashIcon className="w-5 h-5 text-passfort-vibrant group-hover:text-red-600 transition-colors" />
                     </button>
                 </div>
@@ -579,9 +559,10 @@ function StoredPasswordComponent({
             <div className="relative">
                 <div
                     className={`font-mono p-3 rounded-lg bg-zinc-800/50 ${
-                        isRevealed ? "text-white" : "text-zinc-500"
-                    }`}>
-                    {isRevealed ? password.value : "••••••••"}
+                        isRevealed ? 'text-white' : 'text-zinc-500'
+                    }`}
+                >
+                    {isRevealed ? password.value : '••••••••'}
                 </div>
                 {isRevealed && (
                     <div className="absolute -top-2 right-0 text-xs text-red-500">
@@ -592,17 +573,15 @@ function StoredPasswordComponent({
 
             {showDeleteConfirm && (
                 <Dialog onClose={() => setShowDeleteConfirm(false)}>
-                    <h2 className="font-bold text-2xl text-white mb-2">
-                        Confirm Deletion
-                    </h2>
+                    <h2 className="font-bold text-2xl text-white mb-2">Confirm Deletion</h2>
                     <p className="text-passfort-vibrant">
-                        Are you sure you want to delete this password? This
-                        action cannot be undone.
+                        Are you sure you want to delete this password? This action cannot be undone.
                     </p>
                     <div className="flex justify-end gap-4 mt-8">
                         <button
                             onClick={() => setShowDeleteConfirm(false)}
-                            className="px-4 py-2 rounded-lg border border-zinc-200 text-zinc-200 bg-zinc-200/10 hover:bg-zinc-200/25">
+                            className="px-4 py-2 rounded-lg border border-zinc-200 text-zinc-200 bg-zinc-200/10 hover:bg-zinc-200/25"
+                        >
                             Cancel
                         </button>
                         <button
@@ -610,7 +589,8 @@ function StoredPasswordComponent({
                                 deletePassword(password);
                                 setShowDeleteConfirm(false);
                             }}
-                            className="px-4 py-2 rounded-lg bg-red-800 text-white hover:bg-red-600 transition-colors">
+                            className="px-4 py-2 rounded-lg bg-red-800 text-white hover:bg-red-600 transition-colors"
+                        >
                             Delete
                         </button>
                     </div>

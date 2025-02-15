@@ -1,23 +1,23 @@
-"use client";
-import React, { useEffect, useState } from "react";
-import { encrypt, decrypt } from "#/lib/encrypt";
-import { Dialog } from "#/components/Dialog";
-import { PasswordGenerator } from "#/components/PasswordGenerator";
-import { writeText as writeTextToClipboard } from "@tauri-apps/plugin-clipboard-manager";
-import Link from "next/link";
+'use client';
+import React, { useEffect, useState } from 'react';
+import { encrypt, decrypt } from '#/lib/encrypt';
+import { Dialog } from '#/components/Dialog';
+import { PasswordGenerator } from '#/components/PasswordGenerator';
+import { writeText as writeTextToClipboard } from '@tauri-apps/plugin-clipboard-manager';
+import Link from 'next/link';
 import {
     getStoredPasswords,
     setStoredPasswords,
     hasMasterPasswordVerification,
     saveMasterPasswordVerification,
-} from "#/lib/fs";
+} from '#/lib/fs';
 
-import { ShieldIcon, CopyIcon, ExclamationIcon, LightBulbIcon } from "#/icons";
+import { ShieldIcon, CopyIcon, ExclamationIcon, LightBulbIcon } from '#/icons';
 
 export default function Page() {
     const [showUpdatePasswordDialog, setUpdatePasswordDialog] = useState(false);
     const [hasMasterPassword, setHasMasterPassword] = useState(false);
-    const [generatedPassword, setGeneratedPassword] = useState("");
+    const [generatedPassword, setGeneratedPassword] = useState('');
 
     // Check if the user has set a master password before
     useEffect(() => {
@@ -28,6 +28,7 @@ export default function Page() {
 
     return (
         <main className="flex-1 px-8 py-4 max-w-7xl">
+            {/* Page Header */}
             <div className="flex justify-between items-center mb-6">
                 <div>
                     <h2 className="text-3xl font-bold">Master Password</h2>
@@ -37,9 +38,24 @@ export default function Page() {
                 </div>
             </div>
 
+            {/* Master Password Warning */}
+            <div className="p-6 rounded-lg border border-red-500 bg-red-500/10 mb-8">
+                <div className="flex items-center mb-2">
+                    <ExclamationIcon className="w-6 h-6 mr-2" />
+                    <h3 className="text-xl font-bold text-white">Warning!</h3>
+                </div>
+
+                <div className="space-y-4 text-red-400">
+                    <p>
+                        If you forget your master password, there is no way to recover your stored
+                        passwords. Such is the price of security.
+                    </p>
+                </div>
+            </div>
+
             {/* Security Notice */}
             <div className="p-6 rounded-lg border border-red-500 bg-red-500/10 mb-8">
-                <div className="flex items-center mb-4">
+                <div className="flex items-center mb-2">
                     <ShieldIcon className="w-6 h-6 mr-2" />
                     <h3 className="text-xl font-bold">Important Security Notice</h3>
                 </div>
@@ -53,37 +69,24 @@ export default function Page() {
                         <li>Never share it with anyone</li>
                         <li>Consider changing it periodically</li>
                     </ul>
-                    <p className="font-bold">
-                        Warning: If you forget your master password, there is no way to recover your
-                        stored passwords. Such is the price of security.
-                    </p>
-
-                    <p>
-                        <Link
-                            href="/password-generator"
-                            className="text-red-400 underline font-bold"
-                        >
-                            Use our password generator
-                        </Link>{" "}
-                        if you dont have a strong password in mind already.
-                    </p>
                 </div>
-            </div>
 
-            {/* Password  Generator */}
-            <div className="p-6 rounded-lg border border-red-500 bg-red-500/10 mb-8">
-                <div className="flex items-center mb-4">
+                <div className="flex items-center mt-8 mb-2">
                     <LightBulbIcon className="w-6 h-6 mr-2" />
-                    <h3 className="text-xl font-bold">Dont have a password in mind?</h3>
+                    <h3 className="text-xl font-bold text-white">
+                        Don&apos;t have a password in mind?
+                    </h3>
                 </div>
-                <div className="space-y-4 text-red-400">
+
+                <div className="space-y-2 text-red-400">
                     <p>
+                        Use our {''}
                         <Link
                             href="/password-generator"
-                            className="text-red-400 font-bold underline decoration-white decoration-2"
+                            className="text-white font-bold underline decoration-red-400 decoration-2"
                         >
-                            Use our password generator
-                        </Link>{" "}
+                            password generator
+                        </Link>{' '}
                         if you dont have a strong password in mind already.
                     </p>
                 </div>
@@ -115,13 +118,13 @@ function UpdateMasterPasswordDialog({
     newMasterPassword: string;
     hasMasterPassword: boolean;
 }) {
-    const [previousMasterPassword, setPreviousMasterPassword] = useState("");
+    const [previousMasterPassword, setPreviousMasterPassword] = useState('');
     const [copySuccess, setCopySuccess] = useState(false);
     const [hasConsented, setHasConsented] = useState(false);
 
     const [errors, setErrors] = useState({
-        previousMasterPassword: "",
-        general: "",
+        previousMasterPassword: '',
+        general: '',
     });
 
     const [consents, setConsents] = useState({
@@ -147,14 +150,14 @@ function UpdateMasterPasswordDialog({
             return;
         }
 
-        setErrors({ previousMasterPassword: "", general: "" });
+        setErrors({ previousMasterPassword: '', general: '' });
 
         try {
             if (hasMasterPassword) {
                 if (!previousMasterPassword) {
                     setErrors((prev) => ({
                         ...prev,
-                        previousMasterPassword: "Your previous master password is required",
+                        previousMasterPassword: 'Your previous master password is required',
                     }));
                     return;
                 }
@@ -169,7 +172,7 @@ function UpdateMasterPasswordDialog({
                         const decrypted = await decrypt(password.value, previousMasterPassword);
 
                         if (!decrypted) {
-                            throw new Error("Invalid previous master password");
+                            throw new Error('Invalid previous master password');
                         }
                         const encrypted = await encrypt(decrypted, newMasterPassword);
 
@@ -190,11 +193,11 @@ function UpdateMasterPasswordDialog({
             toggleDialog(false);
 
             // Redirect to the vault
-            window.location.assign("/");
+            window.location.assign('/');
         } catch (err) {
             setErrors((prev) => ({
                 ...prev,
-                general: err instanceof Error ? err.message : "An error occurred",
+                general: err instanceof Error ? err.message : 'An error occurred',
             }));
         }
     };
@@ -212,7 +215,7 @@ function UpdateMasterPasswordDialog({
             <div>
                 <div className="p-6 max-w-5xl">
                     <h3 className="text-2xl font-bold text-white mb-6">
-                        {hasMasterPassword ? "Update Master Password" : "Set Master Password"}
+                        {hasMasterPassword ? 'Update Master Password' : 'Set Master Password'}
                     </h3>
 
                     {/* Warning Notice */}
@@ -265,8 +268,8 @@ function UpdateMasterPasswordDialog({
                                 <CopyIcon
                                     className={`w-6 h-6 ${
                                         copySuccess
-                                            ? "text-zinc-200 group-hover:text-white"
-                                            : "text-passfort-vibrant group-hover:text-white"
+                                            ? 'text-zinc-200 group-hover:text-white'
+                                            : 'text-passfort-vibrant group-hover:text-white'
                                     }  transition-colors`}
                                 />
                             </button>
@@ -340,8 +343,8 @@ function UpdateMasterPasswordDialog({
                         disabled={!hasConsented}
                         className={`w-full py-3 rounded-lg text-white font-semibold transition-colors ${
                             hasConsented
-                                ? "bg-passfort-vibrant hover:bg-passfort-vibrant/90"
-                                : "bg-passfort-vibrant/25 cursor-not-allowed"
+                                ? 'bg-passfort-vibrant hover:bg-passfort-vibrant/90'
+                                : 'bg-passfort-vibrant/25 cursor-not-allowed'
                         }`}
                     >
                         Update Master Password

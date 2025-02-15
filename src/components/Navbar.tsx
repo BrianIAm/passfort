@@ -7,14 +7,16 @@ import Link from 'next/link';
 import React, { useEffect } from 'react';
 
 import {
-    HomeIcon,
-    LockIcon,
-    InfoIcon,
-    ExclamationIcon,
+    BugIcon,
     CogIcon,
-    HammerIcon,
+    ExclamationIcon,
     FileAndPenIcon,
+    HammerIcon,
+    HomeIcon,
+    InfoIcon,
+    LockIcon,
     RefreshIcon,
+    TagIcon,
 } from '#/icons';
 
 export default function Navbar() {
@@ -24,7 +26,7 @@ export default function Navbar() {
 
     const navItems = [
         {
-            name: 'Password Vault',
+            name: 'Vault',
             href: '/',
             icon: HomeIcon,
         },
@@ -105,28 +107,27 @@ export default function Navbar() {
 
                 {/* Beta Notice */}
                 <div className="p-4 rounded-lg border-2 border-red-500/50 bg-red-500/5">
-                    <div className="flex items-center mb-3">
-                        <ExclamationIcon className="w-5 h-5 text-red-500 mr-2" />
-                        <span className="mr-2 text-sm font-semibold px-2 py-0.5 rounded-sm bg-red-500/20 text-red-400">
-                            Beta
-                        </span>
+                    <div className="flex w-min pl-2 pr-3 py-1 mb-2 items-center bg-red-500/20 rounded-lg text-red-400">
+                        <TagIcon className="w-5 h-5 mr-2" />
+
                         {/* Version */}
-                        <span className="text-sm font-semibold px-2 py-0.5 rounded-sm bg-red-500/20 text-red-400">
-                            v{version}
-                        </span>
+                        <span className="text-sm font-semibold text-nowrap">v{version}beta</span>
                     </div>
                     <p className="text-sm text-red-400 mb-3">
                         PassFort is in beta and under active development. We&apos;re adding new
                         features and squashing bugs.
                     </p>
-                    <a
-                        href="https://github.com/BrianTib/passfort/issues"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-sm text-red-400 hover:text-red-300 underline transition-colors"
-                    >
-                        Report an issue
-                    </a>
+                    <div className="flex items-center">
+                        <BugIcon className="w-5 h-5 mr-2" />
+                        <a
+                            href="https://github.com/BrianTib/passfort/issues"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-sm text-red-400 hover:text-red-300 underline transition-colors"
+                        >
+                            Report an issue
+                        </a>
+                    </div>
                 </div>
             </div>
         </nav>
