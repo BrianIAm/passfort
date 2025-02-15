@@ -4,13 +4,15 @@ import { encrypt, decrypt } from "#/lib/encrypt";
 import { Dialog } from "#/components/Dialog";
 import { PasswordGenerator } from "#/components/PasswordGenerator";
 import { writeText as writeTextToClipboard } from "@tauri-apps/plugin-clipboard-manager";
+import Link from "next/link";
 import {
     getStoredPasswords,
     setStoredPasswords,
     hasMasterPasswordVerification,
     saveMasterPasswordVerification,
 } from "#/lib/fs";
-import { ShieldIcon, CopyIcon, ExclamationIcon } from "#/icons";
+
+import { ShieldIcon, CopyIcon, ExclamationIcon, LightBulbIcon } from "#/icons";
 
 export default function Page() {
     const [showUpdatePasswordDialog, setUpdatePasswordDialog] = useState(false);
@@ -38,8 +40,8 @@ export default function Page() {
             {/* Security Notice */}
             <div className="p-6 rounded-lg border border-red-500 bg-red-500/10 mb-8">
                 <div className="flex items-center mb-4">
-                    <ShieldIcon className="w-6 h-6 text-red-400 mr-2" />
-                    <h3 className="text-xl font-bold text-red-400">Important Security Notice</h3>
+                    <ShieldIcon className="w-6 h-6 mr-2" />
+                    <h3 className="text-xl font-bold">Important Security Notice</h3>
                 </div>
                 <div className="space-y-4 text-red-400">
                     <p>
@@ -54,6 +56,35 @@ export default function Page() {
                     <p className="font-bold">
                         Warning: If you forget your master password, there is no way to recover your
                         stored passwords. Such is the price of security.
+                    </p>
+
+                    <p>
+                        <Link
+                            href="/password-generator"
+                            className="text-red-400 underline font-bold"
+                        >
+                            Use our password generator
+                        </Link>{" "}
+                        if you dont have a strong password in mind already.
+                    </p>
+                </div>
+            </div>
+
+            {/* Password  Generator */}
+            <div className="p-6 rounded-lg border border-red-500 bg-red-500/10 mb-8">
+                <div className="flex items-center mb-4">
+                    <LightBulbIcon className="w-6 h-6 mr-2" />
+                    <h3 className="text-xl font-bold">Dont have a password in mind?</h3>
+                </div>
+                <div className="space-y-4 text-red-400">
+                    <p>
+                        <Link
+                            href="/password-generator"
+                            className="text-red-400 font-bold underline decoration-white decoration-2"
+                        >
+                            Use our password generator
+                        </Link>{" "}
+                        if you dont have a strong password in mind already.
                     </p>
                 </div>
             </div>
@@ -229,7 +260,8 @@ function UpdateMasterPasswordDialog({
                             <button
                                 onClick={handleCopy}
                                 className="p-2 rounded-lg hover:bg-white/10 transition-colors group"
-                                aria-label="Copy to clipboard">
+                                aria-label="Copy to clipboard"
+                            >
                                 <CopyIcon
                                     className={`w-6 h-6 ${
                                         copySuccess
@@ -310,7 +342,8 @@ function UpdateMasterPasswordDialog({
                             hasConsented
                                 ? "bg-passfort-vibrant hover:bg-passfort-vibrant/90"
                                 : "bg-passfort-vibrant/25 cursor-not-allowed"
-                        }`}>
+                        }`}
+                    >
                         Update Master Password
                     </button>
                 </div>

@@ -1,5 +1,7 @@
 "use client";
 
+import { PasswordGenerator } from "#/components/PasswordGenerator";
+
 export default function Page() {
     return (
         <main className="flex-1 px-8 py-4 max-w-7xl">
@@ -11,6 +13,8 @@ export default function Page() {
                     </p>
                 </div>
             </div>
+
+            <PasswordGenerator />
         </main>
     );
 }

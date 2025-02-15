@@ -1,3 +1,8 @@
+import { invoke } from "@tauri-apps/api/core";
+import { createMasterPasswordVerification } from "#/lib/encrypt";
+import { APP_VERSION } from "#/constants";
+import type { Password } from "#/types/password";
+
 import {
     writeFile,
     readFile,
@@ -7,13 +12,9 @@ import {
     BaseDirectory,
     exists,
 } from "@tauri-apps/plugin-fs";
-import { invoke } from "@tauri-apps/api/core";
-
-import { type Password } from "#/types/password";
-import { createMasterPasswordVerification } from "#/lib/encrypt";
 
 // App-specific constant that servers as root key
-const APP_KEY = "PassFort_v1.0";
+const APP_KEY = "PassFort_v" + APP_VERSION;
 
 interface FileKeys {
     passwords: string;
@@ -35,7 +36,7 @@ async function generateFileNames(): Promise<FileKeys> {
     // Derive deterministic but secure filenames using HMAC
     const keys = await invoke<FileKeys>("generate_file_keys", {
         appKey: APP_KEY,
-        version: "1", // For future migrations
+        version: APP_VERSION, // For future migrations
     });
 
     return keys;
@@ -81,13 +82,9 @@ export async function setStoredPasswords(passwords: Password[]) {
     await ensureAppDataDirectoryExists();
     const { passwords: passwordsFileName } = await getFileNames();
 
-    await writeFile(
-        `${passwordsFileName}.bin`,
-        toBinary(JSON.stringify(passwords)),
-        {
-            baseDir: BaseDirectory.AppData,
-        }
-    );
+    await writeFile(`${passwordsFileName}.bin`, toBinary(JSON.stringify(passwords)), {
+        baseDir: BaseDirectory.AppData,
+    });
 }
 
 export async function getMasterPasswordVerification(): Promise<string | null> {
