@@ -286,7 +286,7 @@ function UpdateMasterPasswordDialog({
                                             replacesOldPassword: e.target.checked,
                                         }))
                                     }
-                                    className="w-5 h-5 rounded bg-passfort-vibrant/10 border border-passfort-vibrant checked:bg-passfort-vibrant focus:ring-0"
+                                    className="w-5 h-5 rounded-sm bg-passfort-vibrant/10 border border-passfort-vibrant checked:bg-passfort-vibrant focus:ring-0"
                                 />
                                 <span className="ml-2 text-sm text-passfort-vibrant">
                                     I understand that this new master password will replace my
@@ -306,7 +306,7 @@ function UpdateMasterPasswordDialog({
                                         dataLoss: e.target.checked,
                                     }))
                                 }
-                                className="w-5 h-5 rounded bg-passfort-vibrant/10 border border-passfort-vibrant checked:bg-passfort-vibrant focus:ring-0"
+                                className="w-5 h-5 rounded-sm bg-passfort-vibrant/10 border border-passfort-vibrant checked:bg-passfort-vibrant focus:ring-0"
                             />
                             <span className="ml-2 text-sm text-passfort-vibrant">
                                 I understand that losing this master password will result in
@@ -326,7 +326,7 @@ function UpdateMasterPasswordDialog({
                                         safekeeping: e.target.checked,
                                     }))
                                 }
-                                className="w-5 h-5 rounded bg-passfort-vibrant/10 border border-passfort-vibrant checked:bg-passfort-vibrant focus:ring-0 focus:border-none"
+                                className="w-5 h-5 rounded-sm bg-passfort-vibrant/10 border border-passfort-vibrant checked:bg-passfort-vibrant focus:ring-0 focus:border-none"
                             />
                             <span className="ml-2 text-sm text-passfort-vibrant">
                                 I have stored this new master password securely

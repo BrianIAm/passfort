@@ -481,7 +481,7 @@ function UnlockPasswordsModal({
 
                     <button
                         type="submit"
-                        className="mt-4 text-white px-4 py-2 rounded font-semibold bg-passfort-vibrant">
+                        className="mt-4 text-white px-4 py-2 rounded-sm font-semibold bg-passfort-vibrant">
                         Unlock
                     </button>
                 </form>
@@ -548,7 +548,7 @@ function StoredPasswordComponent({
                     {password.associated_identifier && (
                         <p
                             className={`text-sm text-passfort-vibrant/75 ${
-                                !isRevealed && "blur-sm"
+                                !isRevealed && "blur-xs"
                             }`}>
                             {isRevealed
                                 ? password.associated_identifier

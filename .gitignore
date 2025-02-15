@@ -1,12 +1,10 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
-/ignore
-
 # dependencies
-/node_modules
-/.pnp
 .pnp.js
 .yarn/install-state.gz
+/.pnp
+/node_modules
 package-lock.json
 pnpm-lock.yaml
 
@@ -19,11 +17,10 @@ pnpm-lock.yaml
 
 # production
 /build
-
 /src/app/development/
 
 # misc
-.DS_Store
+.DS_Store/
 *.pem
 
 # debug
@@ -34,9 +31,14 @@ yarn-error.log*
 # local env files
 .env*.local
 
-# vercel
-.vercel
-
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Tauri-specific ignores
+# Users should run `cargo tauri icon` to generate the icons
+/src-tauri/icons/
+# Ignore platform-specific schema files (may cause unnecessary diffs)
+/src-tauri/gen/schemas/
+# Exclude large generated JSON files while keeping essential configs
+/src-tauri/gen/*.json

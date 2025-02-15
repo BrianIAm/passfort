@@ -98,7 +98,7 @@ export function PasswordGenerator({
                                 type="checkbox"
                                 checked={isBitChecked(generatedPasswordOptions, option.bit)}
                                 onChange={() => handleToggleBit(option.bit)}
-                                className="w-5 h-5 rounded bg-passfort-vibrant/10 border border-passfort-vibrant checked:bg-passfort-vibrant focus:ring-passfort-vibrant"
+                                className="w-5 h-5 rounded-sm bg-passfort-vibrant/10 border border-passfort-vibrant checked:bg-passfort-vibrant focus:ring-passfort-vibrant"
                             />
                             <label htmlFor={option.id} className="ml-2 text-passfort-vibrant">
                                 {option.label}
@@ -121,7 +121,7 @@ export function PasswordGenerator({
                             const value = parseInt(e.target.value);
                             setGeneratedPasswordLength(value);
                         }}
-                        className="range w-full h-2 rounded-lg appearance-none bg-passfort-vibrant/10 accent-passfort-vibrant cursor-pointer [&::-webkit-slider-thumb]:!bg-passfort-vibrant [&::-webkit-slider-thumb]:hover:bg-passfort-vibrant"
+                        className="range w-full h-2 rounded-lg appearance-none bg-passfort-vibrant/10 accent-passfort-vibrant cursor-pointer [&::-webkit-slider-thumb]:bg-passfort-vibrant! [&::-webkit-slider-thumb]:hover:bg-passfort-vibrant"
                     />
                     <div className="flex justify-between text-xs text-passfort-vibrant mt-2">
                         <span>8</span>

@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="./public/logo.png" alt="PassFort Logo" width="128" height="128"/>
+  <img src="./app-icon.png" alt="PassFort Logo" width="128" height="128"/>
   <h1>PassFort</h1>
   <p>A secure, encrypted, and offline-first password manager</p>
 
@@ -24,7 +24,7 @@ PassFort is a desktop application that helps you securely manage and store passw
 -   ⚡ **Fast & Offline**: Works without internet connection
 -   🎯 **Auto-Lock**: Automatic locking after inactivity
 -   🔄 **Password Generator**: Built-in secure password generation
--   ∞ **Unlimited Storage**: No limits on number of passwords
+-   ∞ **Unlimited Storage**: However many passwords is store is entirely determined by your system.
 
 ## **Installation**
 
@@ -33,6 +33,14 @@ PassFort is a desktop application that helps you securely manage and store passw
 -   Windows 10/11, macOS 10.15+, or Linux
 -   200MB free disk space
 -   2GB RAM minimum
+
+### Building the project locally
+
+If you're directly pulling from the repository to either contribute or build the project locally, follow these steps after downloading the project locally.
+
+(*P.S. These steps assume you have Rust and pnpm installed*)
+
+
 
 ### Download
 

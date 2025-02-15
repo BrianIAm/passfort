@@ -99,7 +99,7 @@ export default function Navbar() {
                 <div className="p-4 rounded-lg border-2 border-red-500/50 bg-red-500/5">
                     <div className="flex items-center mb-3">
                         <ExclamationIcon className="w-5 h-5 text-red-500 mr-2" />
-                        <span className="text-sm font-semibold px-2 py-0.5 rounded bg-red-500/20 text-red-400">
+                        <span className="text-sm font-semibold px-2 py-0.5 rounded-sm bg-red-500/20 text-red-400">
                             Beta
                         </span>
                     </div>

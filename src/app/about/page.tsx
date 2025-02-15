@@ -52,7 +52,7 @@ export default function Page() {
             {/* Important Notice */}
             <div className="p-4 rounded-lg border-2 border-red-500 bg-red-500/10 mb-8">
                 <div className="flex items-center mb-3">
-                    <span className="text-sm font-semibold px-2.5 py-0.5 rounded bg-red-200 text-red-800">
+                    <span className="text-sm font-semibold px-2.5 py-0.5 rounded-sm bg-red-200 text-red-800">
                         Critical Information
                     </span>
                 </div>
