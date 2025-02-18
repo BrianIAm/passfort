@@ -1,13 +1,5 @@
-"use client";
-import React, {
-    useState,
-    useRef,
-    useEffect,
-    useCallback,
-    useImperativeHandle,
-    forwardRef,
-    createContext,
-} from "react";
+'use client';
+import React, { useState, useCallback, createContext } from 'react';
 
 export interface Toast {
     content: string | React.ReactNode | React.ReactNode[];
@@ -24,11 +16,7 @@ type ToastProps = {
 
 export const ToastContext = createContext<ToastProps>({} as ToastProps);
 
-export function ToastProvider({
-    children,
-}: {
-    children: React.ReactNode | React.ReactNode[];
-}) {
+export function ToastProvider({ children }: { children: React.ReactNode | React.ReactNode[] }) {
     const [toasts, setToasts] = useState<Toast[]>([]);
 
     const addToast = useCallback((toast: Toast) => {
@@ -52,7 +40,8 @@ export function ToastProvider({
                 addToast,
                 removeToast,
                 removeToastByIndex,
-            }}>
+            }}
+        >
             {children}
         </ToastContext.Provider>
     );

@@ -1,17 +1,17 @@
-import "./globals.css";
-import { Poppins } from "next/font/google";
-import Navbar from "#/components/Navbar";
-import { ToastProvider, ToastContext } from "#/context/ToastContext";
-import type { Metadata } from "next";
+import './globals.css';
+import { Poppins } from 'next/font/google';
+import TitleBar from '#/components/TitleBar';
+import Navbar from '#/components/Navbar';
+import type { Metadata } from 'next';
 
 const poppins = Poppins({
-    weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
-    subsets: ["latin"],
+    weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
+    subsets: ['latin'],
 });
 
 export const metadata: Metadata = {
-    title: "PassFort",
-    description: "Your credentials, your way.",
+    title: 'PassFort',
+    description: 'Your credentials, your way.',
 };
 
 export default function RootLayout({
@@ -21,12 +21,14 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en">
-            <body
-                className={`${poppins.className} relative bg-zinc-900 text-white z-10`}>
-                <BackgroundGlow />
+            <body className={`${poppins.className} w-screen h-screen flex bg-zinc-900 text-white`}>
+                {/* <TitleBar /> */}
                 <Navbar />
 
-                <div className="relative flex z-10 ml-64">{children}</div>
+                <div className="w-full overflow-y-auto no-scrollbars">
+                    <BackgroundGlow />
+                    {children}
+                </div>
             </body>
         </html>
     );
@@ -34,7 +36,7 @@ export default function RootLayout({
 
 function BackgroundGlow() {
     return (
-        <div className="absolute inset-0 flex justify-center items-center z-0 h-screen">
+        <div className="absolute inset-0 ml-[325px] flex justify-center items-center -z-10 h-screen pointer-events-none">
             <div className="w-[32rem] h-[32rem] bg-passfort-vibrant rounded-full blur-[350px]"></div>
         </div>
     );

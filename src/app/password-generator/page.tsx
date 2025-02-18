@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { PasswordGenerator } from "#/components/PasswordGenerator";
+import { PasswordGenerator } from '#/components/PasswordGenerator';
 
 export default function Page() {
     return (
@@ -8,9 +8,7 @@ export default function Page() {
             <div className="flex justify-between items-center mb-6">
                 <div>
                     <h2 className="text-3xl font-bold">Password Generator</h2>
-                    <p className="text-passfort-vibrant mt-2">
-                        Generate strong and secure passwords
-                    </p>
+                    <p className="text-red-500 mt-2">Generate strong and secure passwords</p>
                 </div>
             </div>
 

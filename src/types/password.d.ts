@@ -3,5 +3,6 @@ export interface Password {
     value: string;
     // This will often be an email or username
     associated_identifier?: string;
-    last_updated: number;
+    created_at: number;
+    updated_at: number;
 }

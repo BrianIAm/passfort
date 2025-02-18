@@ -3,12 +3,10 @@
 export default function Page() {
     return (
         <main className="flex-1 px-8 py-4 max-w-7xl">
-            <h2 className="mb-6 text-3xl font-bold">About PassFort</h2>
-
             {/* Overview Section */}
             <div className="mb-8">
-                <h3 className="text-xl font-bold mb-4">What is PassFort?</h3>
-                <p className="text-passfort-vibrant mb-4">
+                <h3 className="text-3xl font-bold mb-4">What is PassFort?</h3>
+                <p className="text-red-500 mb-4">
                     PassFort is a free, open-source desktop password manager designed to keep your
                     online credentials secure and easily accessible. Unlike cloud-based
                     alternatives, PassFort operates completely offline, ensuring your passwords
@@ -103,7 +101,7 @@ export default function Page() {
                     href="https://github.com/BrianTib/passfort"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center text-passfort-vibrant hover:text-white"
+                    className="font-bold underline decoration-2 decoration-passfort-vibrant"
                 >
                     View on GitHub
                     {/* <ArrowTopRightOnSquareIcon className="w-4 h-4 ml-1" /> */}

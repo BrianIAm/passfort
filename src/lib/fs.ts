@@ -1,20 +1,20 @@
-import { invoke } from "@tauri-apps/api/core";
-import { createMasterPasswordVerification } from "#/lib/encrypt";
-import { APP_VERSION } from "#/constants";
-import type { Password } from "#/types/password";
+import { invoke } from '@tauri-apps/api/core';
+import { createMasterPasswordVerification } from '#/lib/encrypt';
+import { getVersion } from '@tauri-apps/api/app';
+import type { Password } from '#/types/password';
 
 import {
     writeFile,
     readFile,
-    readDir,
-    remove,
-    mkdir,
+    readDir as readDirectory,
+    remove as removeFile,
+    mkdir as createDirectory,
     BaseDirectory,
     exists,
-} from "@tauri-apps/plugin-fs";
+} from '@tauri-apps/plugin-fs';
 
 // App-specific constant that servers as root key
-const APP_KEY = "PassFort_v" + APP_VERSION;
+const APP_KEY = 'PassFort_v';
 
 interface FileKeys {
     passwords: string;
@@ -34,9 +34,10 @@ function fromBinary(data: Uint8Array): string {
 
 async function generateFileNames(): Promise<FileKeys> {
     // Derive deterministic but secure filenames using HMAC
-    const keys = await invoke<FileKeys>("generate_file_keys", {
+    const keys = await invoke<FileKeys>('generate_file_keys', {
         appKey: APP_KEY,
-        version: APP_VERSION, // For future migrations
+        // For future migrations
+        version: await getVersion(),
     });
 
     return keys;
@@ -50,9 +51,9 @@ async function getFileNames(): Promise<FileKeys> {
 }
 
 async function ensureAppDataDirectoryExists() {
-    const appDataExists = await exists("", { baseDir: BaseDirectory.AppData });
+    const appDataExists = await exists('', { baseDir: BaseDirectory.AppData });
     if (!appDataExists) {
-        await mkdir("", { baseDir: BaseDirectory.AppData, recursive: true });
+        await createDirectory('', { baseDir: BaseDirectory.AppData, recursive: true });
     }
 }
 
@@ -118,10 +119,10 @@ export async function saveMasterPasswordVerification(masterPassword: string) {
 
 export async function deleteAllData() {
     try {
-        const entries = await readDir("", { baseDir: BaseDirectory.AppData });
+        const entries = await readDirectory('', { baseDir: BaseDirectory.AppData });
 
         for (const entry of entries) {
-            await remove(entry.name, { baseDir: BaseDirectory.AppData });
+            await removeFile(entry.name, { baseDir: BaseDirectory.AppData });
         }
     } catch {}
 }

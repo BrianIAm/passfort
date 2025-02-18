@@ -49,12 +49,12 @@ export default function Page() {
         setPasswords(await getStoredPasswords());
     };
 
-    useEffect(() => {
-        const watcherInterval = setInterval(loadPasswords, 3_000);
+    // useEffect(() => {
+    //     const watcherInterval = setInterval(loadPasswords, 3_000);
 
-        loadPasswords();
-        return () => clearInterval(watcherInterval);
-    }, []);
+    //     loadPasswords();
+    //     return () => clearInterval(watcherInterval);
+    // }, []);
 
     useEffect(() => {
         const unlockInterval = setInterval(() => {
@@ -92,7 +92,7 @@ export default function Page() {
                 <div className="flex justify-between items-center mb-6">
                     <div>
                         <h2 className="text-3xl font-bold">Password Vault</h2>
-                        <p className="text-passfort-vibrant mt-2">
+                        <p className="text-red-500 mt-2">
                             Securely store and manage your passwords
                         </p>
                     </div>
@@ -248,7 +248,8 @@ function AddPasswordModal({
             name: name.value,
             associated_identifier: identifier.value,
             value: password.value,
-            last_updated: Date.now(),
+            created_at: Date.now(),
+            updated_at: Date.now(),
         });
 
         setIsModalShowing(false);

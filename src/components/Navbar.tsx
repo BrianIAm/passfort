@@ -41,14 +41,14 @@ export default function Navbar() {
             icon: RefreshIcon,
         },
         {
-            name: 'About',
-            href: '/about',
-            icon: InfoIcon,
-        },
-        {
             name: 'Contributions',
             href: '/contributions',
             icon: UserGroupIcon,
+        },
+        {
+            name: 'About',
+            href: '/about',
+            icon: InfoIcon,
         },
         {
             name: 'Settings',
@@ -57,20 +57,20 @@ export default function Navbar() {
         },
     ];
 
-    // if (process.env.NODE_ENV === "development") {
-    //     navItems.push({
-    //         name: "Development",
-    //         href: "/development",
-    //         icon: HammerIcon,
-    //     });
-    // }
+    if (process.env.NODE_ENV === 'development') {
+        navItems.push({
+            name: 'Development',
+            href: '/development',
+            icon: HammerIcon,
+        });
+    }
 
     useEffect(() => {
         getVersion().then((version) => setVersion(version));
     }, []);
 
     return (
-        <nav className="fixed h-screen w-64 flex-col" aria-label="Sidebar">
+        <nav className="h-screen w-[325px] flex-col" aria-label="Sidebar">
             <div className="flex flex-col h-full px-3 py-4 overflow-x-hidden overflow-y-auto bg-passfort">
                 {/* Logo */}
                 <Link href="/" className="flex items-center ps-2.5 mb-5">
@@ -123,7 +123,7 @@ export default function Navbar() {
                             href="https://github.com/BrianTib/passfort/issues"
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-sm text-red-400 hover:text-red-300 underline transition-colors"
+                            className="font-bold text-sm underline decoration-2 decoration-red-400"
                         >
                             Report an issue
                         </a>

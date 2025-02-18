@@ -82,7 +82,7 @@ If you're directly pulling from the repository to either contribute or build the
 
 ## **Contributing**
 
-Contributions will be welcome after the 1.0.0 release. Please read our [Contributing Guidelines](./.github/CONTRIBUTING.md) for more information.
+Contributions will be welcome after the 100.0.0 release. Please read our [Contributing Guidelines](./.github/CONTRIBUTING.md) for more information.
 
 ## **License**
 

@@ -1,8 +1,8 @@
-"use client";
-import { useState } from "react";
-import { Dialog } from "#/components/Dialog";
-import { deleteAllData } from "#/lib/fs";
-import { ExclamationIcon } from "#/icons";
+'use client';
+import { useState } from 'react';
+import { Dialog } from '#/components/Dialog';
+import { deleteAllData } from '#/lib/fs';
+import { ExclamationIcon } from '#/icons';
 
 export default function Page() {
     const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -14,7 +14,7 @@ export default function Page() {
             // console.error("Failed to delete data:", error);
         } finally {
             setShowDeleteModal(false);
-            window.location.assign("/"); // Redirect to home after deletion
+            window.location.assign('/'); // Redirect to home after deletion
         }
     };
 
@@ -24,31 +24,26 @@ export default function Page() {
                 <div className="flex justify-between items-center mb-6">
                     <div>
                         <h2 className="text-3xl font-bold">Settings</h2>
-                        <p className="text-passfort-vibrant mt-2">
-                            Configure PassFort to your liking
-                        </p>
+                        <p className="text-red-500 mt-2">Configure PassFort to your liking</p>
                     </div>
                 </div>
 
                 {/* Danger Zone */}
                 <div className="mt-8">
-                    <h3 className="text-2xl font-bold text-red-600 mb-4">
-                        Danger Zone
-                    </h3>
+                    <h3 className="text-2xl font-bold text-red-600 mb-4">Danger Zone</h3>
                     <div className="p-6 border-2 border-red-500 rounded-lg">
                         <div className="flex items-center justify-between">
                             <div>
-                                <h4 className="text-lg font-medium text-white">
-                                    Delete All Data
-                                </h4>
+                                <h4 className="text-lg font-medium text-white">Delete All Data</h4>
                                 <p className="text-sm text-red-500">
-                                    Permanently delete all your stored passwords
-                                    and settings. This action cannot be undone.
+                                    Permanently delete all your stored passwords and settings. This
+                                    action cannot be undone.
                                 </p>
                             </div>
                             <button
                                 onClick={() => setShowDeleteModal(true)}
-                                className="px-4 py-2 bg-red-500/10 text-red-500 rounded-lg hover:bg-red-500/20 transition-colors">
+                                className="px-4 py-2 bg-red-500/10 text-red-500 rounded-lg hover:bg-red-500/20 transition-colors"
+                            >
                                 Delete All Data
                             </button>
                         </div>
@@ -61,9 +56,7 @@ export default function Page() {
                         <div className="p-6">
                             <div className="flex items-center mb-4">
                                 <ExclamationIcon className="w-8 h-8 text-red-500 mr-2" />
-                                <h3 className="text-3xl font-bold text-white">
-                                    Delete All Data
-                                </h3>
+                                <h3 className="text-3xl font-bold text-white">Delete All Data</h3>
                             </div>
 
                             <div className="mb-6">
@@ -79,20 +72,21 @@ export default function Page() {
 
                             <div className="bg-red-500/10 p-4 rounded-lg mb-6">
                                 <p className="text-red-400 text-sm">
-                                    This action is permanent and cannot be
-                                    undone.
+                                    This action is permanent and cannot be undone.
                                 </p>
                             </div>
 
                             <div className="flex gap-4">
                                 <button
                                     onClick={() => setShowDeleteModal(false)}
-                                    className="px-4 py-2 rounded-lg border border-passfort-vibrant text-passfort-vibrant hover:bg-passfort-vibrant/10">
+                                    className="px-4 py-2 rounded-lg border border-passfort-vibrant text-passfort-vibrant hover:bg-passfort-vibrant/10"
+                                >
                                     Cancel
                                 </button>
                                 <button
                                     onClick={handleDeleteData}
-                                    className="px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-700">
+                                    className="px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-700"
+                                >
                                     Delete Everything
                                 </button>
                             </div>

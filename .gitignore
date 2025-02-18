@@ -23,6 +23,9 @@ pnpm-lock.yaml
 .DS_Store/
 *.pem
 
+# Local Notes
+NOTES.md
+
 # debug
 npm-debug.log*
 yarn-debug.log*
