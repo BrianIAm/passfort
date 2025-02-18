@@ -3,8 +3,8 @@ use aes_gcm::{
     Aes256Gcm, Nonce,
 };
 use pbkdf2::pbkdf2_hmac;
-use rand::seq::SliceRandom;
-use rand::{Rng, RngCore};
+use rand::seq::{IndexedRandom, SliceRandom};
+use rand::{Rng, RngCore, TryRngCore};
 use sha2::Sha256;
 
 use base64::{engine::general_purpose::URL_SAFE_NO_PAD, Engine as _};
@@ -55,7 +55,7 @@ pub fn encrypt(data: String, master_password: String) -> Result<String, String> 
         return Err("Invalid input data".to_string());
     }
 
-    let mut rng = rand::thread_rng();
+    let mut rng = rand::rng();
 
     // Generate salt
     let mut salt = [0u8; SALT_LENGTH];
@@ -134,13 +134,13 @@ pub fn generate_password(length: Option<u16>, configuration: Option<u8>) -> Stri
     let length = length.unwrap_or(8).max(8).min(256) as usize;
     let options = configuration.unwrap_or(0b1111);
 
-    let mut rng = rand::thread_rng();
+    let mut rng = rand::rng();
     let mut password = Vec::with_capacity(length);
 
     // Ensure at least one character from each selected range
     for (i, &(start, end)) in CHARACTER_RANGES.iter().enumerate() {
         if options & (1 << i) != 0 {
-            let random_char = rng.gen_range(start..end) as char;
+            let random_char = rng.random_range(start..end) as char;
             password.push(random_char);
         }
     }
@@ -160,7 +160,7 @@ pub fn generate_password(length: Option<u16>, configuration: Option<u8>) -> Stri
 
     while password.len() < length {
         let &(start, end) = selected_ranges.choose(&mut rng).unwrap();
-        let random_char = rng.gen_range(start..end) as char;
+        let random_char = rng.random_range(start..end) as char;
         password.push(random_char);
     }
 
@@ -172,7 +172,7 @@ pub fn generate_password(length: Option<u16>, configuration: Option<u8>) -> Stri
 #[tauri::command]
 pub fn generate_random_salt() -> String {
     let mut salt = [0u8; SALT_LENGTH];
-    let mut rng = rand::thread_rng();
+    let mut rng = rand::rng();
     rng.fill_bytes(&mut salt);
     hex::encode(salt)
 }
