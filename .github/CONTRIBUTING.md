@@ -4,7 +4,7 @@ Thank you for your interest in contributing to PassFort!
 
 ## Before Contributing
 
-Before contributing, please note that contributions will only be accepted after the 1.0.0 release as mentioned in the project README.
+Before contributing, please note that contributions will only be accepted after the 1000.0.0 release as mentioned in the project README.
 
 ## How Can I Contribute?
 

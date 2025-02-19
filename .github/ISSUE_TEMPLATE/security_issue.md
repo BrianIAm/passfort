@@ -2,7 +2,7 @@
 name: Security Issue
 about: Help PassFort become aware of a security issue
 title: "[SECURITY] "
-labels: "security-issue"
+labels: "security"
 assignees: ""
 ---
 

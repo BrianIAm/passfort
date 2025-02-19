@@ -60,7 +60,12 @@ export function PasswordGenerator({
             generateNewPassword(generatedPasswordLength, generatedPasswordOptions);
             setHasInitialPassword(true);
         }
-    }, []);
+    }, [
+        generateNewPassword,
+        generatedPasswordLength,
+        generatedPasswordOptions,
+        hasInitialPassword,
+    ]);
 
     const isBitChecked = (field: number, bit: number) => {
         return (field & bit) !== 0;

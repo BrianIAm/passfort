@@ -32,7 +32,7 @@ tauri-plugin-os = "2.2.0"
 tauri-plugin-process = "2.2.0"
 tauri-plugin-notification = "2.2.1"
 tauri-plugin-shell = "2.2.0"
-tauri-plugin-fs = { version = "2.2.0", features=["watch"] }
+tauri-plugin-fs = { version = "2.2.0", features= ["watch"] }
 tauri-plugin-dialog = "2.2.0"
 tauri-plugin-http = "2.3.0"
 
