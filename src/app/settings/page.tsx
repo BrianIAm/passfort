@@ -1,10 +1,12 @@
 'use client';
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { Dialog } from '#/components/Dialog';
 import { deleteAllData } from '#/lib/fs';
 import { ExclamationIcon } from '#/icons';
 
 export default function Page() {
+    const router = useRouter();
     const [showDeleteModal, setShowDeleteModal] = useState(false);
 
     const handleDeleteData = async () => {
@@ -14,7 +16,7 @@ export default function Page() {
             // console.error("Failed to delete data:", error);
         } finally {
             setShowDeleteModal(false);
-            window.location.assign('/'); // Redirect to home after deletion
+            router.push('/'); // Redirect to home after deletion
         }
     };
 

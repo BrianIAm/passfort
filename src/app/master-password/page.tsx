@@ -1,8 +1,7 @@
 'use client';
-import { Dialog } from '#/components/Dialog';
 import { encrypt, decrypt, verifyMasterPassword } from '#/lib/encrypt';
 import { useForm } from '@tanstack/react-form';
-import { writeText as writeTextToClipboard } from '@tauri-apps/plugin-clipboard-manager';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 
@@ -77,6 +76,7 @@ type MasterPasswordForm = {
 };
 
 function CreateOrUpdateMasterPasswordForm() {
+    const router = useRouter();
     const [hasMasterPassword, setHasMasterPassword] = useState(false);
     const validPasswordRegex = /^\S{8,256}$/;
 
@@ -91,7 +91,7 @@ function CreateOrUpdateMasterPasswordForm() {
             if (!hasMasterPassword) {
                 // Save the master password verification and redirect to vault
                 await saveMasterPasswordVerification(value.newMasterPassword);
-                window.location.assign('/');
+                router.push('/');
                 return;
             }
 
@@ -131,7 +131,7 @@ function CreateOrUpdateMasterPasswordForm() {
 
             // Save the master password verification and redirect to vault
             await saveMasterPasswordVerification(value.newMasterPassword);
-            window.location.assign('/');
+            router.push('/');
         },
     });
 
