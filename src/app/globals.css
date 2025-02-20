@@ -1,8 +1,17 @@
 @import 'tailwindcss';
 
 @theme {
-    --color-passfort: #380f17;
-    --color-passfort-vibrant: #dc2011;
+    --color-passfort-50: oklch(0.95 0.02 40);
+    --color-passfort-100: oklch(0.91 0.04 38);
+    --color-passfort-200: oklch(0.86 0.08 36);
+    --color-passfort-300: oklch(0.8 0.14 34);
+    --color-passfort-400: oklch(0.7 0.18 32);
+    --color-passfort-500: oklch(0.5724 0.2201 29.88); /* Vibrant red */
+    --color-passfort-600: oklch(0.4893 0.1814 25.34);
+    --color-passfort-700: oklch(0.4062 0.1427 20.8);
+    --color-passfort-800: oklch(0.3231 0.104 16.26);
+    --color-passfort-900: oklch(0.24 0.0654 11.72); /* Base deep wine red */
+    --color-passfort-950: oklch(0.18 0.045 10);
 
     --background-image-gradient-radial: radial-gradient(var(--tw-gradient-stops));
     --background-image-gradient-conic: conic-gradient(
@@ -79,7 +88,7 @@
     * {
         /* Firefox */
         scrollbar-width: thin;
-        scrollbar-color: var(--color-passfort-vibrant) #1f1f1f;
+        scrollbar-color: var(--color-passfort-500) var(--color-zinc-950);
     }
 
     /* Chrome, Edge, Safari */
@@ -89,16 +98,16 @@
     }
 
     *::-webkit-scrollbar-track {
-        background: #1f1f1f;
+        background: var(--color-zinc-950);
         border-radius: 4px;
     }
 
     *::-webkit-scrollbar-thumb {
-        background: var(--color-passfort-vibrant);
+        background: var(--color-passfort-500);
         border-radius: 4px;
     }
 
     *::-webkit-scrollbar-thumb:hover {
-        background: color-mix(in srgb, var(--color-passfort-vibrant) 85%, white);
+        background: color-mix(in srgb, var(--color-passfort-500) 85%, white);
     }
 }

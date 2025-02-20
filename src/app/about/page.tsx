@@ -15,9 +15,9 @@ export default function Page() {
             </div>
 
             {/* Security Section */}
-            <div className="p-4 rounded-lg border border-passfort-vibrant bg-passfort-vibrant/10 mb-8">
+            <div className="p-4 rounded-lg border border-passfort-500 bg-passfort-500/10 mb-8">
                 <h3 className="text-xl font-bold mb-4">How PassFort Keeps You Safe</h3>
-                <ul className="list-disc list-inside space-y-2 text-passfort-vibrant">
+                <ul className="list-disc list-inside space-y-2 text-passfort-500">
                     <li>Military-grade AES-256 encryption for all stored passwords</li>
                     <li>Completely offline - no internet connection required</li>
                     <li>Master password protection with automatic timeout</li>
@@ -29,7 +29,7 @@ export default function Page() {
             {/* How It Works */}
             <div className="mb-8">
                 <h3 className="text-xl font-bold mb-4">How It Works</h3>
-                <ol className="space-y-4 text-passfort-vibrant">
+                <ol className="space-y-4 text-passfort-500">
                     <li>
                         1. <span className="font-medium">Set up a master password</span> - This is
                         your key to unlock all other passwords. Make it strong and memorable, or
@@ -65,35 +65,33 @@ export default function Page() {
             <div className="mb-8">
                 <h3 className="text-xl font-bold mb-4">Key Features</h3>
                 <ul className="grid grid-cols-2 gap-4">
-                    <li className="p-4 rounded-lg border border-passfort-vibrant bg-passfort-vibrant/10">
+                    <li className="p-4 rounded-lg border border-passfort-500 bg-passfort-500/10">
                         <h4 className="font-medium mb-2">Password Generator</h4>
-                        <p className="text-passfort-vibrant">
+                        <p className="text-passfort-500">
                             Create strong, unique passwords with customizable options
                         </p>
                     </li>
-                    <li className="p-4 rounded-lg border border-passfort-vibrant bg-passfort-vibrant/10">
+                    <li className="p-4 rounded-lg border border-passfort-500 bg-passfort-500/10">
                         <h4 className="font-medium mb-2">Auto-Lock</h4>
-                        <p className="text-passfort-vibrant">
+                        <p className="text-passfort-500">
                             Automatic locking after 60 seconds of inactivity
                         </p>
                     </li>
-                    <li className="p-4 rounded-lg border border-passfort-vibrant bg-passfort-vibrant/10">
+                    <li className="p-4 rounded-lg border border-passfort-500 bg-passfort-500/10">
                         <h4 className="font-medium mb-2">Quick Copy</h4>
-                        <p className="text-passfort-vibrant">
-                            One-click password copying to clipboard
-                        </p>
+                        <p className="text-passfort-500">One-click password copying to clipboard</p>
                     </li>
-                    <li className="p-4 rounded-lg border border-passfort-vibrant bg-passfort-vibrant/10">
+                    <li className="p-4 rounded-lg border border-passfort-500 bg-passfort-500/10">
                         <h4 className="font-medium mb-2">Multi-Platform</h4>
-                        <p className="text-passfort-vibrant">Works on Windows, macOS, and Linux</p>
+                        <p className="text-passfort-500">Works on Windows, macOS, and Linux</p>
                     </li>
                 </ul>
             </div>
 
             {/* Support Section */}
-            <div className="p-4 rounded-lg border border-passfort-vibrant bg-passfort-vibrant/10">
+            <div className="p-4 rounded-lg border border-passfort-500 bg-passfort-500/10">
                 <h3 className="text-xl font-bold mb-4">Support & Feedback</h3>
-                <p className="text-passfort-vibrant mb-4">
+                <p className="text-passfort-500 mb-4">
                     PassFort is currently in beta. If you encounter any issues or have suggestions,
                     please reach out:
                 </p>
@@ -101,7 +99,7 @@ export default function Page() {
                     href="https://github.com/BrianTib/passfort"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="font-bold underline decoration-2 decoration-passfort-vibrant"
+                    className="font-bold underline decoration-2 decoration-passfort-500"
                 >
                     View on GitHub
                     {/* <ArrowTopRightOnSquareIcon className="w-4 h-4 ml-1" /> */}

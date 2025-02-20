@@ -221,7 +221,7 @@ function CreateOrUpdateMasterPasswordForm() {
                             />
 
                             {/* Master Password change notice */}
-                            <div className="bg-sky-600/25 pl-2 pr-4 py-2 rounded-lg inline-flex gap-1 items-center mt-4 text-sm text-sky-200">
+                            <div className="bg-blue-600/25 pl-2 pr-4 py-2 rounded-lg inline-flex gap-1 items-center mt-4 text-sm text-blue-200">
                                 <InfoIcon />
                                 <span className="font-bold">
                                     Updating your master password will re-encode all of the
@@ -230,9 +230,11 @@ function CreateOrUpdateMasterPasswordForm() {
                             </div>
 
                             {field.state.meta.errors.length ? (
-                                <div className="flex mt-2 items-center font-bold underline decoration-2 decoration-red-400">
-                                    <ExclamationIcon className="w-6 h-6 mr-1 text-red-500" />
-                                    <em>{field.state.meta.errors.join(',')}</em>
+                                <div className="bg-red-600/25 pl-2 pr-4 py-2 rounded-lg inline-flex gap-1 items-center mt-4 text-sm text-red-200">
+                                    <ExclamationIcon />
+                                    <span className="font-bold">
+                                        {field.state.meta.errors.join(',')}
+                                    </span>
                                 </div>
                             ) : null}
 
@@ -276,9 +278,11 @@ function CreateOrUpdateMasterPasswordForm() {
                         />
 
                         {field.state.meta.errors.length ? (
-                            <div className="flex mt-2 items-center font-bold underline decoration-2 decoration-red-400">
-                                <ExclamationIcon className="w-6 h-6 mr-1 text-red-500" />
-                                <em>{field.state.meta.errors.join(',')}</em>
+                            <div className="bg-red-600/25 pl-2 pr-4 py-2 rounded-lg inline-flex gap-1 items-center mt-4 text-sm text-red-200">
+                                <ExclamationIcon />
+                                <span className="font-bold">
+                                    {field.state.meta.errors.join(',')}
+                                </span>
                             </div>
                         ) : null}
 
@@ -323,10 +327,12 @@ function CreateOrUpdateMasterPasswordForm() {
                             maxLength={256}
                         />
 
-                        {field.state.meta.isTouched && field.state.meta.errors.length ? (
-                            <div className="flex mt-2 items-center font-bold underline decoration-2 decoration-red-400">
-                                <ExclamationIcon className="w-6 h-6 mr-1 text-red-500" />
-                                <em>{field.state.meta.errors.join(',')}</em>
+                        {field.state.meta.errors.length ? (
+                            <div className="bg-red-600/25 pl-2 pr-4 py-2 rounded-lg inline-flex gap-1 items-center mt-4 text-sm text-red-200">
+                                <ExclamationIcon />
+                                <span className="font-bold">
+                                    {field.state.meta.errors.join(',')}
+                                </span>
                             </div>
                         ) : null}
 
@@ -339,7 +345,7 @@ function CreateOrUpdateMasterPasswordForm() {
             <form.Subscribe selector={(state) => [state.canSubmit, state.isSubmitting]}>
                 {([canSubmit, isSubmitting]) => (
                     <button
-                        className="w-min text-nowrap px-4 py-2 rounded-lg text-white font-semibold bg-red-500 transition-colors disabled:opacity-50 hover:bg-red-500"
+                        className="w-min text-nowrap px-4 py-2 rounded-lg text-white font-semibold bg-passfort-600 transition-colors disabled:opacity-50 hover:bg-passfort-500 hover:text-white"
                         type="submit"
                         disabled={!canSubmit || isSubmitting}
                     >

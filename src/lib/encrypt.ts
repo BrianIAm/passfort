@@ -1,6 +1,5 @@
 import { invoke } from '@tauri-apps/api/core';
 import { getMasterPasswordVerification, getStoredPasswords, setStoredPasswords } from '#/lib/fs';
-import type { Password } from '#/types/password';
 
 /**
  * These are bindings for the rust backend commands.

@@ -62,10 +62,10 @@ export default function Page() {
                             </div>
 
                             <div className="mb-6">
-                                <p className="text-passfort-vibrant mb-4">
+                                <p className="text-passfort-500-500 mb-4">
                                     This will permanently delete:
                                 </p>
-                                <ul className="list-disc list-inside text-passfort-vibrant space-y-2">
+                                <ul className="list-disc list-inside text-passfort-500-500 space-y-2">
                                     <li>All stored passwords</li>
                                     <li>Your master password verification</li>
                                     <li>All settings and preferences</li>
@@ -81,7 +81,7 @@ export default function Page() {
                             <div className="flex gap-4">
                                 <button
                                     onClick={() => setShowDeleteModal(false)}
-                                    className="px-4 py-2 rounded-lg border border-passfort-vibrant text-passfort-vibrant hover:bg-passfort-vibrant/10"
+                                    className="px-4 py-2 rounded-lg border border-passfort-500-500 text-passfort-500-500 hover:bg-passfort-500-500/10"
                                 >
                                     Cancel
                                 </button>

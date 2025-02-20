@@ -96,7 +96,7 @@ export function PasswordGenerator({
     };
 
     return (
-        <div className="border border-passfort-vibrant bg-passfort/25 rounded-lg p-6 mb-8">
+        <div className="border border-passfort-500 bg-passfort-900/25 rounded-lg p-6 mb-8">
             <div className="flex items-center mb-4">
                 <ShapesIcon className="w-6 h-6 mr-2" />
                 <h3 className="text-xl font-bold text-white">Password Generator</h3>
@@ -105,7 +105,7 @@ export function PasswordGenerator({
             {/* Options */}
             <div className="grid grid-cols-2 gap-4 mb-6">
                 <div className="space-y-4">
-                    <span className="block font-bold text-white underline decoration-2 decoration-passfort-vibrant">
+                    <span className="block font-bold text-white underline decoration-2 decoration-passfort-500">
                         Character Configuration
                     </span>
 
@@ -122,7 +122,7 @@ export function PasswordGenerator({
                                     onChange={() => handleToggleBit(option.bit)}
                                 />
                                 {/* Checkbox */}
-                                <span className="w-6 h-6 mr-2 rounded-sm border-2 border-passfort-vibrant bg-passfort peer-checked:bg-passfort-vibrant peer-checked:border-passfort-vibrant flex items-center justify-center">
+                                <span className="w-6 h-6 mr-2 rounded-sm border-2 border-passfort-500 bg-passfort-900 peer-checked:bg-passfort-500 peer-checked:border-passfort-500 flex items-center justify-center">
                                     <svg
                                         className="text-white opacity-0 group-has-[:checked]:opacity-100"
                                         aria-hidden="true"
@@ -141,7 +141,7 @@ export function PasswordGenerator({
                                 </span>
 
                                 {/* Label */}
-                                <p className="text-passfort-vibrant">
+                                <p className="text-passfort-500">
                                     <span className="text-white">{option.label}</span> (
                                     <span className="text-white font-bold">{option.range}</span>)
                                 </p>
@@ -170,9 +170,9 @@ export function PasswordGenerator({
                             setChangedOptions(true);
                             setGeneratedPasswordLength(value);
                         }}
-                        className="range w-full h-2 rounded-lg appearance-none bg-passfort-vibrant/10 accent-passfort-vibrant cursor-pointer [&::-webkit-slider-thumb]:bg-passfort-vibrant! [&::-webkit-slider-thumb]:hover:bg-passfort-vibrant"
+                        className="range w-full h-2 rounded-lg appearance-none bg-passfort-500/10 accent-passfort-500 cursor-pointer [&::-webkit-slider-thumb]:bg-passfort-500! [&::-webkit-slider-thumb]:hover:bg-passfort-500"
                     />
-                    <div className="flex justify-between text-xs text-passfort-vibrant mt-2">
+                    <div className="flex justify-between text-xs text-passfort-500 mt-2">
                         <span>8</span>
                         <span>256</span>
                     </div>
@@ -185,7 +185,7 @@ export function PasswordGenerator({
                     className={`flex items-center px-2 py-2 rounded-lg border ${
                         copySuccess
                             ? 'border-green-500 bg-green-500/10'
-                            : 'border-passfort-vibrant bg-passfort-vibrant/10'
+                            : 'border-passfort-500 bg-passfort-500/10'
                     }`}
                 >
                     <input
@@ -216,7 +216,7 @@ export function PasswordGenerator({
                                 className={`w-6 h-6 ${
                                     copySuccess
                                         ? 'text-green-500 group-hover:text-white'
-                                        : 'text-passfort-vibrant group-hover:text-white'
+                                        : 'text-passfort-500 group-hover:text-white'
                                 }  transition-colors`}
                             />
                         </button>
@@ -229,7 +229,7 @@ export function PasswordGenerator({
                                 className={`w-6 h-6 ${
                                     copySuccess
                                         ? 'text-green-500 group-hover:text-white'
-                                        : 'text-passfort-vibrant group-hover:text-white'
+                                        : 'text-passfort-500 group-hover:text-white'
                                 }  transition-colors`}
                             />
                         </button>
@@ -244,7 +244,7 @@ export function PasswordGenerator({
                                     className={`w-6 h-6 ${
                                         copySuccess
                                             ? 'text-green-500 group-hover:text-white'
-                                            : 'text-passfort-vibrant group-hover:text-white'
+                                            : 'text-passfort-500 group-hover:text-white'
                                     }  transition-colors`}
                                 />
                             </button>

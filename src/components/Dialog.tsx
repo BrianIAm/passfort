@@ -1,19 +1,12 @@
-"use client";
-import React, {
-    useRef,
-    useEffect,
-    useCallback,
-    useImperativeHandle,
-    forwardRef,
-    useState,
-} from "react";
+'use client';
+import React, { useRef, useEffect, useCallback, useImperativeHandle, forwardRef } from 'react';
 
 interface DialogProps {
     withCloseButton?: boolean;
     children: React.ReactNode | React.ReactNode[];
     onClose?: () => void;
-    id?: React.HTMLProps<HTMLDialogElement>["id"];
-    className?: React.HTMLProps<HTMLDialogElement>["className"];
+    id?: string;
+    className?: string;
 }
 
 export interface DialogMethods {
@@ -33,18 +26,19 @@ export const Dialog = forwardRef<DialogMethods, DialogProps>(function Dialog(
             return;
         }
 
+        dialogRef.current.close();
         if (onClose) {
             onClose();
         }
-        dialogRef.current.close();
-    }, [onClose, dialogRef]);
+    }, [onClose]);
 
     const openModal = useCallback(() => {
         if (!dialogRef.current) {
             return;
         }
         dialogRef.current.showModal();
-    }, [dialogRef]);
+        dialogRef.current.focus(); // Ensure focus is set to the dialog
+    }, []);
 
     const toggleModal = useCallback(() => {
         if (!dialogRef.current) {
@@ -58,20 +52,31 @@ export const Dialog = forwardRef<DialogMethods, DialogProps>(function Dialog(
         }
     }, [closeModal, openModal]);
 
-    const checkClose = useCallback(
+    const handleBackdropClick = useCallback(
         (e: React.MouseEvent) => {
             if (!dialogRef.current) {
                 return;
             }
 
-            const dimensions = dialogRef.current.getBoundingClientRect();
+            const dialogElement = dialogRef.current;
+            const rect = dialogElement.getBoundingClientRect();
 
+            // Check if the click is outside the dialog
             if (
-                e.clientX < dimensions.left ||
-                e.clientX > dimensions.right ||
-                e.clientY < dimensions.top ||
-                e.clientY > dimensions.bottom
+                e.clientX < rect.left ||
+                e.clientX > rect.right ||
+                e.clientY < rect.top ||
+                e.clientY > rect.bottom
             ) {
+                closeModal();
+            }
+        },
+        [closeModal]
+    );
+
+    const handleEscapeKey = useCallback(
+        (e: React.KeyboardEvent<HTMLDialogElement>) => {
+            if (e.key === 'Escape') {
                 closeModal();
             }
         },
@@ -90,39 +95,43 @@ export const Dialog = forwardRef<DialogMethods, DialogProps>(function Dialog(
 
     useEffect(() => {
         const dialog = dialogRef.current;
-        if (dialog) {
-            dialog.showModal();
-            dialog.addEventListener("close", closeModal);
+        if (!dialog) {
+            return;
         }
 
-        return () => {
-            if (dialog) {
-                dialog.removeEventListener("close", closeModal);
-            }
-        };
-    }, [closeModal, onClose]);
+        // Open the dialog when the component mounts
+        dialog.showModal();
+        dialog.focus();
+    }, [closeModal, handleEscapeKey]);
 
     return (
         <dialog
             ref={dialogRef}
             id={id}
-            className="relative bg-passfort-vibrant/10 border border-passfort-vibrant text-white p-3 rounded-xl backdrop:bg-black/50 backdrop:backdrop-blur-xs backdrop-blur-sm"
-            onMouseDown={checkClose}>
+            className={`relative bg-passfort-950/80 border border-passfort-500-500 text-white p-3 rounded-xl backdrop:bg-black/50 backdrop:backdrop-blur-xs ${className}`}
+            onMouseDown={handleBackdropClick}
+            onClose={closeModal}
+            onKeyDown={handleEscapeKey}
+            role="dialog"
+            aria-modal="true"
+        >
             {children}
 
             {withCloseButton && (
                 <button
                     type="button"
-                    className="absolute top-4 right-2 w-6 h-6 rounded-lg text-passfort-vibrant"
+                    className="absolute top-4 right-2 w-6 h-6 rounded-lg text-passfort-500-500"
                     onClick={closeModal}
-                    aria-label="Close">
+                    aria-label="Close"
+                >
                     <span className="sr-only">Close</span>
                     <svg
                         className="w-4 h-4"
                         aria-hidden="true"
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
-                        viewBox="0 0 14 14">
+                        viewBox="0 0 14 14"
+                    >
                         <path
                             stroke="currentColor"
                             strokeLinecap="round"

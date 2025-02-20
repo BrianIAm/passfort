@@ -104,7 +104,7 @@ export default function Page() {
             </div>
 
             {/* Support Section */}
-            <div className="p-6 rounded-lg bg-linear-to-br from-passfort-vibrant/20 to-transparent border border-passfort-vibrant/30">
+            <div className="p-6 rounded-lg bg-linear-to-br from-passfort-500/20 to-transparent border border-passfort-500/30">
                 <div className="flex items-start gap-6">
                     <div className="flex-1">
                         <h3 className="text-2xl font-bold mb-4">Support PassFort</h3>

@@ -37,7 +37,7 @@ export default function RootLayout({
 function BackgroundGlow() {
     return (
         <div className="absolute inset-0 ml-[325px] flex justify-center items-center -z-10 h-screen pointer-events-none">
-            <div className="w-[32rem] h-[32rem] bg-passfort-vibrant rounded-full blur-[350px]"></div>
+            <div className="w-[32rem] h-[32rem] bg-passfort-500 rounded-full blur-[350px]"></div>
         </div>
     );
 }

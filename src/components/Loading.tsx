@@ -1,4 +1,4 @@
-import Image from "next/image";
+import Image from 'next/image';
 
 export function Loading({ message }: { message?: string }) {
     return (
@@ -12,11 +12,7 @@ export function Loading({ message }: { message?: string }) {
                     alt="PassFort Logo"
                 />
 
-                {message && (
-                    <p className="text-passfort-vibrant text-lg font-medium">
-                        {message}
-                    </p>
-                )}
+                {message && <p className="text-passfort-500-500 text-lg font-medium">{message}</p>}
             </div>
         </div>
     );

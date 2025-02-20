@@ -20,7 +20,7 @@ import {
 } from '#/icons';
 
 export default function Navbar() {
-    const [version, setVersion] = React.useState<string>('');
+    const [version, setVersion] = React.useState('');
     const pathname = usePathname();
     const isActive = (path: string) => pathname === path;
 
@@ -66,12 +66,12 @@ export default function Navbar() {
     }
 
     useEffect(() => {
-        getVersion().then((version) => setVersion(version));
+        getVersion().then((v) => setVersion(v));
     }, []);
 
     return (
         <nav className="h-screen w-[325px] flex-col" aria-label="Sidebar">
-            <div className="flex flex-col h-full px-3 py-4 overflow-x-hidden overflow-y-auto bg-passfort">
+            <div className="flex flex-col h-full px-3 py-4 overflow-x-hidden overflow-y-auto bg-passfort-900">
                 {/* Logo */}
                 <Link href="/" className="flex items-center ps-2.5 mb-5">
                     <Image
@@ -94,8 +94,8 @@ export default function Navbar() {
                                 href={item.href}
                                 className={`flex items-center px-4 py-3 rounded-lg transition-colors ${
                                     isActive(item.href)
-                                        ? 'bg-passfort-vibrant/25 text-white'
-                                        : 'text-passfort-vibrant hover:bg-passfort-vibrant/10'
+                                        ? 'bg-passfort-500/25 text-white'
+                                        : 'text-passfort-500 hover:bg-passfort-500/10'
                                 }`}
                             >
                                 <item.icon className="w-5 h-5 mr-3" />

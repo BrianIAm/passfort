@@ -1,20 +1,24 @@
 import { invoke } from '@tauri-apps/api/core';
 import { createMasterPasswordVerification } from '#/lib/encrypt';
-import { getVersion } from '@tauri-apps/api/app';
-import type { Password } from '#/types/password';
 
 import {
     writeFile,
     readFile,
+    create,
     readDir as readDirectory,
     remove as removeFile,
     mkdir as createDirectory,
     BaseDirectory,
     exists,
+    watch,
+    WatchEvent,
 } from '@tauri-apps/plugin-fs';
 
 // App-specific constant that servers as root key
 const APP_KEY = 'PassFort_v';
+// This is NOT the version of the app, but the version of the file structure
+// This is used to migrate data when the file structure changes
+const FILES_KEY = '1.0';
 
 interface FileKeys {
     passwords: string;
@@ -37,9 +41,17 @@ async function generateFileNames(): Promise<FileKeys> {
     const keys = await invoke<FileKeys>('generate_file_keys', {
         appKey: APP_KEY,
         // For future migrations
-        version: await getVersion(),
+        version: FILES_KEY,
     });
 
+    // Create the files to ensure they exist
+    const [verificationFile, passwordsFile] = await Promise.all([
+        create(`${keys.verification}.bin`, { baseDir: BaseDirectory.AppData }),
+        create(`${keys.passwords}.bin`, { baseDir: BaseDirectory.AppData }),
+    ]);
+
+    // Close the files
+    await Promise.all([verificationFile.close(), passwordsFile.close()]);
     return keys;
 }
 
@@ -47,6 +59,7 @@ async function getFileNames(): Promise<FileKeys> {
     if (!fileNames) {
         fileNames = await generateFileNames();
     }
+
     return fileNames;
 }
 
@@ -125,4 +138,14 @@ export async function deleteAllData() {
             await removeFile(entry.name, { baseDir: BaseDirectory.AppData });
         }
     } catch {}
+}
+
+export async function watchForPasswordChanges(callback: (event: WatchEvent) => void) {
+    await ensureAppDataDirectoryExists();
+    const { passwords: passwordsFileName } = await getFileNames();
+
+    return await watch('', callback, {
+        baseDir: BaseDirectory.AppData,
+        delayMs: 500,
+    });
 }
