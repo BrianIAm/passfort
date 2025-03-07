@@ -41,7 +41,7 @@
     },
     "productName": "passfort",
     "mainBinaryName": "passfort",
-    "version": "0.2.1",
+    "version": "0.2.2",
     "identifier": "PassFort",
     "plugins": {},
     "app": {

@@ -4,7 +4,7 @@ use aes_gcm::{
 };
 use pbkdf2::pbkdf2_hmac;
 use rand::seq::{IndexedRandom, SliceRandom};
-use rand::{Rng, RngCore, TryRngCore};
+use rand::{RngCore, TryRngCore};
 use sha2::Sha256;
 
 use base64::{engine::general_purpose::URL_SAFE_NO_PAD, Engine as _};
