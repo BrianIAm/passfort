@@ -20,19 +20,32 @@ const NONCE_LENGTH: usize = 12;
 const KEY_LENGTH: usize = 32;
 const ITERATIONS: u32 = 100_000;
 
+// Character ranges for generating random master passwords
+const CHARACTER_RANGES: [(&str, &str); 5] = [
+    ("abcdefghijklmnopqrstuvwxyz", "lowercase"), // Lowecase
+    ("ABCDEFGHIJKLMNOPQRSTUVWXYZ", "uppercase"), // Uppercase
+    ("0123456789", "numbers"),                   // Numbers
+    ("!@#$%&_-", "symbols_basic"),               // Symbols (basic set)
+    ("*^+=?.,|~(){}[]\\:;<>/", "symbols_extra"), // Symbols (extra set)
+];
+
+// Define common combinations as constants
+pub const PASSWORD_OPTION_LOWERCASE: u8 = 0b000001;
+pub const PASSWORD_OPTION_UPPERCASE: u8 = 0b000010;
+pub const PASSWORD_OPTION_NUMBERS: u8 = 0b000100;
+pub const PASSWORD_OPTION_SYMBOLS_BASIC: u8 = 0b001000;
+// This still exists, just not used
+//pub const PASSWORD_OPTION_SYMBOLS_EXTRA: u8 = 0b100000;
+// Common combinations
+pub const PASSWORD_OPTION_LETTERS: u8 = PASSWORD_OPTION_LOWERCASE | PASSWORD_OPTION_UPPERCASE;
+pub const PASSWORD_OPTION_ALPHANUMERIC: u8 = PASSWORD_OPTION_LETTERS | PASSWORD_OPTION_NUMBERS;
+pub const PASSWORD_OPTION_BASIC: u8 = PASSWORD_OPTION_ALPHANUMERIC | PASSWORD_OPTION_SYMBOLS_BASIC;
+
 #[derive(serde::Serialize)]
 pub struct FileKeys {
     passwords: String,
     verification: String,
 }
-
-// Character ranges for generating random master passwords
-const CHARACTER_RANGES: [(u8, u8); 4] = [
-    (b'a', b'z' + 1), // Lowercase
-    (b'A', b'Z' + 1), // Uppercase
-    (b'0', b'9' + 1), // Numbers
-    (b'!', b'/' + 1), // Symbols (basic set)
-];
 
 #[tauri::command]
 // Change derive_key to return bytes directly
@@ -128,39 +141,44 @@ pub fn decrypt(encrypted_data: String, master_password: String) -> Result<String
     String::from_utf8(plaintext).map_err(|e| format!("Invalid UTF-8 in decrypted data: {}", e))
 }
 
-// Genereate a random password for the client
+// Updated generate_password function
 #[tauri::command]
 pub fn generate_password(length: Option<u16>, configuration: Option<u8>) -> String {
+    // Determine what the length of the password should be
     let length = length.unwrap_or(8).max(8).min(256) as usize;
-    let options = configuration.unwrap_or(0b1111);
+    // Default to alphanumeric if no configuration provided
+    let options = configuration.unwrap_or(PASSWORD_OPTION_BASIC);
+
+    // If no options are selected, default to alphanumeric
+    let options = if options == 0 {
+        PASSWORD_OPTION_BASIC
+    } else {
+        options
+    };
 
     let mut rng = rand::rng();
     let mut password = Vec::with_capacity(length);
 
-    // Ensure at least one character from each selected range
-    for (i, &(start, end)) in CHARACTER_RANGES.iter().enumerate() {
+    // This will be a vec of all the possible chars we can use
+    let mut chars: Vec<char> = Vec::new();
+
+    // Add the chars from the enabled options to the charlist
+    for (i, &(range, _)) in CHARACTER_RANGES.iter().enumerate() {
         if options & (1 << i) != 0 {
-            let random_char = rng.random_range(start..end) as char;
-            password.push(random_char);
+            let range_chars: Vec<char> = range.chars().collect();
+            chars.extend(range_chars);
         }
     }
 
-    // Fill the rest of the password length with random characters from selected ranges
-    let selected_ranges: Vec<(u8, u8)> = CHARACTER_RANGES
-        .iter()
-        .enumerate()
-        .filter_map(|(i, &range)| {
-            if options & (1 << i) != 0 {
-                Some(range)
-            } else {
-                None
-            }
-        })
-        .collect();
+    // Ensure we have at least one range selected
+    if chars.is_empty() {
+        // Fallback to alphanumeric if somehow nothing is selected
+        return generate_password(Some(length as u16), Some(PASSWORD_OPTION_BASIC));
+    }
 
+    // Fill the rest of the password with random characters from selected ranges
     while password.len() < length {
-        let &(start, end) = selected_ranges.choose(&mut rng).unwrap();
-        let random_char = rng.random_range(start..end) as char;
+        let random_char = chars.choose(&mut rng).unwrap();
         password.push(random_char);
     }
 

@@ -149,3 +149,8 @@ export async function watchForPasswordChanges(callback: (event: WatchEvent) => v
         delayMs: 500,
     });
 }
+
+export async function addPassword(password: Password) {
+    const passwords = await getStoredPasswords();
+    await setStoredPasswords([...passwords, password]);
+}
