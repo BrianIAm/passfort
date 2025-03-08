@@ -108,7 +108,7 @@ export const Dialog = forwardRef<DialogMethods, DialogProps>(function Dialog(
         <dialog
             ref={dialogRef}
             id={id}
-            className={`relative bg-passfort-950/80 border border-passfort-500-500 text-white p-3 rounded-xl backdrop:bg-black/50 backdrop:backdrop-blur-xs ${className}`}
+            className={`relative m-auto bg-zinc-950 border border-passfort-500 text-white p-3 rounded-xl backdrop:bg-black/50 backdrop:backdrop-blur-xs ${className}`}
             onMouseDown={handleBackdropClick}
             onClose={closeModal}
             onKeyDown={handleEscapeKey}
@@ -120,7 +120,7 @@ export const Dialog = forwardRef<DialogMethods, DialogProps>(function Dialog(
             {withCloseButton && (
                 <button
                     type="button"
-                    className="absolute top-4 right-2 w-6 h-6 rounded-lg text-passfort-500-500"
+                    className="absolute top-6 right-4 w-6 h-6 rounded-lg text-passfort-500"
                     onClick={closeModal}
                     aria-label="Close"
                 >

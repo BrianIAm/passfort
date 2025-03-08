@@ -18,15 +18,6 @@
 //! - Nonce Length: 12 bytes for AES-GCM
 //! - Key Length: 32 bytes (256 bits) for AES-256
 //! - PBKDF2 Iterations: 100,000 for brute-force resistance
-//!
-//! ## Password Generation
-//!
-//! Supports various character sets with bitflag configuration:
-//! - Lowercase: a-z
-//! - Uppercase: A-Z
-//! - Numbers: 0-9
-//! - Basic symbols: !@#$%&_-
-//! - Extra symbols: *^+=?.,|~(){}[]\:;<>/
 use aes_gcm::{
     Aes256Gcm, Nonce,
     aead::{Aead, KeyInit},

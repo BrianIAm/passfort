@@ -27,13 +27,13 @@ const GENERATOR_OPTIONS: {
     {
         id: 'SYMBOLS_BASIC',
         label: 'Common Symbols',
-        range: '!-@',
+        range: '!@#$%&_-',
         bit: PasswordOptionBits.SYMBOLS_BASIC,
     },
     {
         id: 'SYMBOLS_EXTRA',
         label: 'Rare Symbols',
-        range: '*-+',
+        range: '*^+=?.,|~(){}[]\\:;<>/',
         bit: PasswordOptionBits.SYMBOLS_EXTRA,
     },
 ];

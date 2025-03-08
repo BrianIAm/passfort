@@ -9,10 +9,7 @@ export default function Component() {
 
     const handleMinimize = async () => {
         const appWindow = getCurrentWindow();
-
-        if (await appWindow.isMinimizable()) {
-            appWindow.minimize();
-        }
+        appWindow.minimize();
     };
 
     const handleToggleMaximized = async () => {

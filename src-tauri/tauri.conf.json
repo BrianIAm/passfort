@@ -54,8 +54,8 @@
                 "resizable": true,
                 "title": "PassFort",
                 "width": 1440,
-                "minWidth": 1440,
-                "minHeight": 1080
+                "minWidth": 720,
+                "minHeight": 720
             }
         ],
         "security": {

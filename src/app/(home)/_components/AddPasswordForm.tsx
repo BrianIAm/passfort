@@ -1,15 +1,10 @@
-import { useForm, type FieldApi } from '@tanstack/react-form';
-import { encrypt, verifyMasterPassword } from '#/lib/encrypt';
-import { getVersion } from '@tauri-apps/api/app';
 import { addPassword } from '#/lib/fs';
 import { Dialog } from '#/components/Dialog';
+import { encrypt, verifyMasterPassword } from '#/lib/encrypt';
+import { getVersion } from '@tauri-apps/api/app';
+import { useForm } from '@tanstack/react-form';
 
 import { LockIcon, ExclamationIcon, ShieldIcon } from '#/icons';
-
-interface ExtendedFormPassword extends Password {
-    master_password: string;
-    password_confirm: string;
-}
 
 export default function Component({
     setIsModalShowing,
@@ -24,7 +19,7 @@ export default function Component({
             master_password: '',
             password_confirm: '',
         },
-        onSubmit: async ({ value }: { value: typeof form.defaultValues }) => {
+        onSubmit: async ({ value }) => {
             const { master_password, password_confirm, ...passwordFormFields } = value;
 
             if (passwordFormFields.value !== password_confirm) {
@@ -51,7 +46,7 @@ export default function Component({
     return (
         <Dialog onClose={() => setIsModalShowing(false)}>
             <form
-                className="flex flex-col p-6 max-w-2xl gap-6"
+                className="flex flex-col p-4 max-w-2xl gap-6"
                 autoComplete="off"
                 onSubmit={(e) => {
                     e.preventDefault();
@@ -84,7 +79,8 @@ export default function Component({
                             return null;
                         },
                     }}
-                    children={(field: FieldApi<ExtendedFormPassword, 'name'>) => (
+                >
+                    {(field) => (
                         <div className="inline-flex flex-col gap-2">
                             <label htmlFor={field.name}>Name</label>
                             <input
@@ -115,11 +111,11 @@ export default function Component({
                             ) : null}
                         </div>
                     )}
-                />
+                </form.Field>
 
                 {/* Associated Identifier */}
                 <form.Field name={'associated_identifier'}>
-                    {(field: FieldApi<ExtendedFormPassword, 'associated_identifier'>) => (
+                    {(field) => (
                         <div className="inline-flex flex-col gap-2">
                             <label htmlFor={field.name}>Identifier</label>
                             <input
@@ -172,7 +168,7 @@ export default function Component({
                         },
                     }}
                 >
-                    {(field: FieldApi<ExtendedFormPassword, 'value'>) => (
+                    {(field) => (
                         <div className="inline-flex flex-col gap-2">
                             <label htmlFor={field.name}>Password</label>
                             <input
@@ -226,7 +222,7 @@ export default function Component({
                         },
                     }}
                 >
-                    {(field: FieldApi<ExtendedFormPassword, 'password_confirm'>) => (
+                    {(field) => (
                         <div className="inline-flex flex-col gap-2">
                             <label htmlFor={field.name}>Confirm password</label>
                             <input
@@ -290,7 +286,7 @@ export default function Component({
                         },
                     }}
                 >
-                    {(field: FieldApi<ExtendedFormPassword, 'master_password'>) => (
+                    {(field) => (
                         <div className="inline-flex flex-col gap-2">
                             <label htmlFor={field.name}>Master Password</label>
                             <input
@@ -331,13 +327,8 @@ export default function Component({
                     </button>
 
                     {/* Submit Button */}
-                    <form.Subscribe
-                        selector={(state: { canSubmit: boolean; isSubmitting: boolean }) => [
-                            state.canSubmit,
-                            state.isSubmitting,
-                        ]}
-                    >
-                        {([canSubmit, isSubmitting]: [boolean, boolean]) => (
+                    <form.Subscribe selector={(state) => [state.canSubmit, state.isSubmitting]}>
+                        {([canSubmit, isSubmitting]) => (
                             <button
                                 className="w-min text-nowrap px-4 py-2 rounded-lg text-white font-semibold bg-red-800 transition-colors disabled:opacity-50 disabled:grayscale-100 hover:bg-passfort-500"
                                 type="submit"
