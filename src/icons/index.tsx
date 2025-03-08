@@ -482,6 +482,90 @@ export function UserGroupIcon(props: SVGProps<SVGSVGElement>) {
     );
 }
 
+export function MinimizeIcon(props: SVGProps<SVGSVGElement>) {
+    return (
+        <svg
+            className="w-6 h-6"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            {...props}
+        >
+            <path
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M5 9h4m0 0V5m0 4L4 4m15 5h-4m0 0V5m0 4 5-5M5 15h4m0 0v4m0-4-5 5m15-5h-4m0 0v4m0-4 5 5"
+            />
+        </svg>
+    );
+}
+
+export function ExpandIcon(props: SVGProps<SVGSVGElement>) {
+    return (
+        <svg
+            className="w-6 h-6"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            {...props}
+        >
+            <path
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M8 4H4m0 0v4m0-4 5 5m7-5h4m0 0v4m0-4-5 5M8 20H4m0 0v-4m0 4 5-5m7 5h4m0 0v-4m0 4-5-5"
+            />
+        </svg>
+    );
+}
+
+export function CloseIcon(props: SVGProps<SVGSVGElement>) {
+    return (
+        <svg
+            className="w-6 h-6"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            {...props}
+        >
+            <path
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M6 18 17.94 6M18 18 6.06 6"
+            />
+        </svg>
+    );
+}
+
+export function MinusIcon(props: SVGProps<SVGSVGElement>) {
+    return (
+        <svg
+            className="w-6 h-6"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            {...props}
+        >
+            <path
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M5 12h14"
+            />
+        </svg>
+    );
+}
+
 export function PaypalIcon(props: SVGProps<SVGSVGElement>) {
     return (
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 48 48" {...props}>
