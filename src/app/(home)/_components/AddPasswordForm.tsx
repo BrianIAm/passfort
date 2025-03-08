@@ -1,4 +1,4 @@
-import { useForm } from '@tanstack/react-form';
+import { useForm, type FieldApi } from '@tanstack/react-form';
 import { encrypt, verifyMasterPassword } from '#/lib/encrypt';
 import { getVersion } from '@tauri-apps/api/app';
 import { addPassword } from '#/lib/fs';
@@ -6,7 +6,7 @@ import { Dialog } from '#/components/Dialog';
 
 import { LockIcon, ExclamationIcon, ShieldIcon } from '#/icons';
 
-interface PasswordForm extends Pick<Password, 'name' | 'associated_identifier' | 'value'> {
+interface ExtendedFormPassword extends Password {
     master_password: string;
     password_confirm: string;
 }
@@ -24,7 +24,7 @@ export default function Component({
             master_password: '',
             password_confirm: '',
         },
-        onSubmit: async ({ value }) => {
+        onSubmit: async ({ value }: { value: typeof form.defaultValues }) => {
             const { master_password, password_confirm, ...passwordFormFields } = value;
 
             if (passwordFormFields.value !== password_confirm) {
@@ -68,7 +68,7 @@ export default function Component({
                 <form.Field
                     name={'name'}
                     validators={{
-                        onChange: ({ value }) => {
+                        onChange: ({ value }: { value: string }) => {
                             if (!value) {
                                 return 'Name is required';
                             }
@@ -84,8 +84,7 @@ export default function Component({
                             return null;
                         },
                     }}
-                >
-                    {(field) => (
+                    children={(field: FieldApi<ExtendedFormPassword, 'name'>) => (
                         <div className="inline-flex flex-col gap-2">
                             <label htmlFor={field.name}>Name</label>
                             <input
@@ -116,11 +115,11 @@ export default function Component({
                             ) : null}
                         </div>
                     )}
-                </form.Field>
+                />
 
                 {/* Associated Identifier */}
                 <form.Field name={'associated_identifier'}>
-                    {(field) => (
+                    {(field: FieldApi<ExtendedFormPassword, 'associated_identifier'>) => (
                         <div className="inline-flex flex-col gap-2">
                             <label htmlFor={field.name}>Identifier</label>
                             <input
@@ -156,7 +155,7 @@ export default function Component({
                 <form.Field
                     name={'value'}
                     validators={{
-                        onChange: ({ value }) => {
+                        onChange: ({ value }: { value: string }) => {
                             if (!value) {
                                 return 'Password is required';
                             }
@@ -173,7 +172,7 @@ export default function Component({
                         },
                     }}
                 >
-                    {(field) => (
+                    {(field: FieldApi<ExtendedFormPassword, 'value'>) => (
                         <div className="inline-flex flex-col gap-2">
                             <label htmlFor={field.name}>Password</label>
                             <input
@@ -210,7 +209,7 @@ export default function Component({
                 <form.Field
                     name={'password_confirm'}
                     validators={{
-                        onChange: ({ value }) => {
+                        onChange: ({ value }: { value: string }) => {
                             if (!value) {
                                 return 'Password confirmation is required';
                             }
@@ -227,7 +226,7 @@ export default function Component({
                         },
                     }}
                 >
-                    {(field) => (
+                    {(field: FieldApi<ExtendedFormPassword, 'password_confirm'>) => (
                         <div className="inline-flex flex-col gap-2">
                             <label htmlFor={field.name}>Confirm password</label>
                             <input
@@ -277,7 +276,7 @@ export default function Component({
                     name={'master_password'}
                     validators={{
                         onChangeAsyncDebounceMs: 500,
-                        onChangeAsync: async ({ value }) => {
+                        onChangeAsync: async ({ value }: { value: string }) => {
                             if (!value) {
                                 return 'Master password is required';
                             }
@@ -291,7 +290,7 @@ export default function Component({
                         },
                     }}
                 >
-                    {(field) => (
+                    {(field: FieldApi<ExtendedFormPassword, 'master_password'>) => (
                         <div className="inline-flex flex-col gap-2">
                             <label htmlFor={field.name}>Master Password</label>
                             <input
@@ -332,8 +331,13 @@ export default function Component({
                     </button>
 
                     {/* Submit Button */}
-                    <form.Subscribe selector={(state) => [state.canSubmit, state.isSubmitting]}>
-                        {([canSubmit, isSubmitting]) => (
+                    <form.Subscribe
+                        selector={(state: { canSubmit: boolean; isSubmitting: boolean }) => [
+                            state.canSubmit,
+                            state.isSubmitting,
+                        ]}
+                    >
+                        {([canSubmit, isSubmitting]: [boolean, boolean]) => (
                             <button
                                 className="w-min text-nowrap px-4 py-2 rounded-lg text-white font-semibold bg-red-800 transition-colors disabled:opacity-50 disabled:grayscale-100 hover:bg-passfort-500"
                                 type="submit"

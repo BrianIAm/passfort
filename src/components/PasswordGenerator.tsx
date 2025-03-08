@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { writeText as writeTextToClipboard } from '@tauri-apps/plugin-clipboard-manager';
 import { generatePassword } from '#/lib/encrypt';
-import { useForm, type AnyFieldApi } from '@tanstack/react-form';
+import { useForm } from '@tanstack/react-form';
 
 import {
     PasswordOptionBits,
@@ -12,7 +12,7 @@ import {
     type PasswordOptionValue,
 } from '#/types/passwords';
 
-import { CopyIcon, SaveIcon, GenerateIcon, ShapesIcon } from '#/icons';
+import { CopyIcon, GenerateIcon, ShapesIcon } from '#/icons';
 
 const GENERATOR_OPTIONS: {
     id: PasswordOptionKey;
@@ -26,14 +26,14 @@ const GENERATOR_OPTIONS: {
     { id: 'NUMBERS', label: 'Numbers', range: '0-9', bit: PasswordOptionBits.NUMBERS },
     {
         id: 'SYMBOLS_BASIC',
-        label: 'Very Common Symbols',
-        range: '!@#$%&_-',
+        label: 'Common Symbols',
+        range: '!-@',
         bit: PasswordOptionBits.SYMBOLS_BASIC,
     },
     {
         id: 'SYMBOLS_EXTRA',
         label: 'Rare Symbols',
-        range: '*^+=?.,|~(){}[]\\:;<>/',
+        range: '*-+',
         bit: PasswordOptionBits.SYMBOLS_EXTRA,
     },
 ];
@@ -46,9 +46,6 @@ export function PasswordGenerator() {
             password: '',
             password_length: 32,
             password_options: PasswordOptionBits.ALPHANUMERIC | PasswordOptionBits.SYMBOLS_BASIC,
-        },
-        onSubmit: async ({ value }) => {
-            console.log(value);
         },
     });
 
@@ -66,8 +63,10 @@ export function PasswordGenerator() {
 
     // Generate a new password on component mount
     useEffect(() => {
-        handleGenerateNewPassword();
-    }, []);
+        if (form.state.values.password == '') {
+            handleGenerateNewPassword();
+        }
+    }, [form.state.values]);
 
     return (
         <form
@@ -85,11 +84,15 @@ export function PasswordGenerator() {
 
             <div className="grid grid-cols-2 gap-4 mb-6">
                 {/* Checkboxes */}
-                <form.Field name="password_options">
-                    {(field) => (
+                <form.Field
+                    name="password_options"
+                    children={(field: {
+                        state: { value: number };
+                        setValue: (value: number) => void;
+                    }) => (
                         <OptionCheckBoxes
                             bitfield={field.state.value}
-                            updateBitfield={(bitfield) => {
+                            updateBitfield={(bitfield: number) => {
                                 field.setValue(
                                     bitfield ||
                                         PasswordOptionBits.ALPHANUMERIC &
@@ -99,11 +102,15 @@ export function PasswordGenerator() {
                             }}
                         />
                     )}
-                </form.Field>
+                />
 
                 {/* Length range slider */}
-                <form.Field name="password_length">
-                    {(field) => (
+                <form.Field
+                    name="password_length"
+                    children={(field: {
+                        state: { value: number };
+                        setValue: (value: number) => void;
+                    }) => (
                         <LengthSlider
                             length={field.state.value}
                             onChange={(newLength: number) => {
@@ -112,7 +119,7 @@ export function PasswordGenerator() {
                             }}
                         />
                     )}
-                </form.Field>
+                />
             </div>
 
             {/* Password read-only textfield */}

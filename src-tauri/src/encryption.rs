@@ -1,13 +1,42 @@
+//! # Encryption Module
+//!
+//! This module provides cryptographic operations for secure password storage and management.
+//! It implements AES-256-GCM encryption for data protection, PBKDF2 key derivation, and
+//! secure password generation functionality.
+//!
+//! ## Key Features
+//!
+//! - Secure encryption/decryption of password data
+//! - Password derivation using PBKDF2 with SHA-256
+//! - Configurable random password generation
+//! - Constant-time string comparison for security
+//! - File key generation for secure storage
+//!
+//! ## Security Parameters
+//!
+//! - Salt Length: 32 bytes for key derivation
+//! - Nonce Length: 12 bytes for AES-GCM
+//! - Key Length: 32 bytes (256 bits) for AES-256
+//! - PBKDF2 Iterations: 100,000 for brute-force resistance
+//!
+//! ## Password Generation
+//!
+//! Supports various character sets with bitflag configuration:
+//! - Lowercase: a-z
+//! - Uppercase: A-Z
+//! - Numbers: 0-9
+//! - Basic symbols: !@#$%&_-
+//! - Extra symbols: *^+=?.,|~(){}[]\:;<>/
 use aes_gcm::{
-    aead::{Aead, KeyInit},
     Aes256Gcm, Nonce,
+    aead::{Aead, KeyInit},
 };
 use pbkdf2::pbkdf2_hmac;
 use rand::seq::{IndexedRandom, SliceRandom};
 use rand::{RngCore, TryRngCore};
 use sha2::Sha256;
 
-use base64::{engine::general_purpose::URL_SAFE_NO_PAD, Engine as _};
+use base64::{Engine as _, engine::general_purpose::URL_SAFE_NO_PAD};
 use hmac::{Hmac, Mac};
 
 type HmacSha256 = Hmac<Sha256>;
@@ -141,23 +170,25 @@ pub fn decrypt(encrypted_data: String, master_password: String) -> Result<String
     String::from_utf8(plaintext).map_err(|e| format!("Invalid UTF-8 in decrypted data: {}", e))
 }
 
-// Updated generate_password function
 #[tauri::command]
 pub fn generate_password(length: Option<u16>, configuration: Option<u8>) -> String {
     // Determine what the length of the password should be
+    // Ensure the value is between 8 and 256
     let length = length.unwrap_or(8).max(8).min(256) as usize;
-    // Default to alphanumeric if no configuration provided
+    // Default to alphanumeric + symbols
     let options = configuration.unwrap_or(PASSWORD_OPTION_BASIC);
 
-    // If no options are selected, default to alphanumeric
+    // If the configuration has no options selected...
     let options = if options == 0 {
+        // Default to alphanumeric + symbols
         PASSWORD_OPTION_BASIC
     } else {
         options
     };
 
-    let mut rng = rand::rng();
+    // Instantiate our password which will be a list of chars
     let mut password = Vec::with_capacity(length);
+    let mut rng = rand::rng();
 
     // This will be a vec of all the possible chars we can use
     let mut chars: Vec<char> = Vec::new();
@@ -197,13 +228,18 @@ pub fn generate_random_salt() -> String {
 
 #[tauri::command]
 pub fn constant_time_compare(a: String, b: String) -> bool {
-    // Compare the two strings in constant time using XOR
+    // First check if lengths match - this is safe to do in variable time
+    // since string length is not typically a secret
     a.len() == b.len()
         && a.as_bytes()
             .iter()
-            .zip(b.as_bytes().iter())
-            .fold(0, |acc, (x, y)| acc | (x ^ y))
-            == 0
+            .zip(b.as_bytes().iter()) // Pair up bytes from both strings
+            .fold(0, |acc, (x, y)| {
+                // XOR each byte pair - produces 0 only when bytes are identical
+                // Bitwise OR with accumulator - remains 0 only if all pairs match
+                acc | (x ^ y)
+            })
+            == 0 // Final result is 0 only if all byte pairs were identical
 }
 
 #[tauri::command]
@@ -228,5 +264,78 @@ pub fn generate_file_keys(app_key: String, version: String) -> FileKeys {
     FileKeys {
         passwords,
         verification,
+    }
+}
+
+#[cfg(test)]
+mod test {
+    use super::*;
+    const TEST_MASTER_PASSWORD: &str = "!!PassFortTest123";
+
+    #[test]
+    fn test_gen_password_length() {
+        // Test different password lengths
+        let password_8 = generate_password(Some(8), Some(0));
+        let password_16 = generate_password(Some(16), Some(0));
+        let password_32 = generate_password(Some(32), Some(0));
+        let password_256 = generate_password(Some(256), Some(0));
+
+        assert_eq!(password_8.len(), 8);
+        assert_eq!(password_16.len(), 16);
+        assert_eq!(password_32.len(), 32);
+        assert_eq!(password_256.len(), 256);
+
+        // Test min/max enforcement
+        let password_too_short = generate_password(Some(4), Some(0));
+        let password_too_long = generate_password(Some(300), Some(0));
+
+        assert_eq!(password_too_short.len(), 8); // Should enforce min of 8
+        assert_eq!(password_too_long.len(), 256); // Should enforce max of 256
+    }
+
+    #[test]
+    fn test_gen_password_options() {
+        // Test lowercase only
+        let lowercase_only = generate_password(Some(100), Some(PASSWORD_OPTION_LOWERCASE));
+        assert!(lowercase_only.chars().all(|c| c.is_ascii_lowercase()));
+
+        // Test uppercase only
+        let uppercase_only = generate_password(Some(100), Some(PASSWORD_OPTION_UPPERCASE));
+        assert!(uppercase_only.chars().all(|c| c.is_ascii_uppercase()));
+
+        // Test numbers only
+        let numbers_only = generate_password(Some(100), Some(PASSWORD_OPTION_NUMBERS));
+        assert!(numbers_only.chars().all(|c| c.is_ascii_digit()));
+
+        // Test symbols basic only
+        let symbols_basic = generate_password(Some(100), Some(PASSWORD_OPTION_SYMBOLS_BASIC));
+        let basic_symbols = "!@#$%&_-";
+        assert!(symbols_basic.chars().all(|c| basic_symbols.contains(c)));
+
+        // Test alphanumeric (combo)
+        let alphanumeric = generate_password(Some(100), Some(PASSWORD_OPTION_ALPHANUMERIC));
+        assert!(alphanumeric.chars().all(|c| c.is_ascii_alphanumeric()));
+    }
+
+    #[test]
+    fn test_encryption_decryption() {
+        let random_password = generate_password(Some(128), Some(0));
+        let encrypted = encrypt(random_password.clone(), TEST_MASTER_PASSWORD.to_string()).unwrap();
+        let decrypted = decrypt(encrypted, TEST_MASTER_PASSWORD.to_string()).unwrap();
+
+        assert_eq!(decrypted, random_password);
+
+        // Test with different password lengths
+        let short_pwd = generate_password(Some(8), Some(0));
+        let long_pwd = generate_password(Some(256), Some(0));
+
+        let encrypted_short = encrypt(short_pwd.clone(), TEST_MASTER_PASSWORD.to_string()).unwrap();
+        let encrypted_long = encrypt(long_pwd.clone(), TEST_MASTER_PASSWORD.to_string()).unwrap();
+
+        let decrypted_short = decrypt(encrypted_short, TEST_MASTER_PASSWORD.to_string()).unwrap();
+        let decrypted_long = decrypt(encrypted_long, TEST_MASTER_PASSWORD.to_string()).unwrap();
+
+        assert_eq!(decrypted_short, short_pwd);
+        assert_eq!(decrypted_long, long_pwd);
     }
 }

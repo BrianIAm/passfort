@@ -22,7 +22,7 @@ export default function RootLayout({
     return (
         <html lang="en">
             <body className={`${poppins.className} w-screen h-screen flex bg-zinc-900 text-white`}>
-                {/* <TitleBar /> */}
+                <TitleBar />
                 <Navbar />
 
                 <div className="w-full overflow-y-auto no-scrollbars">
