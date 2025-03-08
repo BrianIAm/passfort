@@ -7,7 +7,18 @@ import { MinimizeIcon, ExpandIcon, MinusIcon, CloseIcon } from '#/icons';
 export default function Component() {
     const [isMaximized, setMaximized] = useState(false);
 
-    const handleToggleMaximized = async () => {};
+    const handleMinimize = async () => {
+        const appWindow = getCurrentWindow();
+
+        if (await appWindow.isMinimizable()) {
+            appWindow.minimize();
+        }
+    };
+
+    const handleToggleMaximized = async () => {
+        const appWindow = getCurrentWindow();
+        appWindow.toggleMaximize();
+    };
 
     const handleMouseDown = (e: React.MouseEvent) => {
         const appWindow = getCurrentWindow();
@@ -34,6 +45,7 @@ export default function Component() {
             <button
                 id="titlebar-minimize"
                 className="p-1 hover:text-white hover:bg-red-900/50 rounded-lg hover:transition-all"
+                onClick={handleMinimize}
             >
                 <MinusIcon />
             </button>
