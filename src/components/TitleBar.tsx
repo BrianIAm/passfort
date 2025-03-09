@@ -1,10 +1,9 @@
 'use client';
 import { useState, useEffect, useCallback } from 'react';
 import { getCurrentWindow } from '@tauri-apps/api/window';
-
+import { usePlatform } from '#/context/PlatformContext';
 import { MinusIcon, CloseIcon, WindowsMaximizeIcon, WindowsRestoreIcon } from '#/icons';
 
-// Platform-specific title bar configurations
 const TITLE_BAR_CONFIGS = {
     windows: {
         className:
@@ -27,7 +26,7 @@ const TITLE_BAR_CONFIGS = {
 
 export default function TitleBar() {
     const [isMaximized, setIsMaximized] = useState(false);
-    const [platform] = useState('windows'); // Default to Windows, could detect OS
+    const platform = usePlatform();
 
     // Window action handlers
     const windowActions: Record<string, () => Promise<void>> = {
@@ -45,9 +44,7 @@ export default function TitleBar() {
         const checkWindowState = async () => {
             try {
                 setIsMaximized(await getCurrentWindow().isMaximized());
-            } catch (error) {
-                console.error('Failed to check window state:', error);
-            }
+            } catch (_) {}
         };
 
         checkWindowState();

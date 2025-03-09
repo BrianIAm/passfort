@@ -2,6 +2,7 @@
 
 import { getVersion } from '@tauri-apps/api/app';
 import { usePathname } from 'next/navigation';
+import { usePlatform } from '#/context/PlatformContext';
 import Image from 'next/image';
 import Link from 'next/link';
 import React, { useEffect } from 'react';
@@ -9,10 +10,8 @@ import React, { useEffect } from 'react';
 import {
     BugIcon,
     CogIcon,
-    FileAndPenIcon,
     MosaicIcon,
     HammerIcon,
-    HomeIcon,
     InfoIcon,
     LockIcon,
     RefreshIcon,
@@ -22,6 +21,7 @@ import {
 
 export default function Navbar() {
     const [version, setVersion] = React.useState('');
+    const platform = usePlatform();
     const pathname = usePathname();
     const isActive = (path: string) => pathname === path;
 
@@ -72,7 +72,11 @@ export default function Navbar() {
 
     return (
         <nav className="h-screen w-[325px] flex-col" aria-label="Sidebar">
-            <div className="flex flex-col h-full px-3 pb-4 pt-12 overflow-x-hidden overflow-y-auto bg-passfort-900">
+            <div
+                className={`flex flex-col h-full px-3 pb-4 ${
+                    platform === 'macos' ? 'pt-12' : 'pt-4'
+                } overflow-x-hidden overflow-y-auto bg-passfort-900`}
+            >
                 {/* Logo */}
                 <Link href="/" className="flex items-center ps-2.5 mb-5">
                     <Image

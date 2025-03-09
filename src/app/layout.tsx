@@ -2,6 +2,7 @@ import './globals.css';
 import { Poppins } from 'next/font/google';
 import TitleBar from '#/components/TitleBar';
 import Navbar from '#/components/Navbar';
+import { PlatformProvider } from '#/context/PlatformContext';
 import type { Metadata } from 'next';
 
 const poppins = Poppins({
@@ -22,13 +23,15 @@ export default function RootLayout({
     return (
         <html lang="en">
             <body className={`${poppins.className} w-screen h-screen flex bg-zinc-900 text-white`}>
-                <TitleBar />
-                <Navbar />
+                <PlatformProvider>
+                    <TitleBar />
+                    <Navbar />
 
-                <div className="w-full overflow-y-auto no-scrollbars pt-8">
-                    <BackgroundGlow />
-                    {children}
-                </div>
+                    <div className="w-full overflow-y-auto no-scrollbars pt-2">
+                        <BackgroundGlow />
+                        {children}
+                    </div>
+                </PlatformProvider>
             </body>
         </html>
     );
