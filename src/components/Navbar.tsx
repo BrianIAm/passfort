@@ -72,7 +72,7 @@ export default function Navbar() {
 
     return (
         <nav className="h-screen w-[325px] flex-col" aria-label="Sidebar">
-            <div className="flex flex-col h-full px-3 py-4 overflow-x-hidden overflow-y-auto bg-passfort-900">
+            <div className="flex flex-col h-full px-3 pb-4 pt-12 overflow-x-hidden overflow-y-auto bg-passfort-900">
                 {/* Logo */}
                 <Link href="/" className="flex items-center ps-2.5 mb-5">
                     <Image

@@ -25,7 +25,7 @@ export default function RootLayout({
                 <TitleBar />
                 <Navbar />
 
-                <div className="w-full overflow-y-auto no-scrollbars">
+                <div className="w-full overflow-y-auto no-scrollbars pt-8">
                     <BackgroundGlow />
                     {children}
                 </div>

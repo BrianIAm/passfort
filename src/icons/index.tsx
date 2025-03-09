@@ -580,6 +580,49 @@ export function MosaicIcon(props: SVGProps<SVGSVGElement>) {
     );
 }
 
+export function WindowsMaximizeIcon(props: SVGProps<SVGSVGElement>) {
+    return (
+        <svg
+            className="w-6 h-6"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="currentColor"
+            viewBox="0 0 24 24"
+            {...props}
+        >
+            <path
+                fill-rule="evenodd"
+                d="M4 4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2H4Zm16 7H4v7h16v-7ZM5 8a1 1 0 0 1 1-1h.01a1 1 0 0 1 0 2H6a1 1 0 0 1-1-1Zm4-1a1 1 0 0 0 0 2h.01a1 1 0 0 0 0-2H9Zm2 1a1 1 0 0 1 1-1h.01a1 1 0 1 1 0 2H12a1 1 0 0 1-1-1Z"
+                clip-rule="evenodd"
+            />
+        </svg>
+    );
+}
+
+export function WindowsRestoreIcon(props: SVGProps<SVGSVGElement>) {
+    return (
+        <svg
+            className="w-6 h-6"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="currentColor"
+            viewBox="0 0 24 24"
+            {...props}
+        >
+            <path
+                fill-rule="evenodd"
+                d="M8 5a1 1 0 0 1 1-1h11a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-1a1 1 0 1 1 0-2h1V6H9a1 1 0 0 1-1-1Z"
+                clip-rule="evenodd"
+            />
+            <path
+                fill-rule="evenodd"
+                d="M4 7a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2H4Zm0 11v-5.5h11V18H4Z"
+                clip-rule="evenodd"
+            />
+        </svg>
+    );
+}
+
 export function PaypalIcon(props: SVGProps<SVGSVGElement>) {
     return (
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 48 48" {...props}>
