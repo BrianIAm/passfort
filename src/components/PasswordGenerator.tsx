@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { writeText as writeTextToClipboard } from '@tauri-apps/plugin-clipboard-manager';
 import { generatePassword } from '#/lib/encrypt';
 import { useForm } from '@tanstack/react-form';
@@ -40,6 +40,7 @@ const GENERATOR_OPTIONS: {
 
 export function PasswordGenerator() {
     const [changedOptions, setChangedOptions] = useState(false);
+    const [hasSetInitialPassword, setHasInitialPassword] = useState(false);
 
     const form = useForm({
         defaultValues: {
@@ -49,7 +50,7 @@ export function PasswordGenerator() {
         },
     });
 
-    const handleGenerateNewPassword = async () => {
+    const handleGenerateNewPassword = useCallback(async () => {
         const password = await generatePassword(
             form.getFieldValue('password_length'),
             form.getFieldValue('password_options')
@@ -59,14 +60,16 @@ export function PasswordGenerator() {
         form.setFieldValue('password', password);
         setChangedOptions(false);
         return password;
-    };
+    }, [form]);
 
     // Generate a new password on component mount
     useEffect(() => {
-        if (form.state.values.password == '') {
-            handleGenerateNewPassword();
+        if (!hasSetInitialPassword) {
+            handleGenerateNewPassword().then(() => {
+                setHasInitialPassword(true);
+            });
         }
-    }, [form.state.values]);
+    }, [handleGenerateNewPassword, hasSetInitialPassword]);
 
     return (
         <form
