@@ -108,7 +108,7 @@ export const Dialog = forwardRef<DialogMethods, DialogProps>(function Dialog(
         <dialog
             ref={dialogRef}
             id={id}
-            className={`relative m-auto bg-zinc-950 border border-passfort-500 text-white p-3 rounded-xl backdrop:bg-black/50 backdrop:backdrop-blur-xs ${className}`}
+            className={`relative m-auto bg-zinc-950 border-2 border-passfort-500 text-white p-3 rounded-xl backdrop:bg-black/50 backdrop:backdrop-blur-xs ${className}`}
             onMouseDown={handleBackdropClick}
             onClose={closeModal}
             onKeyDown={handleEscapeKey}

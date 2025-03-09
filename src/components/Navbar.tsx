@@ -10,6 +10,7 @@ import {
     BugIcon,
     CogIcon,
     FileAndPenIcon,
+    MosaicIcon,
     HammerIcon,
     HomeIcon,
     InfoIcon,
@@ -28,7 +29,7 @@ export default function Navbar() {
         {
             name: 'Vault',
             href: '/',
-            icon: HomeIcon,
+            icon: MosaicIcon,
         },
         {
             name: 'Master Password',

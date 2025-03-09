@@ -1,4 +1,4 @@
-import { addPassword } from '#/lib/fs';
+import { addPassword, hasMasterPasswordVerification } from '#/lib/fs';
 import { Dialog } from '#/components/Dialog';
 import { encrypt, verifyMasterPassword } from '#/lib/encrypt';
 import { getVersion } from '@tauri-apps/api/app';
@@ -257,11 +257,17 @@ export default function Component({
 
                 {/* Security Notice */}
                 <div className="p-4 rounded-lg border border-passfort-500 bg-passfort-950">
-                    <div className="inline-flex font-bold">
+                    <div className="flex font-bold mb-2">
                         <LockIcon className="w-6 h-6 mr-2 text-red-500" />
                         <h3 className="text-lg">Encode with Master Password</h3>
+                        {true && (
+                            <label className="ml-auto inline-flex bg-gren-500 items-center cursor-pointer">
+                                <input type="checkbox" value="" className="sr-only peer" checked />
+                                <div className="relative w-11 h-6 bg-gray-200 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-passfort-500" />
+                            </label>
+                        )}
                     </div>
-                    <p className="space-y-4 text-zinc-400 text-sm">
+                    <p className="space-y-4 text-red-300 text-sm">
                         Use your master password to encode this password. PassFort does not store
                         your master password so you&apos;ll need to type it again.
                     </p>
@@ -330,7 +336,7 @@ export default function Component({
                     <form.Subscribe selector={(state) => [state.canSubmit, state.isSubmitting]}>
                         {([canSubmit, isSubmitting]) => (
                             <button
-                                className="w-min text-nowrap px-4 py-2 rounded-lg text-white font-semibold bg-red-800 transition-colors disabled:opacity-50 disabled:grayscale-100 hover:bg-passfort-500"
+                                className="w-min text-nowrap px-4 py-2 rounded-lg text-white font-semibold bg-passfort-500 transition-colors disabled:opacity-50 disabled:grayscale-100 hover:bg-passfort-500"
                                 type="submit"
                                 disabled={!canSubmit || isSubmitting}
                             >

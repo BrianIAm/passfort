@@ -69,18 +69,12 @@ export default function Page() {
     );
 }
 
-type MasterPasswordForm = {
-    previousMasterPassword?: string;
-    newMasterPassword: string;
-    newMasterPasswordConfirm: string;
-};
-
 function CreateOrUpdateMasterPasswordForm() {
     const router = useRouter();
     const [hasMasterPassword, setHasMasterPassword] = useState(false);
     const validPasswordRegex = /^\S{8,256}$/;
 
-    const form = useForm<MasterPasswordForm>({
+    const form = useForm({
         defaultValues: {
             previousMasterPassword: '',
             newMasterPassword: '',

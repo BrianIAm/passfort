@@ -80,18 +80,45 @@ export default function Page() {
 
     // Check if the user has set a master password before
     useEffect(() => {
-        hasMasterPasswordVerification().then((hasMasterPassword) => {
-            setHasMasterPassword(hasMasterPassword);
-        });
+        hasMasterPasswordVerification().then((hasMasterPassword) =>
+            setHasMasterPassword(hasMasterPassword)
+        );
     }, []);
 
     return (
-        <main className="w-full">
+        <main className="w-full flex-1 px-8 py-4">
+            {/* Page Header */}
+            <div className="flex justify-between items-center mb-6">
+                <div>
+                    <h2 className="text-3xl font-bold">Password Vault</h2>
+                    <p className="text-red-500 mt-2">Securely store and manage your passwords</p>
+                </div>
+            </div>
+
             <UnlockProgressBar lastUnlockTime={lastUnlockTime} />
 
-            <div className="flex-1 px-8 py-4 max-w-7xl">
+            <div>
                 {/* Modals */}
                 {isAddingPassword && <AddPasswordModal setIsModalShowing={setIsAddingPassword} />}
+
+                {/* No Masterpassword Panel*/}
+                {!hasMasterPassword && <NoMasterPasswordDisclaimer />}
+
+                {/* Has Master Password But No Passwords */}
+                {hasMasterPassword && passwords.length < 1 && (
+                    <div className="p-8 rounded-lg border border-passfort-500 bg-passfort-500/10 text-center">
+                        <h3 className="text-xl font-bold mb-4">No Passwords Yet</h3>
+                        <p className="text-passfort-500 mb-6">
+                            Your vault is empty. Start by adding your first password.
+                        </p>
+                        <button
+                            className="px-4 py-2 rounded-lg bg-passfort-500 hover:bg-passfort-500/80 transition-colors"
+                            onClick={() => setIsAddingPassword(true)}
+                        >
+                            Add Your First Password
+                        </button>
+                    </div>
+                )}
 
                 {isUnlockingPasswords && (
                     <UnlockPasswordsModal
@@ -102,13 +129,6 @@ export default function Page() {
 
                 {/* Header Section */}
                 <div className="flex justify-between items-center mb-6">
-                    <div>
-                        <h2 className="text-3xl font-bold">Password Vault</h2>
-                        <p className="text-red-500 mt-2">
-                            Securely store and manage your passwords
-                        </p>
-                    </div>
-
                     {passwords.length > 0 && (
                         <div className="flex gap-4">
                             <button
@@ -156,23 +176,6 @@ export default function Page() {
                     </div>
                 )}
 
-                {/* No Master Password Disclaimer */}
-                {!hasMasterPassword && (
-                    <div className="p-8 rounded-lg border border-passfort-500 bg-passfort-500/10 text-center">
-                        <h3 className="text-xl font-bold mb-4">No Master Password Set</h3>
-                        <p className="text-passfort-500 mb-6">
-                            You haven&apos;t set a master password yet. To start using PassFort, set
-                            a master password to secure your vault
-                        </p>
-                        <Link
-                            href="/master-password"
-                            className="px-4 py-2 rounded-lg bg-passfort-500 hover:bg-passfort-500/80 transition-colors"
-                        >
-                            Setup Master Password
-                        </Link>
-                    </div>
-                )}
-
                 {/* Password Grid */}
                 {hasMasterPassword && passwords.length > 0 && (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-[600px] overflow-y-auto">
@@ -186,24 +189,26 @@ export default function Page() {
                         ))}
                     </div>
                 )}
-
-                {/* Empty Vault */}
-                {hasMasterPassword && passwords.length <= 0 && (
-                    <div className="p-8 rounded-lg border border-passfort-500 bg-passfort-500/10 text-center">
-                        <h3 className="text-xl font-bold mb-4">No Passwords Yet</h3>
-                        <p className="text-passfort-500 mb-6">
-                            Your vault is empty. Start by adding your first password.
-                        </p>
-                        <button
-                            className="px-4 py-2 rounded-lg bg-passfort-500 hover:bg-passfort-500/80 transition-colors"
-                            onClick={() => setIsAddingPassword(true)}
-                        >
-                            Add Your First Password
-                        </button>
-                    </div>
-                )}
             </div>
         </main>
+    );
+}
+
+function NoMasterPasswordDisclaimer() {
+    return (
+        <div className="p-8 rounded-lg border border-passfort-500 bg-passfort-500/10 text-center">
+            <h3 className="text-xl font-bold mb-4">No Master Password Set</h3>
+            <p className="text-passfort-500 mb-6">
+                You haven&apos;t set a master password yet. To start using PassFort, set a master
+                password to secure your vault
+            </p>
+            <Link
+                href="/master-password"
+                className="px-4 py-2 rounded-lg bg-passfort-500 hover:bg-passfort-500/80 transition-colors"
+            >
+                Setup Master Password
+            </Link>
+        </div>
     );
 }
 
