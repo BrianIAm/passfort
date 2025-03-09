@@ -260,12 +260,17 @@ export default function Component({
                     <div className="flex font-bold mb-2">
                         <LockIcon className="w-6 h-6 mr-2 text-red-500" />
                         <h3 className="text-lg">Encode with Master Password</h3>
-                        {true && (
-                            <label className="ml-auto inline-flex bg-gren-500 items-center cursor-pointer">
-                                <input type="checkbox" value="" className="sr-only peer" checked />
-                                <div className="relative w-11 h-6 bg-gray-200 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-passfort-500" />
-                            </label>
-                        )}
+                        {!form.getFieldMeta('master_password')?.isPristine &&
+                            (form.getFieldMeta('master_password')?.errors || []).length < 1 && (
+                                <label className="ml-auto inline-flex bg-gren-500 items-center cursor-pointer">
+                                    <input
+                                        type="checkbox"
+                                        className="sr-only peer"
+                                        defaultChecked={true}
+                                    />
+                                    <div className="relative w-11 h-6 bg-gray-200 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-passfort-500" />
+                                </label>
+                            )}
                     </div>
                     <p className="space-y-4 text-red-300 text-sm">
                         Use your master password to encode this password. PassFort does not store
